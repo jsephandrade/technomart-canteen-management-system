@@ -1,36 +1,26 @@
-
 import React from 'react';
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarTrigger,
-  SidebarInset
-} from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { NavigationSidebar } from '@/components/NavigationSidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-
 interface MainLayoutProps {
   children: React.ReactNode;
   title?: string;
 }
-
-const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({
+  children,
+  title
+}) => {
   const isMobile = useIsMobile();
-
-  return (
-    <SidebarProvider defaultOpen={!isMobile}>
+  return <SidebarProvider defaultOpen={!isMobile}>
       <div className="flex h-screen w-full bg-background">
         {/* Sidebar */}
         <Sidebar variant="sidebar">
           <SidebarHeader>
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold">Canteen MS</span>
+                <span className="text-xl font-bold">TechnoMart</span>
               </div>
             </div>
           </SidebarHeader>
@@ -74,8 +64,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
           </main>
         </SidebarInset>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default MainLayout;
