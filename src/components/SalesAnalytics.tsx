@@ -128,7 +128,11 @@ const SalesAnalytics: React.FC = () => {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => [`$${value.toFixed(2)}`, 'Amount']} />
+                    <Tooltip formatter={(value) => {
+                      // Fix: Check if value is a number before calling toFixed
+                      const formattedValue = typeof value === 'number' ? `$${value.toFixed(2)}` : `$${value}`;
+                      return [formattedValue, 'Amount'];
+                    }} />
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
@@ -231,7 +235,11 @@ const SalesAnalytics: React.FC = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" />
                     <YAxis dataKey="name" type="category" />
-                    <Tooltip formatter={(value) => [`$${value.toFixed(2)}`, 'Revenue']} />
+                    <Tooltip formatter={(value) => {
+                      // Fix: Check if value is a number before calling toFixed
+                      const formattedValue = typeof value === 'number' ? `$${value.toFixed(2)}` : `$${value}`;
+                      return [formattedValue, 'Revenue'];
+                    }} />
                     <Legend />
                     <Bar dataKey="value" name="Revenue ($)" fill="hsl(var(--secondary))" />
                   </BarChart>
