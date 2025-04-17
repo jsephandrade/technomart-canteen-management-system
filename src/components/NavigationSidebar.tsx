@@ -6,7 +6,20 @@ import {
   SidebarMenuItem,
   SidebarMenuButton
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Menu, TrendingUp, Users, CalendarClock, MessageSquare } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  Menu, 
+  TrendingUp, 
+  Users, 
+  CalendarClock, 
+  MessageSquare,
+  ShoppingCart,
+  Utensils,
+  Bell,
+  Package,
+  CreditCard,
+  FileText
+} from 'lucide-react';
 
 export const NavigationSidebar: React.FC = () => {
   const location = useLocation();
@@ -23,6 +36,21 @@ export const NavigationSidebar: React.FC = () => {
       icon: Menu
     },
     {
+      name: 'POS',
+      href: '/pos',
+      icon: ShoppingCart
+    },
+    {
+      name: 'Catering',
+      href: '/catering',
+      icon: Utensils
+    },
+    {
+      name: 'Inventory',
+      href: '/inventory',
+      icon: Package
+    },
+    {
       name: 'Sales Analytics',
       href: '/sales',
       icon: TrendingUp
@@ -31,6 +59,26 @@ export const NavigationSidebar: React.FC = () => {
       name: 'Employee Schedule',
       href: '/employees',
       icon: CalendarClock
+    },
+    {
+      name: 'Payments',
+      href: '/payments',
+      icon: CreditCard
+    },
+    {
+      name: 'Users',
+      href: '/users',
+      icon: Users
+    },
+    {
+      name: 'User Logs',
+      href: '/logs',
+      icon: FileText
+    },
+    {
+      name: 'Notifications',
+      href: '/notifications',
+      icon: Bell
     },
     {
       name: 'Customer Feedback',

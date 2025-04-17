@@ -11,6 +11,13 @@ import MenuManagement from "./components/MenuManagement";
 import SalesAnalytics from "./components/SalesAnalytics";
 import EmployeeSchedule from "./components/EmployeeSchedule";
 import CustomerFeedback from "./components/CustomerFeedback";
+import POS from "./components/POS";
+import Catering from "./components/Catering";
+import Inventory from "./components/Inventory";
+import Payments from "./components/Payments";
+import Users from "./components/Users";
+import UserLogs from "./components/UserLogs";
+import Notifications from "./components/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +51,48 @@ const App = () => (
           <Route path="/feedback" element={
             <MainLayout title="Customer Feedback">
               <CustomerFeedback />
+            </MainLayout>
+          } />
+          
+          <Route path="/pos" element={
+            <MainLayout title="Point of Sale">
+              <POS />
+            </MainLayout>
+          } />
+          
+          <Route path="/catering" element={
+            <MainLayout title="Catering Management">
+              <Catering />
+            </MainLayout>
+          } />
+          
+          <Route path="/inventory" element={
+            <MainLayout title="Inventory Management">
+              <Inventory />
+            </MainLayout>
+          } />
+          
+          <Route path="/payments" element={
+            <MainLayout title="Payment Management">
+              <Payments />
+            </MainLayout>
+          } />
+          
+          <Route path="/users" element={
+            <MainLayout title="User Management">
+              <Users />
+            </MainLayout>
+          } />
+          
+          <Route path="/logs" element={
+            <MainLayout title="User Logs">
+              <UserLogs />
+            </MainLayout>
+          } />
+          
+          <Route path="/notifications" element={
+            <MainLayout title="Notifications">
+              <Notifications />
             </MainLayout>
           } />
           
