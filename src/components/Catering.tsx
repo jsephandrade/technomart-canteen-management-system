@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CustomBadge } from '@/components/ui/custom-badge';
 import { 
   Utensils, 
   CalendarDays, 
@@ -339,9 +340,9 @@ const Catering: React.FC = () => {
                     <h3 className="text-lg font-semibold">{sortedEvents[0].name}</h3>
                     <p className="text-sm text-muted-foreground">{sortedEvents[0].client}</p>
                   </div>
-                  <Badge variant={getStatusBadgeVariant(sortedEvents[0].status)} className="capitalize w-fit">
+                  <CustomBadge variant={getStatusBadgeVariant(sortedEvents[0].status)} className="capitalize w-fit">
                     {sortedEvents[0].status.replace('-', ' ')}
-                  </Badge>
+                  </CustomBadge>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

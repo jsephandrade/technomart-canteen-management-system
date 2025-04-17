@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CustomBadge } from '@/components/ui/custom-badge';
 import { 
   CreditCard, 
   Search, 
@@ -254,9 +255,9 @@ const Payments: React.FC = () => {
                             ${payment.amount.toFixed(2)}
                           </td>
                           <td className="p-4 align-middle">
-                            <Badge variant={getStatusBadgeVariant(payment.status)} className="capitalize">
+                            <CustomBadge variant={getStatusBadgeVariant(payment.status)} className="capitalize">
                               {payment.status}
-                            </Badge>
+                            </CustomBadge>
                           </td>
                           <td className="p-4 align-middle text-right">
                             <DropdownMenu>
@@ -337,9 +338,9 @@ const Payments: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{payment.orderId}</span>
-                          <Badge variant={getStatusBadgeVariant(payment.status)} className="capitalize text-xs">
+                          <CustomBadge variant={getStatusBadgeVariant(payment.status)} className="capitalize text-xs">
                             {payment.status}
-                          </Badge>
+                          </CustomBadge>
                         </div>
                         <div className="text-xs text-muted-foreground">
                           {payment.customer ? payment.customer : 'Walk-in Customer'}

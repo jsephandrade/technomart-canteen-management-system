@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CustomBadge } from '@/components/ui/custom-badge';
 import { 
   Package, 
   Search, 
@@ -221,9 +222,9 @@ const Inventory: React.FC = () => {
                                 <div className="flex flex-col gap-1">
                                   <div className="flex justify-between text-xs">
                                     <span>{item.currentStock} {item.unit}</span>
-                                    <Badge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
+                                    <CustomBadge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
                                       {getStockStatusText(item.currentStock, item.minThreshold)}
-                                    </Badge>
+                                    </CustomBadge>
                                   </div>
                                   <Progress
                                     value={getStockPercentage(item.currentStock, item.minThreshold)}
@@ -283,9 +284,9 @@ const Inventory: React.FC = () => {
                           <h3 className="font-medium">{item.name}</h3>
                           <p className="text-sm text-muted-foreground">{item.category}</p>
                         </div>
-                        <Badge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
+                        <CustomBadge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
                           {getStockStatusText(item.currentStock, item.minThreshold)}
-                        </Badge>
+                        </CustomBadge>
                       </div>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs mb-1">
