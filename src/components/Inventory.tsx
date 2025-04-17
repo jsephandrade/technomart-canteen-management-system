@@ -1,46 +1,405 @@
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Package, 
+  Search, 
+  PlusCircle, 
+  AlertTriangle, 
+  ArrowUpDown,
+  MoreVertical,
+  Truck,
+  PenSquare,
+  Trash2,
+  BarChart2
+} from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  category: string;
+  currentStock: number;
+  minThreshold: number;
+  unit: string;
+  lastUpdated: string;
+  supplier: string;
+}
 
 const Inventory: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([
+    {
+      id: '1',
+      name: 'Rice',
+      category: 'Grains',
+      currentStock: 25,
+      minThreshold: 10,
+      unit: 'kg',
+      lastUpdated: '2025-04-15',
+      supplier: 'Global Foods'
+    },
+    {
+      id: '2',
+      name: 'Chicken Breast',
+      category: 'Meat',
+      currentStock: 8,
+      minThreshold: 5,
+      unit: 'kg',
+      lastUpdated: '2025-04-16',
+      supplier: 'Fresh Farms'
+    },
+    {
+      id: '3',
+      name: 'Olive Oil',
+      category: 'Condiments',
+      currentStock: 2,
+      minThreshold: 3,
+      unit: 'bottles',
+      lastUpdated: '2025-04-16',
+      supplier: 'Gourmet Supplies'
+    },
+    {
+      id: '4',
+      name: 'Tomatoes',
+      category: 'Vegetables',
+      currentStock: 15,
+      minThreshold: 8,
+      unit: 'kg',
+      lastUpdated: '2025-04-17',
+      supplier: 'Local Farms'
+    },
+    {
+      id: '5',
+      name: 'Flour',
+      category: 'Baking',
+      currentStock: 12,
+      minThreshold: 5,
+      unit: 'kg',
+      lastUpdated: '2025-04-14',
+      supplier: 'Baker\'s Choice'
+    },
+    {
+      id: '6',
+      name: 'Salt',
+      category: 'Condiments',
+      currentStock: 4,
+      minThreshold: 2,
+      unit: 'kg',
+      lastUpdated: '2025-04-13',
+      supplier: 'Seasoning Co.'
+    },
+    {
+      id: '7',
+      name: 'Milk',
+      category: 'Dairy',
+      currentStock: 6,
+      minThreshold: 8,
+      unit: 'liters',
+      lastUpdated: '2025-04-17',
+      supplier: 'Dairy Farms'
+    }
+  ]);
+
+  const categories = ['Grains', 'Meat', 'Vegetables', 'Dairy', 'Condiments', 'Baking', 'Fruits'];
+  
+  const filteredItems = inventoryItems.filter(item => {
+    // Filter by search term
+    const matchesSearch = 
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.supplier.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Filter by category
+    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  // Items that are below threshold
+  const lowStockItems = inventoryItems.filter(item => item.currentStock < item.minThreshold);
+  
+  // Calculate stock level percentage
+  const getStockPercentage = (current: number, threshold: number) => {
+    return Math.min(100, Math.round((current / (threshold * 2)) * 100));
+  };
+  
+  // Determine badge color based on stock level
+  const getStockBadgeVariant = (current: number, threshold: number) => {
+    if (current <= threshold * 0.5) return 'destructive';
+    if (current <= threshold) return 'warning';
+    return 'success';
+  };
+  
+  // Get text for stock status
+  const getStockStatusText = (current: number, threshold: number) => {
+    if (current <= threshold * 0.5) return 'Critical';
+    if (current <= threshold) return 'Low';
+    if (current >= threshold * 2) return 'Overstocked';
+    return 'Good';
+  };
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Card>
-        <CardHeader>
-          <CardTitle>Raw Materials Inventory</CardTitle>
-          <CardDescription>Track and manage inventory items</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            This module provides real-time tracking of all raw materials, stock levels,
-            and usage rates. Set up auto-ordering thresholds and track expiry dates.
-          </p>
-        </CardContent>
-      </Card>
+    <div className="grid gap-4 md:grid-cols-3">
+      <div className="md:col-span-2 space-y-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle>Raw Materials Inventory</CardTitle>
+              <CardDescription>Track and manage inventory items</CardDescription>
+            </div>
+            <Button size="sm" className="flex gap-1">
+              <PlusCircle className="h-4 w-4 mr-1" /> Add Item
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
+              <div className="relative flex-1">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search inventory..."
+                  className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <Tabs defaultValue="list" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="list">List View</TabsTrigger>
+                <TabsTrigger value="grid">Grid View</TabsTrigger>
+              </TabsList>
+              <TabsContent value="list">
+                <div className="rounded-md border">
+                  <div className="relative w-full overflow-auto">
+                    <table className="w-full caption-bottom text-sm">
+                      <thead>
+                        <tr className="border-b bg-muted/50">
+                          <th className="h-10 px-4 text-left font-medium">
+                            <div className="flex items-center gap-1">
+                              Name <ArrowUpDown className="h-3 w-3" />
+                            </div>
+                          </th>
+                          <th className="h-10 px-4 text-left font-medium">Category</th>
+                          <th className="h-10 px-4 text-left font-medium">Stock Level</th>
+                          <th className="h-10 px-4 text-left font-medium hidden md:table-cell">Supplier</th>
+                          <th className="h-10 px-4 text-right font-medium">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredItems.length > 0 ? (
+                          filteredItems.map((item) => (
+                            <tr key={item.id} className="border-b transition-colors hover:bg-muted/50">
+                              <td className="p-4 align-middle font-medium">
+                                {item.name}
+                              </td>
+                              <td className="p-4 align-middle">
+                                <Badge variant="outline">{item.category}</Badge>
+                              </td>
+                              <td className="p-4 align-middle">
+                                <div className="flex flex-col gap-1">
+                                  <div className="flex justify-between text-xs">
+                                    <span>{item.currentStock} {item.unit}</span>
+                                    <Badge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
+                                      {getStockStatusText(item.currentStock, item.minThreshold)}
+                                    </Badge>
+                                  </div>
+                                  <Progress
+                                    value={getStockPercentage(item.currentStock, item.minThreshold)}
+                                    className={`h-2 ${
+                                      item.currentStock < item.minThreshold ? 'bg-red-200' : 'bg-green-200'
+                                    }`}
+                                  />
+                                </div>
+                              </td>
+                              <td className="p-4 align-middle hidden md:table-cell">{item.supplier}</td>
+                              <td className="p-4 align-middle text-right">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>
+                                      <PenSquare className="mr-2 h-4 w-4" /> Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      <Truck className="mr-2 h-4 w-4" /> Order More
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      <BarChart2 className="mr-2 h-4 w-4" /> Usage History
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem className="text-destructive">
+                                      <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan={5} className="h-24 text-center">
+                              No inventory items found
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="grid">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                  {filteredItems.map(item => (
+                    <div key={item.id} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-medium">{item.name}</h3>
+                          <p className="text-sm text-muted-foreground">{item.category}</p>
+                        </div>
+                        <Badge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
+                          {getStockStatusText(item.currentStock, item.minThreshold)}
+                        </Badge>
+                      </div>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs mb-1">
+                          <span>Current: {item.currentStock} {item.unit}</span>
+                          <span>Min: {item.minThreshold} {item.unit}</span>
+                        </div>
+                        <Progress
+                          value={getStockPercentage(item.currentStock, item.minThreshold)}
+                          className="h-2"
+                        />
+                      </div>
+                      <div className="mt-3 flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">
+                          Supplier: {item.supplier}
+                        </span>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+          <CardFooter className="border-t py-3">
+            <div className="text-xs text-muted-foreground">
+              Showing {filteredItems.length} of {inventoryItems.length} items
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Low Stock Items</CardTitle>
-          <CardDescription>Materials that need reordering</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-sm text-muted-foreground">
-            <p className="mb-2">No items currently below threshold levels.</p>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Supplier Management</CardTitle>
-          <CardDescription>Manage vendor relationships</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Track supplier information, order history, and performance metrics.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Low Stock Items</CardTitle>
+            <CardDescription>Materials that need reordering</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {lowStockItems.length > 0 ? (
+              <div className="space-y-3">
+                {lowStockItems.map(item => (
+                  <div key={item.id} className="flex items-center justify-between border-b pb-2 last:border-0">
+                    <div className="flex items-start gap-2">
+                      {item.currentStock <= item.minThreshold * 0.5 ? (
+                        <AlertTriangle className="h-4 w-4 text-destructive mt-1" />
+                      ) : (
+                        <AlertTriangle className="h-4 w-4 text-amber-500 mt-1" />
+                      )}
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {item.currentStock} / {item.minThreshold} {item.unit}
+                        </p>
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline" className="flex items-center gap-1">
+                      <Truck className="h-3 w-3 mr-1" /> Order
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <Package className="mx-auto h-12 w-12 text-muted-foreground/50 mb-3" />
+                <p className="text-muted-foreground">No items currently below threshold levels</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Supplier Management</CardTitle>
+            <CardDescription>Manage vendor relationships</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center border-b pb-2">
+                <div>
+                  <p className="font-medium">Fresh Farms</p>
+                  <p className="text-xs text-muted-foreground">Meat, Poultry</p>
+                </div>
+                <Badge variant="outline">Active</Badge>
+              </div>
+              <div className="flex justify-between items-center border-b pb-2">
+                <div>
+                  <p className="font-medium">Local Farms</p>
+                  <p className="text-xs text-muted-foreground">Fruits, Vegetables</p>
+                </div>
+                <Badge variant="outline">Active</Badge>
+              </div>
+              <div className="flex justify-between items-center border-b pb-2">
+                <div>
+                  <p className="font-medium">Global Foods</p>
+                  <p className="text-xs text-muted-foreground">Grains, Dry goods</p>
+                </div>
+                <Badge variant="outline">Active</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-medium">Dairy Farms</p>
+                  <p className="text-xs text-muted-foreground">Dairy Products</p>
+                </div>
+                <Badge variant="outline">Active</Badge>
+              </div>
+            </div>
+            <Button className="w-full mt-4" variant="outline" size="sm">
+              <PlusCircle className="h-4 w-4 mr-1" /> Add Supplier
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
