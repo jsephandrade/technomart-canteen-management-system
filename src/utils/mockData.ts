@@ -1,3 +1,4 @@
+
 import { MenuItem, Sale, Employee, Feedback, DashboardStats, ScheduleEntry } from '@/types';
 
 export const menuItems: MenuItem[] = [
@@ -25,7 +26,7 @@ export const menuItems: MenuItem[] = [
     id: '3',
     name: 'Grilled Chicken Sandwich',
     description: 'Grilled chicken breast with avocado, bacon, and honey mustard',
-    price: 9.99,
+    price: 499.50, // Converted to Philippine Peso
     category: 'Main Course',
     image: '/placeholder.svg',
     available: true,
@@ -35,7 +36,7 @@ export const menuItems: MenuItem[] = [
     id: '4',
     name: 'Veggie Wrap',
     description: 'Fresh vegetables with hummus in a spinach wrap',
-    price: 7.49,
+    price: 374.50, // Converted to Philippine Peso
     category: 'Vegetarian',
     image: '/placeholder.svg',
     available: true,
@@ -45,7 +46,7 @@ export const menuItems: MenuItem[] = [
     id: '5',
     name: 'French Fries',
     description: 'Crispy golden fries with our special seasoning',
-    price: 3.99,
+    price: 199.50, // Converted to Philippine Peso
     category: 'Sides',
     image: '/placeholder.svg',
     available: true,
@@ -55,7 +56,7 @@ export const menuItems: MenuItem[] = [
     id: '6',
     name: 'Chocolate Brownie',
     description: 'Rich chocolate brownie with vanilla ice cream',
-    price: 5.49,
+    price: 274.50, // Converted to Philippine Peso
     category: 'Desserts',
     image: '/placeholder.svg',
     available: true,
@@ -67,10 +68,10 @@ export const salesData: Sale[] = [
   {
     id: '1',
     items: [
-      { menuItemId: '1', menuItemName: 'Classic Burger', quantity: 2, price: 8.99 },
-      { menuItemId: '5', menuItemName: 'French Fries', quantity: 1, price: 3.99 }
+      { menuItemId: '1', menuItemName: 'Classic Burger', quantity: 2, price: 449.99 },
+      { menuItemId: '5', menuItemName: 'French Fries', quantity: 1, price: 199.50 }
     ],
-    total: 21.97,
+    total: 1099.48,
     date: '2025-04-17T10:30:00',
     paymentMethod: 'card',
     employeeId: '1'
@@ -78,10 +79,10 @@ export const salesData: Sale[] = [
   {
     id: '2',
     items: [
-      { menuItemId: '3', menuItemName: 'Grilled Chicken Sandwich', quantity: 1, price: 9.99 },
-      { menuItemId: '4', menuItemName: 'Veggie Wrap', quantity: 1, price: 7.49 }
+      { menuItemId: '3', menuItemName: 'Grilled Chicken Sandwich', quantity: 1, price: 499.50 },
+      { menuItemId: '4', menuItemName: 'Veggie Wrap', quantity: 1, price: 374.50 }
     ],
-    total: 17.48,
+    total: 874.00,
     date: '2025-04-17T12:45:00',
     paymentMethod: 'cash',
     employeeId: '2'
@@ -89,10 +90,10 @@ export const salesData: Sale[] = [
   {
     id: '3',
     items: [
-      { menuItemId: '2', menuItemName: 'Caesar Salad', quantity: 2, price: 6.49 },
-      { menuItemId: '6', menuItemName: 'Chocolate Brownie', quantity: 1, price: 5.49 }
+      { menuItemId: '2', menuItemName: 'Caesar Salad', quantity: 2, price: 324.50 },
+      { menuItemId: '6', menuItemName: 'Chocolate Brownie', quantity: 1, price: 274.50 }
     ],
-    total: 18.47,
+    total: 923.50,
     date: '2025-04-17T13:15:00',
     paymentMethod: 'mobile',
     employeeId: '1'
@@ -100,11 +101,11 @@ export const salesData: Sale[] = [
   {
     id: '4',
     items: [
-      { menuItemId: '1', menuItemName: 'Classic Burger', quantity: 1, price: 8.99 },
-      { menuItemId: '5', menuItemName: 'French Fries', quantity: 1, price: 3.99 },
-      { menuItemId: '6', menuItemName: 'Chocolate Brownie', quantity: 1, price: 5.49 }
+      { menuItemId: '1', menuItemName: 'Classic Burger', quantity: 1, price: 449.99 },
+      { menuItemId: '5', menuItemName: 'French Fries', quantity: 1, price: 199.50 },
+      { menuItemId: '6', menuItemName: 'Chocolate Brownie', quantity: 1, price: 274.50 }
     ],
-    total: 18.47,
+    total: 923.99,
     date: '2025-04-16T11:30:00',
     paymentMethod: 'card',
     employeeId: '3'
@@ -112,9 +113,9 @@ export const salesData: Sale[] = [
   {
     id: '5',
     items: [
-      { menuItemId: '3', menuItemName: 'Grilled Chicken Sandwich', quantity: 2, price: 9.99 }
+      { menuItemId: '3', menuItemName: 'Grilled Chicken Sandwich', quantity: 2, price: 499.50 }
     ],
-    total: 19.98,
+    total: 999.00,
     date: '2025-04-16T14:20:00',
     paymentMethod: 'cash',
     employeeId: '2'
@@ -243,8 +244,8 @@ export const feedbackData: Feedback[] = [
 ];
 
 export const dashboardStats: DashboardStats = {
-  dailySales: 548.75,
-  monthlySales: 15632.50,
+  dailySales: 27437.50,  // Converted to Philippine Peso
+  monthlySales: 781625.00, // Converted to Philippine Peso
   customerCount: 127,
   popularItems: [
     { name: 'Classic Burger', count: 42 },
@@ -254,18 +255,18 @@ export const dashboardStats: DashboardStats = {
   ],
   recentSales: salesData.slice(0, 3),
   salesByCategory: [
-    { category: 'Main Course', amount: 8542.75 },
-    { category: 'Sides', amount: 2356.80 },
-    { category: 'Desserts', amount: 1845.25 },
-    { category: 'Beverages', amount: 1755.30 },
-    { category: 'Salads', amount: 1132.40 }
+    { category: 'Main Course', amount: 427137.50 }, // Converted to Philippine Peso
+    { category: 'Sides', amount: 117840.00 },      // Converted to Philippine Peso
+    { category: 'Desserts', amount: 92262.50 },    // Converted to Philippine Peso
+    { category: 'Beverages', amount: 87765.00 },   // Converted to Philippine Peso
+    { category: 'Salads', amount: 56620.00 }       // Converted to Philippine Peso
   ],
   salesByTime: [
-    { time: '8am-10am', amount: 845.50 },
-    { time: '10am-12pm', amount: 1756.25 },
-    { time: '12pm-2pm', amount: 3254.75 },
-    { time: '2pm-4pm', amount: 1932.65 },
-    { time: '4pm-6pm', amount: 2845.30 },
-    { time: '6pm-8pm', amount: 4998.05 }
+    { time: '8am-10am', amount: 42275.00 },    // Converted to Philippine Peso
+    { time: '10am-12pm', amount: 87812.50 },   // Converted to Philippine Peso
+    { time: '12pm-2pm', amount: 162737.50 },   // Converted to Philippine Peso
+    { time: '2pm-4pm', amount: 96632.50 },     // Converted to Philippine Peso
+    { time: '4pm-6pm', amount: 142265.00 },    // Converted to Philippine Peso
+    { time: '6pm-8pm', amount: 249902.50 }     // Converted to Philippine Peso
   ]
 };
