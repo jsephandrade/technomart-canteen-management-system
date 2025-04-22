@@ -43,42 +43,186 @@ const POS: React.FC = () => {
   const [categories] = useState<Category[]>([
     {
       id: '1',
-      name: 'Breakfast',
+      name: 'Rice Meals',
       items: [
-        { id: '101', name: 'Breakfast Sandwich', description: 'Egg, cheese, bacon on a bagel', price: 5.99, category: 'Breakfast', available: true, popular: true },
-        { id: '102', name: 'Pancake Stack', description: 'Three fluffy pancakes with syrup', price: 6.99, category: 'Breakfast', available: true, popular: false },
-        { id: '103', name: 'Omelette', description: 'Three egg omelette with cheese and veggies', price: 7.99, category: 'Breakfast', available: true, popular: true },
-        { id: '104', name: 'Breakfast Burrito', description: 'Eggs, beans, cheese, wrapped in a tortilla', price: 6.49, category: 'Breakfast', available: true, popular: false },
+        { 
+          id: '101', 
+          name: 'Pork Adobo', 
+          description: 'Tender pork marinated in vinegar, soy sauce and garlic served with rice', 
+          price: 249.99, 
+          category: 'Rice Meals', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/adobo.jpg'
+        },
+        { 
+          id: '102', 
+          name: 'Sinigang na Baboy', 
+          description: 'Sour soup with pork, vegetables and tamarind broth served with rice', 
+          price: 269.99, 
+          category: 'Rice Meals', 
+          available: true, 
+          popular: false,
+          image: '/filipino-food/sinigang.jpg'
+        },
+        { 
+          id: '103', 
+          name: 'Chicken Tinola', 
+          description: 'Ginger-based chicken soup with green papaya and chili leaves served with rice', 
+          price: 239.99, 
+          category: 'Rice Meals', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/tinola.jpg'
+        },
+        { 
+          id: '104', 
+          name: 'Beef Kare-Kare', 
+          description: 'Beef and vegetables in peanut sauce served with bagoong and rice', 
+          price: 299.99, 
+          category: 'Rice Meals', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/kare-kare.jpg'
+        },
       ]
     },
     {
       id: '2',
-      name: 'Lunch',
+      name: 'Merienda',
       items: [
-        { id: '201', name: 'Chicken Sandwich', description: 'Grilled chicken breast with lettuce and mayo', price: 8.99, category: 'Lunch', available: true, popular: true },
-        { id: '202', name: 'Caesar Salad', description: 'Romaine lettuce with Caesar dressing and croutons', price: 7.49, category: 'Lunch', available: true, popular: false },
-        { id: '203', name: 'Veggie Wrap', description: 'Mixed vegetables in a whole wheat wrap', price: 6.99, category: 'Lunch', available: true, popular: true },
-        { id: '204', name: 'Burger & Fries', description: 'Beef patty with cheese and a side of fries', price: 9.99, category: 'Lunch', available: true, popular: true },
+        { 
+          id: '201', 
+          name: 'Pancit Bihon', 
+          description: 'Stir-fried rice noodles with vegetables and meat', 
+          price: 189.99, 
+          category: 'Merienda', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/pancit.jpg'
+        },
+        { 
+          id: '202', 
+          name: 'Lumpiang Shanghai', 
+          description: 'Crispy spring rolls filled with ground pork (6 pcs)', 
+          price: 159.99, 
+          category: 'Merienda', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/lumpia.jpg'
+        },
+        { 
+          id: '203', 
+          name: 'Champorado', 
+          description: 'Chocolate rice porridge served with milk', 
+          price: 129.99, 
+          category: 'Merienda', 
+          available: true, 
+          popular: false,
+          image: '/filipino-food/champorado.jpg'
+        },
+        { 
+          id: '204', 
+          name: 'Palabok', 
+          description: 'Rice noodles with shrimp sauce, eggs, and toppings', 
+          price: 199.99, 
+          category: 'Merienda', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/palabok.jpg'
+        },
       ]
     },
     {
       id: '3',
-      name: 'Beverages',
+      name: 'Drinks',
       items: [
-        { id: '301', name: 'Coffee', description: 'Freshly brewed coffee', price: 2.49, category: 'Beverages', available: true, popular: true },
-        { id: '302', name: 'Iced Tea', description: 'Sweetened or unsweetened', price: 2.29, category: 'Beverages', available: true, popular: false },
-        { id: '303', name: 'Orange Juice', description: 'Freshly squeezed', price: 3.49, category: 'Beverages', available: true, popular: false },
-        { id: '304', name: 'Smoothie', description: 'Fruit smoothie with yogurt', price: 4.99, category: 'Beverages', available: true, popular: true },
+        { 
+          id: '301', 
+          name: 'Sago\'t Gulaman', 
+          description: 'Sweet drink with tapioca pearls and grass jelly', 
+          price: 79.99, 
+          category: 'Drinks', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/sago-gulaman.jpg'
+        },
+        { 
+          id: '302', 
+          name: 'Calamansi Juice', 
+          description: 'Fresh calamansi citrus juice', 
+          price: 69.99, 
+          category: 'Drinks', 
+          available: true, 
+          popular: false,
+          image: '/filipino-food/calamansi.jpg'
+        },
+        { 
+          id: '303', 
+          name: 'Buko Juice', 
+          description: 'Fresh young coconut water', 
+          price: 89.99, 
+          category: 'Drinks', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/buko.jpg'
+        },
+        { 
+          id: '304', 
+          name: 'Tsokolate', 
+          description: 'Traditional Filipino hot chocolate', 
+          price: 99.99, 
+          category: 'Drinks', 
+          available: true, 
+          popular: false,
+          image: '/filipino-food/tsokolate.jpg'
+        },
       ]
     },
     {
       id: '4',
-      name: 'Snacks',
+      name: 'Desserts',
       items: [
-        { id: '401', name: 'Fruit Cup', description: 'Seasonal fresh fruit', price: 3.49, category: 'Snacks', available: true, popular: false },
-        { id: '402', name: 'Chips', description: 'Kettle-cooked potato chips', price: 1.99, category: 'Snacks', available: true, popular: true },
-        { id: '403', name: 'Yogurt Parfait', description: 'Yogurt with granola and berries', price: 4.49, category: 'Snacks', available: true, popular: true },
-        { id: '404', name: 'Cookie', description: 'Freshly baked chocolate chip cookie', price: 1.79, category: 'Snacks', available: true, popular: false },
+        { 
+          id: '401', 
+          name: 'Halo-Halo', 
+          description: 'Mixed shaved ice with sweet beans, fruits, and leche flan', 
+          price: 169.99, 
+          category: 'Desserts', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/halo-halo.jpg'
+        },
+        { 
+          id: '402', 
+          name: 'Leche Flan', 
+          description: 'Creamy caramel custard dessert', 
+          price: 129.99, 
+          category: 'Desserts', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/leche-flan.jpg'
+        },
+        { 
+          id: '403', 
+          name: 'Turon', 
+          description: 'Sweet banana and jackfruit spring rolls (3 pcs)', 
+          price: 99.99, 
+          category: 'Desserts', 
+          available: true, 
+          popular: true,
+          image: '/filipino-food/turon.jpg'
+        },
+        { 
+          id: '404', 
+          name: 'Buko Pandan', 
+          description: 'Young coconut and pandan jelly dessert', 
+          price: 149.99, 
+          category: 'Desserts', 
+          available: true, 
+          popular: false,
+          image: '/filipino-food/buko-pandan.jpg'
+        },
       ]
     }
   ]);
@@ -222,6 +366,15 @@ const POS: React.FC = () => {
                           className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
                           onClick={() => addToOrder(item)}
                         >
+                          {item.image && (
+                            <div className="w-full h-32 mb-2 rounded-md overflow-hidden">
+                              <img 
+                                src={item.image} 
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
                           <div className="flex justify-between items-start mb-1">
                             <h4 className="font-medium">{item.name}</h4>
                             {item.popular && (
