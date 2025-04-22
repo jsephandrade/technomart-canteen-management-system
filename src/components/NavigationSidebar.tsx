@@ -36,7 +36,7 @@ export const NavigationSidebar: React.FC = () => {
       icon: Menu
     },
     {
-      name: 'POS',
+      name: 'Point of Sale',
       href: '/pos',
       icon: ShoppingCart
     },
