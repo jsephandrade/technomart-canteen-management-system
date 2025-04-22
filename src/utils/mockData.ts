@@ -1,4 +1,3 @@
-
 import { MenuItem, Sale, Employee, Feedback, DashboardStats, ScheduleEntry } from '@/types';
 
 export const menuItems: MenuItem[] = [
@@ -6,7 +5,7 @@ export const menuItems: MenuItem[] = [
     id: '1',
     name: 'Classic Burger',
     description: 'Juicy beef patty with lettuce, tomato, and our secret sauce',
-    price: 8.99,
+    price: 449.99, // Converted to Philippine Peso
     category: 'Main Course',
     image: '/placeholder.svg',
     available: true,
@@ -16,7 +15,7 @@ export const menuItems: MenuItem[] = [
     id: '2',
     name: 'Caesar Salad',
     description: 'Crisp romaine lettuce with parmesan, croutons, and Caesar dressing',
-    price: 6.49,
+    price: 324.50, // Converted to Philippine Peso
     category: 'Salads',
     image: '/placeholder.svg',
     available: true,

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -252,7 +251,7 @@ const Payments: React.FC = () => {
                             </div>
                           </td>
                           <td className="p-4 align-middle">
-                            ${payment.amount.toFixed(2)}
+                            ₱{payment.amount.toFixed(2)}
                           </td>
                           <td className="p-4 align-middle">
                             <CustomBadge variant={getStatusBadgeVariant(payment.status)} className="capitalize">
@@ -307,7 +306,7 @@ const Payments: React.FC = () => {
               Showing {sortedPayments.length} of {payments.length} transactions
             </div>
             <div className="text-sm">
-              Total: <span className="font-semibold">${getTotalAmount(selectedStatus)}</span>
+              Total: <span className="font-semibold">₱{getTotalAmount(selectedStatus)}</span>
             </div>
           </CardFooter>
         </Card>
@@ -348,7 +347,7 @@ const Payments: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium">${payment.amount.toFixed(2)}</div>
+                      <div className="font-medium">₱{payment.amount.toFixed(2)}</div>
                       <div className="text-xs text-muted-foreground capitalize">{payment.method}</div>
                     </div>
                   </div>
@@ -431,7 +430,7 @@ const Payments: React.FC = () => {
             <div className="grid grid-cols-2 gap-3">
               <div className="border rounded-md p-3 text-center">
                 <p className="text-xs text-muted-foreground mb-1">Today's Total</p>
-                <p className="text-2xl font-bold">${getTotalAmount()}</p>
+                <p className="text-2xl font-bold">₱{getTotalAmount()}</p>
               </div>
               <div className="border rounded-md p-3 text-center">
                 <p className="text-xs text-muted-foreground mb-1">Transactions</p>
@@ -440,7 +439,7 @@ const Payments: React.FC = () => {
               <div className="border rounded-md p-3 text-center">
                 <p className="text-xs text-muted-foreground mb-1">Avg. Transaction</p>
                 <p className="text-2xl font-bold">
-                  ${(parseFloat(getTotalAmount()) / payments.filter(p => p.status !== 'refunded').length).toFixed(2)}
+                  ₱{(parseFloat(getTotalAmount()) / payments.filter(p => p.status !== 'refunded').length).toFixed(2)}
                 </p>
               </div>
               <div className="border rounded-md p-3 text-center">

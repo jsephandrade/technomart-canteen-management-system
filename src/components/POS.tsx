@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -140,7 +139,7 @@ const POS: React.FC = () => {
   };
   
   const calculateTax = () => {
-    return calculateSubtotal() * 0.0825; // 8.25% tax rate
+    return calculateSubtotal() * 0.12; // Updated to 12% tax rate common in Philippines
   };
   
   const calculateTotal = () => {
@@ -230,7 +229,7 @@ const POS: React.FC = () => {
                             )}
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{item.description}</p>
-                          <p className="text-sm font-semibold">${item.price.toFixed(2)}</p>
+                          <p className="text-sm font-semibold">₱{item.price.toFixed(2)}</p>
                         </div>
                       ))
                     ) : (
@@ -300,8 +299,8 @@ const POS: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p>${(item.price * item.quantity).toFixed(2)}</p>
-                      <p className="text-xs text-muted-foreground">${item.price.toFixed(2)} each</p>
+                      <p>₱{(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-xs text-muted-foreground">₱{item.price.toFixed(2)} each</p>
                     </div>
                   </div>
                 ))}
@@ -318,15 +317,15 @@ const POS: React.FC = () => {
               <div className="mt-6 border-t pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
-                  <span>${calculateSubtotal().toFixed(2)}</span>
+                  <span>₱{calculateSubtotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Tax (8.25%)</span>
-                  <span>${calculateTax().toFixed(2)}</span>
+                  <span>Tax (12%)</span>
+                  <span>₱{calculateTax().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-semibold text-base pt-2 border-t">
                   <span>Total</span>
-                  <span>${calculateTotal().toFixed(2)}</span>
+                  <span>₱{calculateTotal().toFixed(2)}</span>
                 </div>
               </div>
             )}
@@ -372,7 +371,7 @@ const POS: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center mb-4">
-                    <p className="text-3xl font-bold">${calculateTotal().toFixed(2)}</p>
+                    <p className="text-3xl font-bold">₱{calculateTotal().toFixed(2)}</p>
                     <p className="text-sm text-muted-foreground">Total amount due</p>
                   </div>
                   
@@ -418,11 +417,11 @@ const POS: React.FC = () => {
                     </div>
                     <div className="flex justify-between mb-2">
                       <span className="text-sm">Subtotal:</span>
-                      <span className="text-sm">${calculateSubtotal().toFixed(2)}</span>
+                      <span className="text-sm">₱{calculateSubtotal().toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Tax:</span>
-                      <span className="text-sm">${calculateTax().toFixed(2)}</span>
+                      <span className="text-sm">₱{calculateTax().toFixed(2)}</span>
                     </div>
                   </div>
                 </CardContent>
