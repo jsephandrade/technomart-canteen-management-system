@@ -7,8 +7,7 @@ import {
   CreditCard, 
   Search, 
   Download, 
-  Filter, 
-  ChevronDown,
+  Filter,
   Wallet,
   Receipt,
   ArrowUpDown,
@@ -17,7 +16,6 @@ import {
   Check,
   X,
   ArrowDownUp,
-  BarChart,
   Banknote,
   Smartphone,
   CircleDollarSign
@@ -418,40 +416,6 @@ const Payments: React.FC = () => {
                 </div>
               </TabsContent>
             </Tabs>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Payment Analytics</CardTitle>
-            <CardDescription>Transaction summary</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="border rounded-md p-3 text-center">
-                <p className="text-xs text-muted-foreground mb-1">Today's Total</p>
-                <p className="text-2xl font-bold">₱{getTotalAmount()}</p>
-              </div>
-              <div className="border rounded-md p-3 text-center">
-                <p className="text-xs text-muted-foreground mb-1">Transactions</p>
-                <p className="text-2xl font-bold">{payments.length}</p>
-              </div>
-              <div className="border rounded-md p-3 text-center">
-                <p className="text-xs text-muted-foreground mb-1">Avg. Transaction</p>
-                <p className="text-2xl font-bold">
-                  ₱{(parseFloat(getTotalAmount()) / payments.filter(p => p.status !== 'refunded').length).toFixed(2)}
-                </p>
-              </div>
-              <div className="border rounded-md p-3 text-center">
-                <p className="text-xs text-muted-foreground mb-1">Success Rate</p>
-                <p className="text-2xl font-bold">
-                  {Math.round(payments.filter(p => p.status === 'completed').length / payments.length * 100)}%
-                </p>
-              </div>
-            </div>
-            <Button className="w-full mt-4" variant="outline" size="sm">
-              <BarChart className="h-4 w-4 mr-1" /> Detailed Reports
-            </Button>
           </CardContent>
         </Card>
       </div>

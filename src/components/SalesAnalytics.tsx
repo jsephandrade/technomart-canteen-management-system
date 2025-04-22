@@ -4,60 +4,148 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { salesData, menuItems } from '@/utils/mockData';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Sale } from '@/types';
+import { Button } from '@/components/ui/button';
+import { BarChart as BarChartIcon } from 'lucide-react';
+
+// Helper function to group sales by date
+const groupSalesByDate = (data: Sale[]) => {
+  const grouped = data.reduce((acc: Record<string, number>, sale) => {
+    const date = new Date(sale.date).toLocaleDateString();
+    acc[date] = (acc[date] || 0) + sale.total;
+    return acc;
+  }, {});
+  
+  return Object.entries(grouped).map(([date, total]) => ({
+    date,
+    total
+  }));
+};
+
+// Helper function to get sales by payment method
+const getSalesByPaymentMethod = (data: Sale[]) => {
+  const grouped = data.reduce((acc: Record<string, number>, sale) => {
+    acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + sale.total;
+    return acc;
+  }, {});
+  
+  return Object.entries(grouped).map(([name, value]) => ({
+    name: name.charAt(0).toUpperCase() + name.slice(1),
+    value
+  }));
+};
+
+// Helper function to get sales by item
+const getSalesByItem = (data: Sale[]) => {
+  const itemSales: Record<string, number> = {};
+  
+  data.forEach(sale => {
+    sale.items.forEach(item => {
+      const itemName = item.menuItemName;
+      itemSales[itemName] = (itemSales[itemName] || 0) + (item.price * item.quantity);
+    });
+  });
+  
+  return Object.entries(itemSales)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5);
+};
+
+const dailySalesData = groupSalesByDate(salesData);
+const paymentMethodData = getSalesByPaymentMethod(salesData);
+const topSellingItemsData = getSalesByItem(salesData);
+
+// Colors for pie chart
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+// Mock payments data
+interface Payment {
+  id: string;
+  orderId: string;
+  amount: number;
+  date: string;
+  method: 'cash' | 'card' | 'mobile';
+  status: 'completed' | 'pending' | 'failed' | 'refunded';
+  customer?: string;
+}
+
+const mockPayments: Payment[] = [
+  {
+    id: '1',
+    orderId: 'ORD-2581',
+    amount: 45.75,
+    date: '2025-04-17 10:32:15',
+    method: 'card',
+    status: 'completed',
+    customer: 'John Doe'
+  },
+  {
+    id: '2',
+    orderId: 'ORD-2582',
+    amount: 22.50,
+    date: '2025-04-17 11:15:22',
+    method: 'cash',
+    status: 'completed'
+  },
+  {
+    id: '3',
+    orderId: 'ORD-2583',
+    amount: 38.90,
+    date: '2025-04-17 12:25:40',
+    method: 'mobile',
+    status: 'completed',
+    customer: 'Sarah Johnson'
+  },
+  {
+    id: '4',
+    orderId: 'ORD-2584',
+    amount: 29.95,
+    date: '2025-04-17 13:10:05',
+    method: 'card',
+    status: 'failed',
+    customer: 'Alex Chen'
+  },
+  {
+    id: '5',
+    orderId: 'ORD-2585',
+    amount: 52.35,
+    date: '2025-04-17 14:27:51',
+    method: 'mobile',
+    status: 'completed',
+    customer: 'Maria Lopez'
+  },
+  {
+    id: '6',
+    orderId: 'ORD-2586',
+    amount: 18.25,
+    date: '2025-04-17 15:45:12',
+    method: 'cash',
+    status: 'completed'
+  },
+  {
+    id: '7',
+    orderId: 'ORD-2587',
+    amount: 65.80,
+    date: '2025-04-17 16:30:45',
+    method: 'card',
+    status: 'refunded',
+    customer: 'David Brown'
+  }
+];
 
 const SalesAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('week');
+  const [payments, setPayments] = useState<Payment[]>(mockPayments);
   
-  // Helper function to group sales by date
-  const groupSalesByDate = (data: Sale[]) => {
-    const grouped = data.reduce((acc: Record<string, number>, sale) => {
-      const date = new Date(sale.date).toLocaleDateString();
-      acc[date] = (acc[date] || 0) + sale.total;
-      return acc;
-    }, {});
-    
-    return Object.entries(grouped).map(([date, total]) => ({
-      date,
-      total
-    }));
+  const getTotalAmount = (status: string = 'all') => {
+    return payments
+      .filter(payment => status === 'all' || payment.status === status)
+      .reduce((total, payment) => {
+        if (payment.status === 'refunded') return total;
+        return total + payment.amount;
+      }, 0)
+      .toFixed(2);
   };
-
-  // Helper function to get sales by payment method
-  const getSalesByPaymentMethod = (data: Sale[]) => {
-    const grouped = data.reduce((acc: Record<string, number>, sale) => {
-      acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + sale.total;
-      return acc;
-    }, {});
-    
-    return Object.entries(grouped).map(([name, value]) => ({
-      name: name.charAt(0).toUpperCase() + name.slice(1),
-      value
-    }));
-  };
-
-  // Helper function to get sales by item
-  const getSalesByItem = (data: Sale[]) => {
-    const itemSales: Record<string, number> = {};
-    
-    data.forEach(sale => {
-      sale.items.forEach(item => {
-        const itemName = item.menuItemName;
-        itemSales[itemName] = (itemSales[itemName] || 0) + (item.price * item.quantity);
-      });
-    });
-    
-    return Object.entries(itemSales)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5);
-  };
-
-  const dailySalesData = groupSalesByDate(salesData);
-  const paymentMethodData = getSalesByPaymentMethod(salesData);
-  const topSellingItemsData = getSalesByItem(salesData);
-
-  // Colors for pie chart
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -68,6 +156,8 @@ const SalesAnalytics: React.FC = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="trends">Trends</TabsTrigger>
           <TabsTrigger value="items">Top Items</TabsTrigger>
+          {/* Add new Payment Analytics Tab */}
+          <TabsTrigger value="payments">Payment Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6 space-y-6">
@@ -279,6 +369,42 @@ const SalesAnalytics: React.FC = () => {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="payments" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Analytics</CardTitle>
+              <CardDescription>Transaction analytics and insights</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="border rounded-md p-3 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Today's Total</p>
+                  <p className="text-2xl font-bold">₱{getTotalAmount()}</p>
+                </div>
+                <div className="border rounded-md p-3 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Transactions</p>
+                  <p className="text-2xl font-bold">{payments.length}</p>
+                </div>
+                <div className="border rounded-md p-3 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Avg. Transaction</p>
+                  <p className="text-2xl font-bold">
+                    ₱{(parseFloat(getTotalAmount()) / payments.filter(p => p.status !== 'refunded').length).toFixed(2)}
+                  </p>
+                </div>
+                <div className="border rounded-md p-3 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Success Rate</p>
+                  <p className="text-2xl font-bold">
+                    {Math.round(payments.filter(p => p.status === 'completed').length / payments.length * 100)}%
+                  </p>
+                </div>
+              </div>
+              <Button className="w-full mt-4" variant="outline" size="sm">
+                <BarChartIcon className="h-4 w-4 mr-1" /> Detailed Reports
+              </Button>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
