@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -71,7 +70,6 @@ const SalesAnalytics: React.FC = () => {
           <TabsTrigger value="items">Top Items</TabsTrigger>
         </TabsList>
 
-        {/* Overview Tab */}
         <TabsContent value="overview" className="mt-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
@@ -176,7 +174,6 @@ const SalesAnalytics: React.FC = () => {
           </Card>
         </TabsContent>
 
-        {/* Trends Tab */}
         <TabsContent value="trends" className="mt-6">
           <Card>
             <CardHeader>
@@ -215,7 +212,6 @@ const SalesAnalytics: React.FC = () => {
           </Card>
         </TabsContent>
 
-        {/* Top Items Tab */}
         <TabsContent value="items" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
