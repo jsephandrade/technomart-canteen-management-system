@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,13 +7,13 @@ import {
   Package, 
   Search, 
   PlusCircle, 
-  AlertTriangle, 
   ArrowUpDown,
   MoreVertical,
   Truck,
   PenSquare,
   Trash2,
-  BarChart2
+  BarChart2,
+  History
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
@@ -109,6 +108,41 @@ const Inventory: React.FC = () => {
       supplier: 'Dairy Farms'
     }
   ]);
+
+  const recentActivities = [
+    {
+      id: '1',
+      action: 'Stock Update',
+      item: 'Rice',
+      quantity: '+50kg',
+      timestamp: '2025-04-22 14:30',
+      user: 'John Smith'
+    },
+    {
+      id: '2',
+      action: 'Stock Deduction',
+      item: 'Chicken Breast',
+      quantity: '-15kg',
+      timestamp: '2025-04-22 13:45',
+      user: 'Maria Garcia'
+    },
+    {
+      id: '3',
+      action: 'Low Stock Alert',
+      item: 'Olive Oil',
+      quantity: '2 bottles remaining',
+      timestamp: '2025-04-22 12:20',
+      user: 'System'
+    },
+    {
+      id: '4',
+      action: 'Inventory Count',
+      item: 'Tomatoes',
+      quantity: 'Updated to 15kg',
+      timestamp: '2025-04-22 11:00',
+      user: 'David Chen'
+    }
+  ];
 
   const categories = ['Grains', 'Meat', 'Vegetables', 'Dairy', 'Condiments', 'Baking', 'Fruits'];
   
@@ -323,80 +357,31 @@ const Inventory: React.FC = () => {
       <div className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Low Stock Items</CardTitle>
-            <CardDescription>Materials that need reordering</CardDescription>
+            <CardTitle>Recent Inventory Activity</CardTitle>
+            <CardDescription>Latest inventory changes and updates</CardDescription>
           </CardHeader>
           <CardContent>
-            {lowStockItems.length > 0 ? (
-              <div className="space-y-3">
-                {lowStockItems.map(item => (
-                  <div key={item.id} className="flex items-center justify-between border-b pb-2 last:border-0">
-                    <div className="flex items-start gap-2">
-                      {item.currentStock <= item.minThreshold * 0.5 ? (
-                        <AlertTriangle className="h-4 w-4 text-destructive mt-1" />
-                      ) : (
-                        <AlertTriangle className="h-4 w-4 text-amber-500 mt-1" />
-                      )}
-                      <div>
-                        <p className="font-medium">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {item.currentStock} / {item.minThreshold} {item.unit}
-                        </p>
-                      </div>
-                    </div>
-                    <Button size="sm" variant="outline" className="flex items-center gap-1">
-                      <Truck className="h-3 w-3 mr-1" /> Order
-                    </Button>
+            <div className="space-y-4">
+              {recentActivities.map((activity) => (
+                <div key={activity.id} className="flex items-start gap-3 pb-3 border-b last:border-0 last:pb-0">
+                  <div className="bg-muted rounded-full p-2">
+                    <History className="h-4 w-4 text-muted-foreground" />
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-6">
-                <Package className="mx-auto h-12 w-12 text-muted-foreground/50 mb-3" />
-                <p className="text-muted-foreground">No items currently below threshold levels</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Supplier Management</CardTitle>
-            <CardDescription>Manage vendor relationships</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <p className="font-medium">Fresh Farms</p>
-                  <p className="text-xs text-muted-foreground">Meat, Poultry</p>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex justify-between items-start">
+                      <p className="font-medium text-sm">{activity.action}</p>
+                      <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {activity.item} • {activity.quantity}
+                    </p>
+                    <p className="text-xs text-muted-foreground">By {activity.user}</p>
+                  </div>
                 </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
-              <div className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <p className="font-medium">Local Farms</p>
-                  <p className="text-xs text-muted-foreground">Fruits, Vegetables</p>
-                </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
-              <div className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <p className="font-medium">Global Foods</p>
-                  <p className="text-xs text-muted-foreground">Grains, Dry goods</p>
-                </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-medium">Dairy Farms</p>
-                  <p className="text-xs text-muted-foreground">Dairy Products</p>
-                </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
+              ))}
             </div>
-            <Button className="w-full mt-4" variant="outline" size="sm">
-              <PlusCircle className="h-4 w-4 mr-1" /> Add Supplier
+            <Button variant="outline" size="sm" className="w-full mt-4">
+              View All Activity
             </Button>
           </CardContent>
         </Card>
