@@ -18,7 +18,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         {/* Sidebar */}
         <Sidebar variant="sidebar">
           <SidebarHeader>
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-center p-4">
               <div className="flex items-center space-x-2">
                 <span className="text-xl font-bold">TechnoMart</span>
               </div>
