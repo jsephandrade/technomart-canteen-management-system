@@ -36,7 +36,7 @@ const MenuManagement: React.FC = () => {
     
     const itemToAdd = {
       ...newItem,
-      id: `${items.length + 1}`,
+      id: `₱{items.length + 1}`,
       price: Number(newItem.price),
       available: newItem.available || true,
       popular: newItem.popular || false,
