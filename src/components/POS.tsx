@@ -139,12 +139,8 @@ const POS: React.FC = () => {
     return currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
   
-  const calculateTax = () => {
-    return calculateSubtotal() * 0.12; // Updated to 12% tax rate common in Philippines
-  };
-  
   const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax();
+    return calculateSubtotal();
   };
 
   const processPayment = () => {
@@ -318,10 +314,6 @@ const POS: React.FC = () => {
                   <span>Subtotal</span>
                   <span>₱{calculateSubtotal().toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span>Tax (12%)</span>
-                  <span>₱{calculateTax().toFixed(2)}</span>
-                </div>
                 <div className="flex justify-between font-semibold text-base pt-2 border-t">
                   <span>Total</span>
                   <span>₱{calculateTotal().toFixed(2)}</span>
@@ -417,10 +409,6 @@ const POS: React.FC = () => {
                     <div className="flex justify-between mb-2">
                       <span className="text-sm">Subtotal:</span>
                       <span className="text-sm">₱{calculateSubtotal().toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Tax:</span>
-                      <span className="text-sm">₱{calculateTax().toFixed(2)}</span>
                     </div>
                   </div>
                 </CardContent>
