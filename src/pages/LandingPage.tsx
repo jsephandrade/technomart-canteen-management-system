@@ -1,24 +1,26 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Github, LogIn, Linkedin } from "lucide-react";
 import { useAuth } from "@/components/AuthContext";
-
-const socialProviders = [
-  { name: "Linkedin", icon: Linkedin },
-  { name: "Github", icon: Github },
-];
-
+const socialProviders = [{
+  name: "Linkedin",
+  icon: Linkedin
+}, {
+  name: "Github",
+  icon: Github
+}];
 const LandingPage: React.FC = () => {
-  const { login, socialLogin } = useAuth();
+  const {
+    login,
+    socialLogin
+  } = useAuth();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setPending(true);
@@ -31,19 +33,16 @@ const LandingPage: React.FC = () => {
     }
     setPending(false);
   };
-
   const handleSocial = async (provider: string) => {
     setPending(true);
     setError("");
     await socialLogin(provider);
     setPending(false);
   };
-
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-blue-100 to-blue-300">
+  return <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-blue-100 to-blue-300">
       <header className="pt-10">
         <h1 className="text-4xl font-bold text-primary drop-shadow">Welcome to TechnoMart</h1>
-        <p className="mt-4 text-lg text-gray-700">Canteen Management System for Admins</p>
+        <p className="mt-4 text-lg text-gray-700">Canteen Management System</p>
       </header>
       <main className="flex flex-1 items-center justify-center w-full">
         <Card className="w-full max-w-md shadow-xl border-0 bg-white bg-opacity-90">
@@ -56,33 +55,13 @@ const LandingPage: React.FC = () => {
           <CardContent>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <Input
-                  type="email"
-                  placeholder="admin@canteen.com"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                  disabled={pending}
-                />
+                <Input type="email" placeholder="admin@canteen.com" value={email} onChange={e => setEmail(e.target.value)} required disabled={pending} />
               </div>
               <div>
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                  disabled={pending}
-                />
+                <Input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required disabled={pending} />
               </div>
-              {error && (
-                <div className="text-red-500 text-sm">{error}</div>
-              )}
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={pending}
-              >
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+              <Button type="submit" className="w-full" disabled={pending}>
                 {mode === "login" ? "Login" : "Sign Up"}
               </Button>
             </form>
@@ -92,19 +71,10 @@ const LandingPage: React.FC = () => {
               <span className="h-px flex-1 bg-gray-300" />
             </div>
             <div className="flex flex-col space-y-2">
-              {socialProviders.map((provider) => (
-                <Button
-                  key={provider.name}
-                  className="w-full"
-                  variant="outline"
-                  type="button"
-                  onClick={() => handleSocial(provider.name)}
-                  disabled={pending}
-                >
+              {socialProviders.map(provider => <Button key={provider.name} className="w-full" variant="outline" type="button" onClick={() => handleSocial(provider.name)} disabled={pending}>
                   <provider.icon className="mr-2" />{" "}
                   Login with {provider.name}
-                </Button>
-              ))}
+                </Button>)}
             </div>
             <div className="text-center mt-4 text-xs text-muted-foreground">
               <div>
@@ -117,8 +87,6 @@ const LandingPage: React.FC = () => {
       <footer className="pb-6 text-gray-500 text-xs">
         &copy; {new Date().getFullYear()} TechnoMart Canteen System
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default LandingPage;
