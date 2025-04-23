@@ -40,189 +40,46 @@ interface Category {
 const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentOrder, setCurrentOrder] = useState<OrderItem[]>([]);
+  // Filipino categories and items (no images)
   const [categories] = useState<Category[]>([
     {
       id: '1',
-      name: 'Rice Meals',
+      name: 'Noodles',
       items: [
-        { 
-          id: '101', 
-          name: 'Pork Adobo', 
-          description: 'Tender pork marinated in vinegar, soy sauce and garlic served with rice', 
-          price: 30.00, 
-          category: 'Rice Meals', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/adobo.jpg'
-        },
-        { 
-          id: '102', 
-          name: 'Sinigang na Baboy', 
-          description: 'Sour soup with pork, vegetables and tamarind broth served with rice', 
-          price: 30.00, 
-          category: 'Rice Meals', 
-          available: true, 
-          popular: false,
-          image: '/filipino-food/sinigang.jpg'
-        },
-        { 
-          id: '103', 
-          name: 'Chicken Tinola', 
-          description: 'Ginger-based chicken soup with green papaya and chili leaves served with rice', 
-          price: 30.00, 
-          category: 'Rice Meals', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/tinola.jpg'
-        },
-        { 
-          id: '104', 
-          name: 'Beef Kare-Kare', 
-          description: 'Beef and vegetables in peanut sauce served with bagoong and rice', 
-          price: 30.00, 
-          category: 'Rice Meals', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/kare-kare.jpg'
-        },
+        { id: '1', name: 'Bam-i', description: 'A festive noodle dish with canton & bihon.', price: 30, category: 'Noodles', available: true, popular: true },
+        { id: '2', name: 'Bihon', description: 'Stir-fried vermicelli rice noodles.', price: 20, category: 'Noodles', available: true, popular: true }
       ]
     },
     {
       id: '2',
-      name: 'Merienda',
+      name: 'Sandwich',
       items: [
-        { 
-          id: '201', 
-          name: 'Pancit Bihon', 
-          description: 'Stir-fried rice noodles with vegetables and meat', 
-          price: 20.00, 
-          category: 'Merienda', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/pancit.jpg'
-        },
-        { 
-          id: '202', 
-          name: 'Lumpiang Shanghai', 
-          description: 'Crispy spring rolls filled with ground pork (6 pcs)', 
-          price: 20.00, 
-          category: 'Merienda', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/lumpia.jpg'
-        },
-        { 
-          id: '203', 
-          name: 'Champorado', 
-          description: 'Chocolate rice porridge served with milk', 
-          price: 20.00, 
-          category: 'Merienda', 
-          available: true, 
-          popular: false,
-          image: '/filipino-food/champorado.jpg'
-        },
-        { 
-          id: '204', 
-          name: 'Palabok', 
-          description: 'Rice noodles with shrimp sauce, eggs, and toppings', 
-          price: 50.00, 
-          category: 'Merienda', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/palabok.jpg'
-        },
+        { id: '3', name: 'Beef loaf', description: 'Savory Filipino-style sandwich with beef loaf slices.', price: 15, category: 'Sandwich', available: true, popular: false }
       ]
     },
     {
       id: '3',
-      name: 'Drinks',
+      name: 'Main Dish',
       items: [
-        { 
-          id: '301', 
-          name: 'Sago\'t Gulaman', 
-          description: 'Sweet drink with tapioca pearls and grass jelly', 
-          price: 20.00, 
-          category: 'Drinks', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/sago-gulaman.jpg'
-        },
-        { 
-          id: '302', 
-          name: 'Calamansi Juice', 
-          description: 'Fresh calamansi citrus juice', 
-          price: 20.00, 
-          category: 'Drinks', 
-          available: true, 
-          popular: false,
-          image: '/filipino-food/calamansi.jpg'
-        },
-        { 
-          id: '303', 
-          name: 'Buko Juice', 
-          description: 'Fresh young coconut water', 
-          price: 20.00, 
-          category: 'Drinks', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/buko.jpg'
-        },
-        { 
-          id: '304', 
-          name: 'Tsokolate', 
-          description: 'Traditional Filipino hot chocolate', 
-          price: 20.00, 
-          category: 'Drinks', 
-          available: true, 
-          popular: false,
-          image: '/filipino-food/tsokolate.jpg'
-        },
+        { id: '4', name: 'Longganisa', description: 'Filipino sweet pork sausage.', price: 15, category: 'Main Dish', available: true, popular: false },
+        { id: '5', name: 'Ginaling', description: 'Ground meat sautéed with vegetables.', price: 60, category: 'Main Dish', available: true, popular: true },
+        { id: '6', name: 'Menudo', description: 'Pork and liver stew.', price: 60, category: 'Main Dish', available: true, popular: true }
       ]
     },
     {
       id: '4',
-      name: 'Desserts',
+      name: 'Viand',
       items: [
-        { 
-          id: '401', 
-          name: 'Halo-Halo', 
-          description: 'Mixed shaved ice with sweet beans, fruits, and leche flan', 
-          price: 20.00, 
-          category: 'Desserts', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/halo-halo.jpg'
-        },
-        { 
-          id: '402', 
-          name: 'Leche Flan', 
-          description: 'Creamy caramel custard dessert', 
-          price: 20.00, 
-          category: 'Desserts', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/leche-flan.jpg'
-        },
-        { 
-          id: '403', 
-          name: 'Turon', 
-          description: 'Sweet banana and jackfruit spring rolls (3 pcs)', 
-          price: 20.00, 
-          category: 'Desserts', 
-          available: true, 
-          popular: true,
-          image: '/filipino-food/turon.jpg'
-        },
-        { 
-          id: '404', 
-          name: 'Buko Pandan', 
-          description: 'Young coconut and pandan jelly dessert', 
-          price: 20.00, 
-          category: 'Desserts', 
-          available: true, 
-          popular: false,
-          image: '/filipino-food/buko-pandan.jpg'
-        },
+        { id: '7', name: 'Monggos', description: 'Hearty mung bean stew.', price: 20, category: 'Viand', available: true, popular: false }
+      ]
+    },
+    {
+      id: '5',
+      name: 'Drinks',
+      items: [
+        { id: '8', name: 'Coke', description: 'Refreshing Coca-Cola soft drink.', price: 20, category: 'Drinks', available: true, popular: false },
+        { id: '9', name: 'Royal', description: 'Sweet Filipino orange soda.', price: 20, category: 'Drinks', available: true, popular: false },
+        { id: '10', name: 'Sprite', description: 'Lemon-lime flavored soda.', price: 20, category: 'Drinks', available: true, popular: false }
       ]
     }
   ]);
@@ -230,7 +87,7 @@ const POS: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>(categories[0].id);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash' | 'mobile'>('card');
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
-  
+
   const addToOrder = (menuItem: MenuItem) => {
     setCurrentOrder(prevOrder => {
       // Check if item already exists in order
@@ -351,7 +208,6 @@ const POS: React.FC = () => {
                   ))}
                 </TabsList>
               </div>
-              
               {categories.map((category) => (
                 <TabsContent 
                   key={category.id} 
@@ -366,15 +222,7 @@ const POS: React.FC = () => {
                           className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
                           onClick={() => addToOrder(item)}
                         >
-                          {item.image && (
-                            <div className="w-full h-32 mb-2 rounded-md overflow-hidden">
-                              <img 
-                                src={item.image} 
-                                alt={item.name}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
+                          {/* No image */}
                           <div className="flex justify-between items-start mb-1">
                             <h4 className="font-medium">{item.name}</h4>
                             {item.popular && (
@@ -404,8 +252,7 @@ const POS: React.FC = () => {
           </CardFooter>
         </Card>
       </div>
-      
-      {/* Order Side */}
+      {/* Order Side: update price & subtotal/tax/total display to use Peso sign */}
       <div className="md:col-span-1">
         <Card className="h-full flex flex-col">
           <CardHeader>
@@ -465,7 +312,6 @@ const POS: React.FC = () => {
                 <p className="text-xs text-muted-foreground mt-1">Select menu items to begin</p>
               </div>
             )}
-            
             {currentOrder.length > 0 && (
               <div className="mt-6 border-t pt-4 space-y-2">
                 <div className="flex justify-between text-sm">

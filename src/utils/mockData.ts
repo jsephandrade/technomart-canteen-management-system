@@ -1,77 +1,108 @@
-
 import { MenuItem, Sale, Employee, Feedback, DashboardStats, ScheduleEntry } from '@/types';
 
+// Filipino menu items (NO images)
 export const menuItems: MenuItem[] = [
   {
     id: '1',
-    name: 'Classic Burger',
-    description: 'Juicy beef patty with lettuce, tomato, and our secret sauce',
-    price: 449.99, // Converted to Philippine Peso
-    category: 'Main Course',
-    image: '/placeholder.svg',
+    name: 'Bam-i',
+    description: 'A festive noodle dish with a combination of canton and bihon, pork, chicken, and vegetables.',
+    price: 30,
+    category: 'Noodles',
     available: true,
     popular: true
   },
   {
     id: '2',
-    name: 'Caesar Salad',
-    description: 'Crisp romaine lettuce with parmesan, croutons, and Caesar dressing',
-    price: 324.50, // Converted to Philippine Peso
-    category: 'Salads',
-    image: '/placeholder.svg',
-    available: true,
-    popular: false
-  },
-  {
-    id: '3',
-    name: 'Grilled Chicken Sandwich',
-    description: 'Grilled chicken breast with avocado, bacon, and honey mustard',
-    price: 499.50, // Converted to Philippine Peso
-    category: 'Main Course',
-    image: '/placeholder.svg',
+    name: 'Bihon',
+    description: 'Stir-fried vermicelli rice noodles with vegetables and meat.',
+    price: 20,
+    category: 'Noodles',
     available: true,
     popular: true
   },
   {
+    id: '3',
+    name: 'Beef loaf',
+    description: 'Savory Filipino-style sandwich with beef loaf slices.',
+    price: 15,
+    category: 'Sandwich',
+    available: true,
+    popular: false
+  },
+  {
     id: '4',
-    name: 'Veggie Wrap',
-    description: 'Fresh vegetables with hummus in a spinach wrap',
-    price: 374.50, // Converted to Philippine Peso
-    category: 'Vegetarian',
-    image: '/placeholder.svg',
+    name: 'Longganisa',
+    description: 'Filipino sweet pork sausage, pan-fried to perfection.',
+    price: 15,
+    category: 'Main Dish',
     available: true,
     popular: false
   },
   {
     id: '5',
-    name: 'French Fries',
-    description: 'Crispy golden fries with our special seasoning',
-    price: 199.50, // Converted to Philippine Peso
-    category: 'Sides',
-    image: '/placeholder.svg',
+    name: 'Ginaling',
+    description: 'Ground meat sautéed with vegetables, a Filipino classic viand.',
+    price: 60,
+    category: 'Main Dish',
     available: true,
     popular: true
   },
   {
     id: '6',
-    name: 'Chocolate Brownie',
-    description: 'Rich chocolate brownie with vanilla ice cream',
-    price: 274.50, // Converted to Philippine Peso
-    category: 'Desserts',
-    image: '/placeholder.svg',
+    name: 'Menudo',
+    description: 'Pork and liver stew with potatoes, carrots, and tomato sauce.',
+    price: 60,
+    category: 'Main Dish',
     available: true,
     popular: true
+  },
+  {
+    id: '7',
+    name: 'Monggos',
+    description: 'Hearty mung bean stew with pork and leafy greens.',
+    price: 20,
+    category: 'Viand',
+    available: true,
+    popular: false
+  },
+  {
+    id: '8',
+    name: 'Coke',
+    description: 'Refreshing Coca-Cola soft drink.',
+    price: 20,
+    category: 'Drinks',
+    available: true,
+    popular: false
+  },
+  {
+    id: '9',
+    name: 'Royal',
+    description: 'Sweet Filipino orange soda.',
+    price: 20,
+    category: 'Drinks',
+    available: true,
+    popular: false
+  },
+  {
+    id: '10',
+    name: 'Sprite',
+    description: 'Lemon-lime flavored soda.',
+    price: 20,
+    category: 'Drinks',
+    available: true,
+    popular: false
   }
 ];
 
+// Adjust salesData to use new Filipino menu item names/ids:
 export const salesData: Sale[] = [
   {
     id: '1',
     items: [
-      { menuItemId: '1', menuItemName: 'Classic Burger', quantity: 2, price: 449.99 },
-      { menuItemId: '5', menuItemName: 'French Fries', quantity: 1, price: 199.50 }
+      { menuItemId: '1', menuItemName: 'Bam-i', quantity: 2, price: 30 },
+      { menuItemId: '8', menuItemName: 'Coke', quantity: 1, price: 20 }
     ],
-    total: 1099.48,
+    total: 80,
     date: '2025-04-17T10:30:00',
     paymentMethod: 'card',
     employeeId: '1'
@@ -79,10 +110,10 @@ export const salesData: Sale[] = [
   {
     id: '2',
     items: [
-      { menuItemId: '3', menuItemName: 'Grilled Chicken Sandwich', quantity: 1, price: 499.50 },
-      { menuItemId: '4', menuItemName: 'Veggie Wrap', quantity: 1, price: 374.50 }
+      { menuItemId: '5', menuItemName: 'Ginaling', quantity: 1, price: 60 },
+      { menuItemId: '10', menuItemName: 'Sprite', quantity: 1, price: 20 }
     ],
-    total: 874.00,
+    total: 80,
     date: '2025-04-17T12:45:00',
     paymentMethod: 'cash',
     employeeId: '2'
@@ -90,10 +121,10 @@ export const salesData: Sale[] = [
   {
     id: '3',
     items: [
-      { menuItemId: '2', menuItemName: 'Caesar Salad', quantity: 2, price: 324.50 },
-      { menuItemId: '6', menuItemName: 'Chocolate Brownie', quantity: 1, price: 274.50 }
+      { menuItemId: '6', menuItemName: 'Menudo', quantity: 2, price: 60 },
+      { menuItemId: '9', menuItemName: 'Royal', quantity: 1, price: 20 }
     ],
-    total: 923.50,
+    total: 140,
     date: '2025-04-17T13:15:00',
     paymentMethod: 'mobile',
     employeeId: '1'
@@ -101,11 +132,11 @@ export const salesData: Sale[] = [
   {
     id: '4',
     items: [
-      { menuItemId: '1', menuItemName: 'Classic Burger', quantity: 1, price: 449.99 },
-      { menuItemId: '5', menuItemName: 'French Fries', quantity: 1, price: 199.50 },
-      { menuItemId: '6', menuItemName: 'Chocolate Brownie', quantity: 1, price: 274.50 }
+      { menuItemId: '1', menuItemName: 'Bam-i', quantity: 1, price: 30 },
+      { menuItemId: '8', menuItemName: 'Coke', quantity: 1, price: 20 },
+      { menuItemId: '9', menuItemName: 'Royal', quantity: 1, price: 20 }
     ],
-    total: 923.99,
+    total: 70,
     date: '2025-04-16T11:30:00',
     paymentMethod: 'card',
     employeeId: '3'
@@ -113,9 +144,9 @@ export const salesData: Sale[] = [
   {
     id: '5',
     items: [
-      { menuItemId: '3', menuItemName: 'Grilled Chicken Sandwich', quantity: 2, price: 499.50 }
+      { menuItemId: '5', menuItemName: 'Ginaling', quantity: 2, price: 60 }
     ],
-    total: 999.00,
+    total: 120,
     date: '2025-04-16T14:20:00',
     paymentMethod: 'cash',
     employeeId: '2'

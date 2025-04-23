@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,13 +35,12 @@ const MenuManagement: React.FC = () => {
     
     const itemToAdd = {
       ...newItem,
-      id: `P{items.length + 1}`,
+      id: `P${items.length + 1}`,
       price: Number(newItem.price),
-      available: newItem.available || true,
-      popular: newItem.popular || false,
-      image: '/placeholder.svg'
+      available: newItem.available ?? true,
+      popular: newItem.popular ?? false
     } as MenuItem;
-    
+
     setItems([...items, itemToAdd]);
     setNewItem({
       name: '',
@@ -52,7 +50,6 @@ const MenuManagement: React.FC = () => {
       available: true,
       popular: false
     });
-    
     setDialogOpen(false);
     toast.success('Menu item added successfully');
   };
@@ -175,7 +172,7 @@ const MenuManagement: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="font-bold text-lg">${item.price.toFixed(2)}</span>
+                    <span className="font-bold text-lg">₱{item.price.toFixed(2)}</span>
                     <Badge variant={item.available ? "outline" : "destructive"}>
                       {item.available ? "Available" : "Unavailable"}
                     </Badge>
@@ -209,7 +206,7 @@ const MenuManagement: React.FC = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-bold text-lg">${item.price.toFixed(2)}</span>
+                      <span className="font-bold text-lg">₱{item.price.toFixed(2)}</span>
                       <Badge variant={item.available ? "outline" : "destructive"}>
                         {item.available ? "Available" : "Unavailable"}
                       </Badge>
