@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,7 +18,6 @@ import Payments from "./components/Payments";
 import Users from "./components/Users";
 import UserLogs from "./components/UserLogs";
 import Notifications from "./components/Notifications";
-import LandingPage from "./pages/LandingPage";
 
 const queryClient = new QueryClient();
 
@@ -28,13 +28,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          {/* Move dashboard to /dashboard */}
-          <Route path="/dashboard" element={
-            <MainLayout title="Dashboard">
-              <Index />
-            </MainLayout>
-          } />
+          <Route path="/" element={<Index />} />
           
           <Route path="/menu" element={
             <MainLayout title="Menu Management">
