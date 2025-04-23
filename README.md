@@ -18,10 +18,7 @@ An intelligent canteen ordering system built for the CTU-MC Multipurpose Coopera
 
 ## 📸 Screenshots
 
-<!-- Add screenshots here -->
-| Dashboard |
-|----------|----------------|
-| ![Dashboard](dashboard.png) |
+ ![Dashboard](dashboard.png) 
 
 ---
 
