@@ -4,6 +4,9 @@ import { NavigationSidebar } from '@/components/NavigationSidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
+import { useAuth } from "@/components/AuthContext";
+import { LogOut } from "lucide-react";
+
 interface MainLayoutProps {
   children: React.ReactNode;
   title?: string;
@@ -13,6 +16,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   title
 }) => {
   const isMobile = useIsMobile();
+  const { user, logout } = useAuth();
+
   return <SidebarProvider defaultOpen={!isMobile}>
       <div className="flex h-screen w-full bg-background">
         {/* Sidebar */}
@@ -36,8 +41,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                   <span className="font-semibold text-sidebar-accent-foreground">A</span>
                 </div>
                 <div>
-                  <p className="font-semibold">Admin User</p>
-                  <p className="text-sm text-sidebar-foreground/70">admin@canteen.com</p>
+                  <p className="font-semibold">{user}</p>
+                  <p className="text-sm text-sidebar-foreground/70">{user}</p>
                 </div>
               </div>
             </div>
@@ -55,6 +60,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             <div className="flex items-center gap-4">
               <Button variant="outline">Help</Button>
               <Button variant="outline">Settings</Button>
+              <Button variant="ghost" onClick={logout} title="Logout">
+                <LogOut className="mr-1" />
+                Logout
+              </Button>
             </div>
           </header>
 
