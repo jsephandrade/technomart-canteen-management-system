@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Google, Github, LogIn } from "lucide-react";
+import { Mail, Github, LogIn, Linkedin } from "lucide-react";
 import { useAuth } from "@/components/AuthContext";
 
 const socialProviders = [
-  { name: "Google", icon: Google },
+  { name: "Linkedin", icon: Linkedin },
   { name: "Github", icon: Github },
 ];
 
@@ -78,7 +78,11 @@ const LandingPage: React.FC = () => {
               {error && (
                 <div className="text-red-500 text-sm">{error}</div>
               )}
-              <Button type="submit" className="w-full" loading={pending}>
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={pending}
+              >
                 {mode === "login" ? "Login" : "Sign Up"}
               </Button>
             </form>
