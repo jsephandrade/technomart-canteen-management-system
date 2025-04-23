@@ -49,8 +49,7 @@ const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-between"
       style={{
-        // Royal Blue #003399 (left) to Gold #FFD700 (right)
-        background: "linear-gradient(135deg, #003399 0%, #FFD700 100%)"
+        background: "#d8b24d"
       }}>
       <header className="pt-10">
         <h1 className="text-4xl font-bold text-primary drop-shadow">Welcome to TechnoMart</h1>
