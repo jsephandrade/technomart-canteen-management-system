@@ -1,16 +1,23 @@
+
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Github, LogIn, Linkedin } from "lucide-react";
+import { LogIn, Linkedin } from "lucide-react";
 import { useAuth } from "@/components/AuthContext";
-const socialProviders = [{
-  name: "Linkedin",
-  icon: Linkedin
-}, {
-  name: "Github",
-  icon: Github
-}];
+
+// Use Google and LinkedIn, but do NOT import Google icon
+const socialProviders = [
+  {
+    name: "Google",
+    // No icon per requirements
+  },
+  {
+    name: "Linkedin",
+    icon: Linkedin,
+  },
+];
+
 const LandingPage: React.FC = () => {
   const {
     login,
@@ -39,7 +46,12 @@ const LandingPage: React.FC = () => {
     await socialLogin(provider);
     setPending(false);
   };
-  return <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-blue-100 to-blue-300">
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-between"
+      style={{
+        // Royal Blue #003399 (left) to Gold #FFD700 (right)
+        background: "linear-gradient(135deg, #003399 0%, #FFD700 100%)"
+      }}>
       <header className="pt-10">
         <h1 className="text-4xl font-bold text-primary drop-shadow">Welcome to TechnoMart</h1>
         <p className="mt-4 text-lg text-gray-700 text-center">Canteen Management System</p>
@@ -49,7 +61,7 @@ const LandingPage: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <LogIn className="h-5 w-5" />
-              {mode === "login" ? "Admin Login" : "Sign Up"}
+              Login
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -71,10 +83,19 @@ const LandingPage: React.FC = () => {
               <span className="h-px flex-1 bg-gray-300" />
             </div>
             <div className="flex flex-col space-y-2">
-              {socialProviders.map(provider => <Button key={provider.name} className="w-full" variant="outline" type="button" onClick={() => handleSocial(provider.name)} disabled={pending}>
-                  <provider.icon className="mr-2" />{" "}
-                  Login with {provider.name}
-                </Button>)}
+              {socialProviders.map(provider => (
+                <Button
+                  key={provider.name}
+                  className="w-full"
+                  variant="outline"
+                  type="button"
+                  onClick={() => handleSocial(provider.name)}
+                  disabled={pending}
+                >
+                  {/* No Google icon, but display icon if present */}
+                  {provider.icon && <provider.icon className="mr-2" />} Login with {provider.name}
+                </Button>
+              ))}
             </div>
             <div className="text-center mt-4 text-xs text-muted-foreground">
               <div>
@@ -87,6 +108,7 @@ const LandingPage: React.FC = () => {
       <footer className="pb-6 text-gray-500 text-xs">
         &copy; {new Date().getFullYear()} TechnoMart Canteen System
       </footer>
-    </div>;
+    </div>
+  );
 };
 export default LandingPage;
