@@ -42,7 +42,7 @@ const LandingPage: React.FC = () => {
   return <div className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-br from-blue-100 to-blue-300">
       <header className="pt-10">
         <h1 className="text-4xl font-bold text-primary drop-shadow">Welcome to TechnoMart</h1>
-        <p className="mt-4 text-lg text-gray-700">Canteen Management System</p>
+        <p className="mt-4 text-lg text-gray-700 text-center">Canteen Management System</p>
       </header>
       <main className="flex flex-1 items-center justify-center w-full">
         <Card className="w-full max-w-md shadow-xl border-0 bg-white bg-opacity-90">
