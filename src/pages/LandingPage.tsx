@@ -38,24 +38,26 @@ const LandingPage: React.FC = () => {
 
   const toggleCard = () => {
     setShowSignup(prev => !prev);
+    // Reset form fields when toggling
+    setError("");
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <header className="w-full py-8 px-6">
-        <h1 className="text-4xl font-bold text-primary drop-shadow text-center">Welcome to TechnoMart</h1>
-        <p className="mt-2 text-lg text-gray-700 text-center">Canteen Management System</p>
+      <header className="w-full py-8 px-6 bg-gradient-to-r from-blue-50 to-white">
+        <h1 className="text-3xl md:text-4xl font-bold text-primary drop-shadow text-center">Welcome to TechnoMart</h1>
+        <p className="mt-2 text-base md:text-lg text-gray-700 text-center">Canteen Management System</p>
       </header>
 
-      <main className="flex-1 flex items-center px-6 gap-12 max-w-7xl mx-auto w-full">
-        <div className="w-1/2 flex flex-col gap-6">
+      <main className="flex-1 flex flex-col md:flex-row items-center px-4 md:px-6 gap-8 max-w-7xl mx-auto w-full py-8">
+        <div className="w-full md:w-1/2 flex flex-col gap-6 max-w-lg order-2 md:order-1">
           <div className="space-y-4">
-            <h2 className="text-3xl font-semibold text-gray-900">Your Campus Food Hub</h2>
-            <p className="text-lg text-gray-600">Streamlined ordering, efficient service, and delicious meals - all in one place.</p>
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900">Your Campus Food Hub</h2>
+            <p className="text-base md:text-lg text-gray-600">Streamlined ordering, efficient service, and delicious meals - all in one place.</p>
           </div>
           
-          <div className="relative w-full max-w-md perspective-1000">
-            <div className={`relative duration-700 transform-style-3d ${showSignup ? 'rotate-y-180' : ''}`}>
+          <div className="relative w-full max-w-md mx-auto md:mx-0 perspective-1000">
+            <div className={`card-container ${showSignup ? 'rotate-y-180' : ''}`}>
               <LoginCard
                 email={email}
                 setEmail={setEmail}
@@ -87,8 +89,8 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="w-1/2 flex items-center justify-center">
-          <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+        <div className="w-full md:w-1/2 flex items-center justify-center mt-8 md:mt-0 order-1 md:order-2">
+          <div className="relative w-full max-w-xl h-64 md:h-auto md:aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
             <img 
               src="/lovable-uploads/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" 
               alt="TechnoMart Canteen"
@@ -99,7 +101,7 @@ const LandingPage: React.FC = () => {
         </div>
       </main>
 
-      <footer className="py-6 text-gray-500 text-xs text-center">
+      <footer className="py-6 text-gray-500 text-xs text-center border-t border-gray-100">
         &copy; {new Date().getFullYear()} TechnoMart Canteen System
       </footer>
     </div>
