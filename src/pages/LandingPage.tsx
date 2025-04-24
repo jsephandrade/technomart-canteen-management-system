@@ -41,47 +41,65 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between bg-white">
-      <header className="pt-10">
-        <h1 className="text-4xl font-bold text-primary drop-shadow">Welcome to TechnoMart</h1>
-        <p className="mt-4 text-lg text-gray-700 text-center">Canteen Management System</p>
+    <div className="min-h-screen flex flex-col bg-white">
+      <header className="w-full py-8 px-6">
+        <h1 className="text-4xl font-bold text-primary drop-shadow text-center">Welcome to TechnoMart</h1>
+        <p className="mt-2 text-lg text-gray-700 text-center">Canteen Management System</p>
       </header>
 
-      <main className="flex flex-1 items-center justify-center w-full px-4">
-        <div className="relative w-full max-w-md perspective-1000">
-          <div className={`relative duration-700 transform-style-3d ${showSignup ? 'rotate-y-180' : ''}`}>
-            <LoginCard
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              handleSubmit={handleSubmit}
-              handleSocial={handleSocial}
-              toggleCard={toggleCard}
-              error={error}
-              pending={pending}
+      <main className="flex-1 flex items-center px-6 gap-12 max-w-7xl mx-auto w-full">
+        <div className="w-1/2 flex flex-col gap-6">
+          <div className="space-y-4">
+            <h2 className="text-3xl font-semibold text-gray-900">Your Campus Food Hub</h2>
+            <p className="text-lg text-gray-600">Streamlined ordering, efficient service, and delicious meals - all in one place.</p>
+          </div>
+          
+          <div className="relative w-full max-w-md perspective-1000">
+            <div className={`relative duration-700 transform-style-3d ${showSignup ? 'rotate-y-180' : ''}`}>
+              <LoginCard
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                handleSubmit={handleSubmit}
+                handleSocial={handleSocial}
+                toggleCard={toggleCard}
+                error={error}
+                pending={pending}
+              />
+              <SignupCard
+                firstName={firstName}
+                setFirstName={setFirstName}
+                lastName={lastName}
+                setLastName={setLastName}
+                contactNumber={contactNumber}
+                setContactNumber={setContactNumber}
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                handleSubmit={handleSubmit}
+                handleSocial={handleSocial}
+                toggleCard={toggleCard}
+                pending={pending}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="w-1/2 flex items-center justify-center">
+          <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+            <img 
+              src="/lovable-uploads/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" 
+              alt="TechnoMart Canteen"
+              className="w-full h-full object-cover"
             />
-            <SignupCard
-              firstName={firstName}
-              setFirstName={setFirstName}
-              lastName={lastName}
-              setLastName={setLastName}
-              contactNumber={contactNumber}
-              setContactNumber={setContactNumber}
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              handleSubmit={handleSubmit}
-              handleSocial={handleSocial}
-              toggleCard={toggleCard}
-              pending={pending}
-            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
           </div>
         </div>
       </main>
 
-      <footer className="pb-6 text-gray-500 text-xs">
+      <footer className="py-6 text-gray-500 text-xs text-center">
         &copy; {new Date().getFullYear()} TechnoMart Canteen System
       </footer>
     </div>
