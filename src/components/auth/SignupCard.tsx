@@ -44,15 +44,13 @@ const SignupCard = ({
   password,
   setPassword,
   handleSubmit,
+  handleSocial,
   toggleCard,
   pending
 }) => {
   return (
     <div className="card-face card-back bg-white">
       <h3 className="text-xl font-semibold mb-4">Create Account</h3>
-      <p className="mb-4 text-sm text-yellow-700 bg-yellow-50 p-3 rounded-lg">
-        Note: Signup is currently disabled. Only administrators can access the system.
-      </p>
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <input
@@ -60,7 +58,7 @@ const SignupCard = ({
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="First Name"
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
           />
           <input
@@ -68,7 +66,7 @@ const SignupCard = ({
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Last Name"
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
           />
         </div>
@@ -77,7 +75,7 @@ const SignupCard = ({
           value={contactNumber}
           onChange={(e) => setContactNumber(e.target.value)}
           placeholder="Contact Number"
-          className="w-full p-3 border border-gray-300 rounded-lg"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
         />
         <input
@@ -85,7 +83,7 @@ const SignupCard = ({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
-          className="w-full p-3 border border-gray-300 rounded-lg"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
         />
         <input
@@ -93,15 +91,15 @@ const SignupCard = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="w-full p-3 border border-gray-300 rounded-lg"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
         />
         <button
           type="submit"
-          disabled={pending || true}
-          className="w-full bg-gray-400 text-white font-medium py-3 px-4 rounded-lg cursor-not-allowed"
+          disabled={pending}
+          className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300"
         >
-          Sign Up Disabled
+          {pending ? "Processing..." : "Sign Up"}
         </button>
       </form>
       
@@ -111,7 +109,7 @@ const SignupCard = ({
           className="text-primary hover:text-primary-dark text-sm font-medium"
           type="button"
         >
-          Back to Login
+          Already have an account? Log in
         </button>
       </div>
     </div>
