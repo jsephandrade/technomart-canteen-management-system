@@ -1,58 +1,103 @@
 
 import React, { useState } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { toast } from "@/components/ui/use-toast"; // assume shadcn-ui toast
-import LoginForm from "@/components/auth/LoginForm";
-import SignupForm from "@/components/auth/SignupForm";
+import { useAuth } from "@/components/AuthContext";
+import LoginCard from "@/components/auth/LoginCard";
+import SignupCard from "@/components/auth/SignupCard";
+import "../styles/card-animations.css";
 
-export const LandingPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
+const LandingPage: React.FC = () => {
+  const { login, socialLogin } = useAuth();
+  const [showSignup, setShowSignup] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [photo, setPhoto] = useState(null);  // Add state for photo
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPending(true);
+    setError("");
+    
+    if (!showSignup) {
+      const ok = await login(email, password);
+      if (!ok) setError("Invalid credentials.");
+    } else {
+      // Simulated signup with photo upload
+      setTimeout(() => {
+        setShowSignup(false);
+        alert("Account created successfully! Please log in.");
+        setFirstName("");
+        setLastName("");
+        setContactNumber("");
+        setPhoto(null);
+      }, 1000);
+    }
+    
+    setPending(false);
+  };
+
+  const handleSocial = async (provider: string) => {
+    setPending(true);
+    setError("");
+    await socialLogin(provider);
+    setPending(false);
+  };
+
+  const toggleCard = () => {
+    setShowSignup(prev => !prev);
+    setError("");
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <header className="py-8 bg-gradient-to-r from-blue-50 to-white text-center">
-        <h1 className="text-4xl font-bold text-primary">Welcome to CTU-MC Cooperative</h1>
-        <p className="mt-2 text-lg text-gray-700">Canteen Management System</p>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <header className="w-full py-8 px-6 bg-white shadow-sm">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">CTU-MC Multipurpose Cooperative</h1>
       </header>
 
-      <main className="flex flex-col lg:flex-row items-center max-w-7xl mx-auto py-12 px-4 gap-12">
-        {/* FORM SIDE */}
-        <div className="w-full lg:w-1/2 max-w-md">
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="login">
-              <LoginForm onSuccess={() => {/* redirect or close modal */}} />
-            </TabsContent>
-            <TabsContent value="signup">
-              <SignupForm
-                onSuccess={() => {
-                  toast({
-                    title: "Account created!",
-                    description: "Please check your email to verify your account.",
-                  });
-                  setActiveTab("login");
-                }}
+      <main className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="relative perspective-1000">
+            <div className={`card-container ${showSignup ? 'rotate-y-180' : ''}`}>
+              <LoginCard
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                handleSubmit={handleSubmit}
+                handleSocial={handleSocial}
+                toggleCard={toggleCard}
+                error={error}
+                pending={pending}
               />
-            </TabsContent>
-          </Tabs>
-        </div>
-
-        {/* IMAGE SIDE */}
-        <div className="w-full lg:w-1/2">
-          <img
-            src="/lovable-uploads/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png"
-            alt="CTU-MC Canteen Front"
-            className="rounded-2xl shadow-lg object-cover w-full h-72 lg:h-full"
-          />
+              <SignupCard
+                firstName={firstName}
+                setFirstName={setFirstName}
+                lastName={lastName}
+                setLastName={setLastName}
+                contactNumber={contactNumber}
+                setContactNumber={setContactNumber}
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                handleSubmit={handleSubmit}
+                handleSocial={handleSocial}
+                toggleCard={toggleCard}
+                pending={pending}
+                photo={photo}
+                setPhoto={setPhoto}
+              />
+            </div>
+          </div>
         </div>
       </main>
 
-      <footer className="py-6 text-center text-xs text-gray-500 border-t">
-        &copy; {new Date().getFullYear()} CTU-MC Canteen System
+      <footer className="py-6 text-gray-500 text-xs text-center bg-white border-t">
+        &copy; {new Date().getFullYear()} CTU-MC Multipurpose Cooperative
       </footer>
     </div>
   );

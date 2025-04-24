@@ -48,17 +48,36 @@ const SignupCard = ({
   toggleCard,
   pending
 }) => {
+  // Add state for photo upload
+  const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  
+  // Handle photo upload
+  const handlePhotoChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setPhoto(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div className="card-face card-back bg-white p-6 rounded-xl shadow-lg">
-      <h3 className="text-xl font-semibold mb-4">Create Account</h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
+    <div className="card-face card-back bg-white p-8 rounded-xl shadow-lg">
+      <h3 className="text-2xl font-semibold mb-6 text-center">Create Account</h3>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid grid-cols-2 gap-4">
           <input
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="First Name"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+            className="w-full p-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
           />
           <input
@@ -66,7 +85,7 @@ const SignupCard = ({
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Last Name"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+            className="w-full p-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
           />
         </div>
@@ -75,7 +94,7 @@ const SignupCard = ({
           value={contactNumber}
           onChange={(e) => setContactNumber(e.target.value)}
           placeholder="Contact Number"
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+          className="w-full p-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
         />
         <input
@@ -83,7 +102,7 @@ const SignupCard = ({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+          className="w-full p-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
         />
         <input
@@ -91,35 +110,74 @@ const SignupCard = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+          className="w-full p-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
         />
+        
+        {/* Photo upload field */}
+        <div className="mt-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Upload 1x1 Photo
+          </label>
+          <div className="flex items-center gap-4">
+            <div className="w-24 h-24 border rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
+              {photoPreview ? (
+                <img 
+                  src={photoPreview} 
+                  alt="Profile preview" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <svg className="w-12 h-12 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
+            <div className="flex-1">
+              <input
+                type="file"
+                id="photo-upload"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="photo-upload"
+                className="cursor-pointer py-2.5 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-200"
+              >
+                Choose Photo
+              </label>
+              <p className="mt-1 text-xs text-gray-500">1:1 ratio recommended</p>
+            </div>
+          </div>
+        </div>
+        
         <button
           type="submit"
           disabled={pending}
-          className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300"
+          className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3.5 px-4 rounded-lg transition-colors duration-300 mt-6"
         >
           {pending ? "Processing..." : "Sign Up"}
         </button>
       </form>
       
-      <div className="mt-5 relative">
+      <div className="mt-8 relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-300"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          <span className="px-4 bg-white text-gray-500">Or continue with</span>
         </div>
       </div>
       
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-6 grid grid-cols-2 gap-4">
         <button
           type="button"
           onClick={() => handleSocial('google')}
-          className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           disabled={pending}
         >
-          <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="#4285F4">
+          <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -130,17 +188,17 @@ const SignupCard = ({
         <button
           type="button"
           onClick={() => handleSocial('facebook')}
-          className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           disabled={pending}
         >
-          <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="#1877F2">
+          <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="#1877F2">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
           </svg>
           Facebook
         </button>
       </div>
       
-      <div className="mt-6 text-center">
+      <div className="mt-8 text-center">
         <button 
           onClick={toggleCard} 
           className="text-primary hover:text-primary-dark text-sm font-medium"
