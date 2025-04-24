@@ -44,97 +44,77 @@ const SignupCard = ({
   password,
   setPassword,
   handleSubmit,
-  handleSocial,
   toggleCard,
-  pending,
-}: SignupCardProps) => {
+  pending
+}) => {
   return (
-    <Card className="w-full shadow-xl border-0 bg-white absolute backface-hidden rotate-y-180">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 justify-between">
-          <div className="flex items-center gap-2">
-            <User className="h-5 w-5" />
-            Create Account
-          </div>
-          <Button variant="ghost" size="sm" onClick={toggleCard}>
-            Back to Login
-          </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              type="text"
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-              disabled={pending}
-            />
-            <Input
-              type="text"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-              disabled={pending}
-            />
-          </div>
-          <Input
-            type="tel"
-            placeholder="Contact Number"
-            value={contactNumber}
-            onChange={(e) => setContactNumber(e.target.value)}
+    <div className="card-face card-back bg-white">
+      <h3 className="text-xl font-semibold mb-4">Create Account</h3>
+      <p className="mb-4 text-sm text-yellow-700 bg-yellow-50 p-3 rounded-lg">
+        Note: Signup is currently disabled. Only administrators can access the system.
+      </p>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="First Name"
+            className="w-full p-3 border border-gray-300 rounded-lg"
             required
-            disabled={pending}
           />
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+          <input
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Last Name"
+            className="w-full p-3 border border-gray-300 rounded-lg"
             required
-            disabled={pending}
           />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={pending}
-          />
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-            <Image className="mx-auto h-8 w-8 text-gray-400" />
-            <p className="mt-2 text-sm text-gray-500">Click to upload 1x1 photo</p>
-          </div>
-          <Button type="submit" className="w-full" disabled={pending}>
-            Create Account
-          </Button>
-        </form>
-        <div className="flex items-center my-4">
-          <span className="h-px flex-1 bg-gray-300" />
-          <span className="px-2 text-xs text-gray-500">OR</span>
-          <span className="h-px flex-1 bg-gray-300" />
         </div>
-        <div className="flex flex-col space-y-2">
-          {socialProviders.map((provider) => (
-            <Button
-              key={provider.name}
-              className="w-full"
-              variant="outline"
-              type="button"
-              onClick={() => handleSocial(provider.name)}
-              disabled={pending}
-            >
-              {provider.icon && <provider.icon className="mr-2" />}
-              Continue with {provider.name}
-            </Button>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+        <input
+          type="tel"
+          value={contactNumber}
+          onChange={(e) => setContactNumber(e.target.value)}
+          placeholder="Contact Number"
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          required
+        />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          required
+        />
+        <button
+          type="submit"
+          disabled={pending || true}
+          className="w-full bg-gray-400 text-white font-medium py-3 px-4 rounded-lg cursor-not-allowed"
+        >
+          Sign Up Disabled
+        </button>
+      </form>
+      
+      <div className="mt-4 text-center">
+        <button 
+          onClick={toggleCard} 
+          className="text-primary hover:text-primary-dark text-sm font-medium"
+          type="button"
+        >
+          Back to Login
+        </button>
+      </div>
+    </div>
   );
 };
 
