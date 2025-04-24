@@ -17,17 +17,31 @@ const LandingPage: React.FC = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setPending(true);
-    setError("");
-    if (!showSignup) {
-      const ok = await login(email, password);
-      if (!ok) setError("Invalid credentials.");
-    } else {
-      setError("Signup disabled. Only admin can login.");
-    }
-    setPending(false);
-  };
+  e.preventDefault();
+  setPending(true);
+  setError("");
+  
+  if (!showSignup) {
+    // Login functionality
+    const ok = await login(email, password);
+    if (!ok) setError("Invalid credentials.");
+  } else {
+    // Simulated signup - just pretend it worked
+    // Simulate a short delay to make it feel real
+    setTimeout(() => {
+      // After "signup", switch to login form
+      setShowSignup(false);
+      // Optionally show a success message
+      alert("Account created successfully! Please log in.");
+      // Clear the form
+      setFirstName("");
+      setLastName("");
+      setContactNumber("");
+    }, 1000);
+  }
+  
+  setPending(false);
+};
 
   const handleSocial = async (provider: string) => {
     setPending(true);
