@@ -1,4 +1,4 @@
-// LandingPage.tsx
+
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast"; // assume shadcn-ui toast
