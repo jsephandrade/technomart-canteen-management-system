@@ -27,91 +27,61 @@ const socialProviders = [
   },
 ];
 
-const LoginCard = ({
-  email,
-  setEmail,
-  password,
-  setPassword,
-  handleSubmit,
-  handleSocial,
-  toggleCard,
-  error,
-  pending,
-}: LoginCardProps) => {
+const LoginCard = ({ 
+  email, 
+  setEmail, 
+  password, 
+  setPassword, 
+  handleSubmit, 
+  handleSocial, 
+  toggleCard, 
+  error, 
+  pending 
+}) => {
   return (
-    <Card className="w-full shadow-xl border-0 bg-white absolute backface-hidden">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <LogIn className="h-5 w-5" />
-          Login
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <Input
-              type="email"
-              placeholder="admin@canteen.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={pending}
-            />
-          </div>
-          <div>
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={pending}
-            />
-          </div>
-          {error && <div className="text-red-500 text-sm">{error}</div>}
-          <Button type="submit" className="w-full" disabled={pending}>
-            Login
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={toggleCard}
-          >
-            Create New Account
-          </Button>
-        </form>
-
-        <div className="flex items-center my-4">
-          <span className="h-px flex-1 bg-gray-300" />
-          <span className="px-2 text-xs text-gray-500">OR</span>
-          <span className="h-px flex-1 bg-gray-300" />
+    <div className="card-face card-front bg-white">
+      <h3 className="text-xl font-semibold mb-4">Login</h3>
+      {error && <div className="p-3 mb-4 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+            required
+          />
         </div>
-
-        <div className="flex flex-col space-y-2">
-          {socialProviders.map((provider) => (
-            <Button
-              key={provider.name}
-              className="w-full"
-              variant="outline"
-              type="button"
-              onClick={() => handleSocial(provider.name)}
-              disabled={pending}
-            >
-              {provider.icon && <provider.icon className="mr-2" />} Login with{" "}
-              {provider.name}
-            </Button>
-          ))}
+        <div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+            required
+          />
         </div>
-
-        <div className="text-center mt-4 text-xs text-muted-foreground">
-          <div>
-            Demo account: <strong>admin@canteen.com</strong> /{" "}
-            <strong>1234</strong>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        <button
+          type="submit"
+          disabled={pending}
+          className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300"
+        >
+          {pending ? "Processing..." : "Login"}
+        </button>
+      </form>
+      
+      <div className="mt-4 text-center">
+        <button 
+          onClick={toggleCard} 
+          className="text-primary hover:text-primary-dark text-sm font-medium"
+          type="button"
+        >
+          Create New Account
+        </button>
+      </div>
+    </div>
   );
 };
 
