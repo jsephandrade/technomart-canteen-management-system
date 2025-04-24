@@ -66,8 +66,7 @@ const LandingPage: React.FC = () => {
       <main className="flex-1 flex flex-col md:flex-row items-center px-4 md:px-6 gap-8 max-w-7xl mx-auto w-full py-8">
         <div className="w-full md:w-1/2 flex flex-col gap-6 max-w-lg order-2 md:order-1">
           <div className="space-y-4">
-            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900">Your Campus Food Hub</h2>
-            <p className="text-base md:text-lg text-gray-600">Streamlined ordering, efficient service, and delicious meals - all in one place.</p>
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900">CTU-MC Multipurpose Cooperative</h2>
           </div>
           
           <div className="relative w-full max-w-md mx-auto md:mx-0 perspective-1000">
