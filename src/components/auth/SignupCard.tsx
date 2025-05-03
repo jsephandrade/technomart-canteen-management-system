@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,7 +47,7 @@ const SignupCard = ({
   handleSocial,
   toggleCard,
   pending
-}) => {
+}: SignupCardProps) => {
   return (
     <div className="card-face card-back bg-white p-6 rounded-xl shadow-lg">
       <h3 className="text-xl font-semibold mb-4">Create Account</h3>
