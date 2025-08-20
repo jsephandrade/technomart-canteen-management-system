@@ -7,74 +7,84 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 96%; /* Light Grey #F5F5F5 */
+    --foreground: 0 0% 31%; /* Dark Grey #4E4E4E */
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 31%; /* Dark Grey #4E4E4E */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 31%; /* Dark Grey #4E4E4E */
 
-    --primary: 201 94% 37%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 353 86% 49%; /* Primary Red #D62828 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 160 84% 39%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 45 100% 52%; /* Gold #FFC107 */
+    --secondary-foreground: 0 0% 31%; /* Dark Grey #4E4E4E */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96%; /* Light Grey #F5F5F5 */
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 150 50% 36%; /* Nile Green #2E8B57 */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 353 86% 49%; /* Primary Red #D62828 */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 201 94% 37%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 353 86% 49%; /* Primary Red #D62828 */
 
     --radius: 0.5rem;
 
-    --sidebar-background: 210 50% 15%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 201 94% 37%;
+    --sidebar-background: 0 0% 31%; /* Dark Grey #4E4E4E */
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 353 86% 49%; /* Primary Red #D62828 */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 20%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 210 40% 20%;
-    --sidebar-ring: 201 94% 37%;
+    --sidebar-accent: 0 0% 25%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 0 0% 25%;
+    --sidebar-ring: 353 86% 49%; /* Primary Red #D62828 */
+
+    /* Custom colors for the new palette */
+    --thalo-blue: 199 100% 36%; /* Thalo Blue #0077B6 */
+    --nile-green: 150 50% 36%; /* Nile Green #2E8B57 */
+    --gold: 45 100% 52%; /* Gold #FFC107 */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 8%;
+    --foreground: 0 0% 96%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 201 94% 37%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 353 86% 49%; /* Primary Red #D62828 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 160 84% 39%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 45 100% 52%; /* Gold #FFC107 */
+    --secondary-foreground: 0 0% 8%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 150 50% 36%; /* Nile Green #2E8B57 */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 353 86% 49%; /* Primary Red #D62828 */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 353 86% 49%; /* Primary Red #D62828 */
+
+    /* Custom colors for the new palette in dark mode */
+    --thalo-blue: 199 100% 45%; /* Slightly lighter in dark mode */
+    --nile-green: 150 50% 45%; /* Slightly lighter in dark mode */
+    --gold: 45 100% 60%; /* Slightly lighter in dark mode */
   }
 }
 

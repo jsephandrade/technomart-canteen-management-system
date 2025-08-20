@@ -65,6 +65,19 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors from your palette
+				'thalo-blue': {
+					DEFAULT: 'hsl(var(--thalo-blue))',
+					foreground: 'hsl(0 0% 100%)'
+				},
+				'nile-green': {
+					DEFAULT: 'hsl(var(--nile-green))',
+					foreground: 'hsl(0 0% 100%)'
+				},
+				'gold': {
+					DEFAULT: 'hsl(var(--gold))',
+					foreground: 'hsl(0 0% 31%)'
 				}
 			},
 			borderRadius: {
