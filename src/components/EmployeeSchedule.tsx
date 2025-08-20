@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,15 +6,15 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
-import { employees, scheduleData } from '@/utils/mockData';
+import { useEmployees } from '@/hooks/useEmployees';
 import { ScheduleEntry, Employee } from '@/types';
 import { CalendarDays, Edit, Plus, Trash2, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 
 const EmployeeSchedule: React.FC = () => {
-  const [schedule, setSchedule] = useState<ScheduleEntry[]>(scheduleData);
-  const [employeeList, setEmployeeList] = useState<Employee[]>(employees);
+  const { data: employeeList = [], isLoading, createEmployee } = useEmployees();
+  const [schedule, setSchedule] = useState<ScheduleEntry[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<ScheduleEntry | null>(null);
   const [employeeDialogOpen, setEmployeeDialogOpen] = useState(false);
@@ -84,30 +83,38 @@ const EmployeeSchedule: React.FC = () => {
     toast.success('Schedule entry deleted successfully');
   };
 
-  const handleAddEmployee = () => {
+  const handleAddEmployee = async () => {
     if (!newEmployee.name || !newEmployee.position || !newEmployee.contact) {
       toast.error('Please fill in all required fields');
       return;
     }
 
-    const employeeToAdd = {
-      ...newEmployee,
-      id: `${employeeList.length + 1}`,
-      hourlyRate: Number(newEmployee.hourlyRate),
-      avatar: '/placeholder.svg'
-    } as Employee;
+    try {
+      await createEmployee({
+        name: newEmployee.name,
+        position: newEmployee.position,
+        hourlyRate: Number(newEmployee.hourlyRate),
+        contact: newEmployee.contact,
+        avatar: '/placeholder.svg'
+      });
 
-    setEmployeeList([...employeeList, employeeToAdd]);
-    setNewEmployee({
-      name: '',
-      position: '',
-      hourlyRate: 0,
-      contact: ''
-    });
+      setNewEmployee({
+        name: '',
+        position: '',
+        hourlyRate: 0,
+        contact: ''
+      });
 
-    setEmployeeDialogOpen(false);
-    toast.success('Employee added successfully');
+      setEmployeeDialogOpen(false);
+      toast.success('Employee added successfully');
+    } catch (error) {
+      toast.error('Failed to add employee');
+    }
   };
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-64">Loading employees...</div>;
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -261,62 +268,68 @@ const EmployeeSchedule: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-8 gap-2 mb-2 font-medium">
-                <div className="col-span-2">Employee</div>
-                {daysOfWeek.map(day => (
-                  <div key={day} className="text-center">{day.slice(0, 3)}</div>
-                ))}
-              </div>
-              <div className="space-y-4">
-                {employeeList.map(employee => (
-                  <div key={employee.id} className="grid grid-cols-8 gap-2 items-center">
-                    <div className="col-span-2 flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                        {employee.name.charAt(0)}
-                      </div>
-                      <span className="font-medium">{employee.name}</span>
-                    </div>
-                    
-                    {daysOfWeek.map(day => {
-                      const entry = schedule.find(s => 
-                        s.employeeId === employee.id && s.day === day
-                      );
-                      
-                      return (
-                        <div key={day} className="text-center h-12 relative">
-                          {entry ? (
-                            <div className="bg-primary/10 p-1 rounded text-xs h-full flex flex-col items-center justify-center">
-                              <span>{entry.startTime} - {entry.endTime}</span>
-                              <div className="flex gap-1 mt-1">
-                                <button onClick={() => setEditingSchedule(entry)} className="text-primary hover:text-primary/80">
-                                  <Edit size={12} />
-                                </button>
-                                <button onClick={() => handleDeleteSchedule(entry.id)} className="text-destructive hover:text-destructive/80">
-                                  <Trash2 size={12} />
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="border border-dashed border-muted h-full rounded flex items-center justify-center">
-                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => {
-                                setNewScheduleEntry({
-                                  employeeId: employee.id,
-                                  day: day,
-                                  startTime: '',
-                                  endTime: ''
-                                });
-                                setDialogOpen(true);
-                              }}>
-                                <Plus size={12} />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+              {employeeList.length === 0 ? (
+                <p className="text-center py-8 text-muted-foreground">No employees found. Add employees to create schedules.</p>
+              ) : (
+                <div>
+                  <div className="grid grid-cols-8 gap-2 mb-2 font-medium">
+                    <div className="col-span-2">Employee</div>
+                    {daysOfWeek.map(day => (
+                      <div key={day} className="text-center">{day.slice(0, 3)}</div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                  <div className="space-y-4">
+                    {employeeList.map(employee => (
+                      <div key={employee.id} className="grid grid-cols-8 gap-2 items-center">
+                        <div className="col-span-2 flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                            {employee.name.charAt(0)}
+                          </div>
+                          <span className="font-medium">{employee.name}</span>
+                        </div>
+                        
+                        {daysOfWeek.map(day => {
+                          const entry = schedule.find(s => 
+                            s.employeeId === employee.id && s.day === day
+                          );
+                          
+                          return (
+                            <div key={day} className="text-center h-12 relative">
+                              {entry ? (
+                                <div className="bg-primary/10 p-1 rounded text-xs h-full flex flex-col items-center justify-center">
+                                  <span>{entry.startTime} - {entry.endTime}</span>
+                                  <div className="flex gap-1 mt-1">
+                                    <button onClick={() => setEditingSchedule(entry)} className="text-primary hover:text-primary/80">
+                                      <Edit size={12} />
+                                    </button>
+                                    <button onClick={() => handleDeleteSchedule(entry.id)} className="text-destructive hover:text-destructive/80">
+                                      <Trash2 size={12} />
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="border border-dashed border-muted h-full rounded flex items-center justify-center">
+                                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => {
+                                    setNewScheduleEntry({
+                                      employeeId: employee.id,
+                                      day: day,
+                                      startTime: '',
+                                      endTime: ''
+                                    });
+                                    setDialogOpen(true);
+                                  }}>
+                                    <Plus size={12} />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

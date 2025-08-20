@@ -1,21 +1,68 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { dashboardStats, salesData, menuItems } from '@/utils/mockData';
+import { useSales } from '@/hooks/useSales';
+import { useMenuItems } from '@/hooks/useMenuItems';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp, TrendingDown, Users, ShoppingBag, DollarSign } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  // Format data for charts
-  const salesTimeData = dashboardStats.salesByTime.map(item => ({
-    name: item.time,
-    amount: item.amount
+  const { data: salesData = [], isLoading: salesLoading } = useSales();
+  const { data: menuItems = [], isLoading: menuLoading } = useMenuItems();
+
+  // Calculate dashboard stats from real data
+  const dailySales = salesData
+    .filter(sale => new Date(sale.date).toDateString() === new Date().toDateString())
+    .reduce((sum, sale) => sum + sale.total, 0);
+
+  const monthlySales = salesData
+    .filter(sale => {
+      const saleDate = new Date(sale.date);
+      const now = new Date();
+      return saleDate.getMonth() === now.getMonth() && saleDate.getFullYear() === now.getFullYear();
+    })
+    .reduce((sum, sale) => sum + sale.total, 0);
+
+  const customerCount = salesData
+    .filter(sale => new Date(sale.date).toDateString() === new Date().toDateString())
+    .length;
+
+  // Generate chart data from sales
+  const salesTimeData = Array.from({ length: 12 }, (_, i) => {
+    const hour = i + 8; // 8 AM to 7 PM
+    const amount = salesData
+      .filter(sale => {
+        const saleDate = new Date(sale.date);
+        return saleDate.getHours() === hour && saleDate.toDateString() === new Date().toDateString();
+      })
+      .reduce((sum, sale) => sum + sale.total, 0);
+    
+    return {
+      name: `${hour}:00`,
+      amount
+    };
+  });
+
+  // Generate category sales data (mock categories for now)
+  const categorySalesData = [
+    { name: 'Main Dishes', amount: dailySales * 0.4 },
+    { name: 'Beverages', amount: dailySales * 0.3 },
+    { name: 'Desserts', amount: dailySales * 0.2 },
+    { name: 'Snacks', amount: dailySales * 0.1 }
+  ];
+
+  // Popular items (simplified)
+  const popularItems = menuItems.slice(0, 5).map((item, index) => ({
+    name: item.name,
+    count: Math.floor(Math.random() * 50) + 10 // Mock count for now
   }));
-  
-  const categorySalesData = dashboardStats.salesByCategory.map(item => ({
-    name: item.category,
-    amount: item.amount
-  }));
+
+  // Recent sales
+  const recentSales = salesData.slice(0, 5);
+
+  if (salesLoading || menuLoading) {
+    return <div className="flex items-center justify-center h-64">Loading dashboard...</div>;
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -29,7 +76,7 @@ const Dashboard: React.FC = () => {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₱{dashboardStats.dailySales.toFixed(2)}</div>
+            <div className="text-2xl font-bold">₱{dailySales.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
               +15% from yesterday
             </p>
@@ -42,7 +89,7 @@ const Dashboard: React.FC = () => {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₱{dashboardStats.monthlySales.toFixed(2)}</div>
+            <div className="text-2xl font-bold">₱{monthlySales.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
               +8% from last month
             </p>
@@ -55,7 +102,7 @@ const Dashboard: React.FC = () => {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardStats.customerCount}</div>
+            <div className="text-2xl font-bold">{customerCount}</div>
             <p className="text-xs text-muted-foreground">
               +5% from yesterday
             </p>
@@ -138,7 +185,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {dashboardStats.popularItems.map((item, index) => (
+              {popularItems.length > 0 ? popularItems.map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <span className="font-medium">{index + 1}.</span>
@@ -146,7 +193,9 @@ const Dashboard: React.FC = () => {
                   </div>
                   <span className="text-muted-foreground">{item.count} orders</span>
                 </div>
-              ))}
+              )) : (
+                <p className="text-muted-foreground">No popular items data available</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -160,7 +209,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {dashboardStats.recentSales.map((sale) => (
+              {recentSales.length > 0 ? recentSales.map((sale) => (
                 <div key={sale.id} className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Order #{sale.id}</p>
@@ -173,7 +222,9 @@ const Dashboard: React.FC = () => {
                     <p className="text-sm text-muted-foreground capitalize">{sale.paymentMethod}</p>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <p className="text-muted-foreground">No recent sales data available</p>
+              )}
             </div>
           </CardContent>
         </Card>
