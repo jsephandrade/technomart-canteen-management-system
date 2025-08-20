@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,81 +13,173 @@ import {
   PenSquare,
   Trash2,
   BarChart2,
-  History,
-  Loader2
+  History
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useInventory, useInventoryActivities } from '@/hooks/useInventory';
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  category: string;
+  currentStock: number;
+  minThreshold: number;
+  unit: string;
+  lastUpdated: string;
+  supplier: string;
+}
 
 const Inventory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   
-  const { items, loading, error, deleteInventoryItem } = useInventory();
-  const { activities, loading: activitiesLoading } = useInventoryActivities();
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([
+    {
+      id: '1',
+      name: 'Rice',
+      category: 'Grains',
+      currentStock: 25,
+      minThreshold: 10,
+      unit: 'kg',
+      lastUpdated: '2025-04-15',
+      supplier: 'Global Foods'
+    },
+    {
+      id: '2',
+      name: 'Chicken Breast',
+      category: 'Meat',
+      currentStock: 8,
+      minThreshold: 5,
+      unit: 'kg',
+      lastUpdated: '2025-04-16',
+      supplier: 'Fresh Farms'
+    },
+    {
+      id: '3',
+      name: 'Olive Oil',
+      category: 'Condiments',
+      currentStock: 2,
+      minThreshold: 3,
+      unit: 'bottles',
+      lastUpdated: '2025-04-16',
+      supplier: 'Gourmet Supplies'
+    },
+    {
+      id: '4',
+      name: 'Tomatoes',
+      category: 'Vegetables',
+      currentStock: 15,
+      minThreshold: 8,
+      unit: 'kg',
+      lastUpdated: '2025-04-17',
+      supplier: 'Local Farms'
+    },
+    {
+      id: '5',
+      name: 'Flour',
+      category: 'Baking',
+      currentStock: 12,
+      minThreshold: 5,
+      unit: 'kg',
+      lastUpdated: '2025-04-14',
+      supplier: 'Baker\'s Choice'
+    },
+    {
+      id: '6',
+      name: 'Salt',
+      category: 'Condiments',
+      currentStock: 4,
+      minThreshold: 2,
+      unit: 'kg',
+      lastUpdated: '2025-04-13',
+      supplier: 'Seasoning Co.'
+    },
+    {
+      id: '7',
+      name: 'Milk',
+      category: 'Dairy',
+      currentStock: 6,
+      minThreshold: 8,
+      unit: 'liters',
+      lastUpdated: '2025-04-17',
+      supplier: 'Dairy Farms'
+    }
+  ]);
 
-  const categories = Array.from(new Set(items.map(item => item.category)));
+  const recentActivities = [
+    {
+      id: '1',
+      action: 'Stock Update',
+      item: 'Rice',
+      quantity: '+50kg',
+      timestamp: '2025-04-22 14:30',
+      user: 'John Smith'
+    },
+    {
+      id: '2',
+      action: 'Stock Deduction',
+      item: 'Chicken Breast',
+      quantity: '-15kg',
+      timestamp: '2025-04-22 13:45',
+      user: 'Maria Garcia'
+    },
+    {
+      id: '3',
+      action: 'Low Stock Alert',
+      item: 'Olive Oil',
+      quantity: '2 bottles remaining',
+      timestamp: '2025-04-22 12:20',
+      user: 'System'
+    },
+    {
+      id: '4',
+      action: 'Inventory Count',
+      item: 'Tomatoes',
+      quantity: 'Updated to 15kg',
+      timestamp: '2025-04-22 11:00',
+      user: 'David Chen'
+    }
+  ];
+
+  const categories = ['Grains', 'Meat', 'Vegetables', 'Dairy', 'Condiments', 'Baking', 'Fruits'];
   
-  const filteredItems = items.filter(item => {
+  const filteredItems = inventoryItems.filter(item => {
+    // Filter by search term
     const matchesSearch = 
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.supplier.toLowerCase().includes(searchTerm.toLowerCase());
     
+    // Filter by category
     const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
     
     return matchesSearch && matchesCategory;
   });
 
-  const lowStockItems = items.filter(item => item.currentStock < item.minThreshold);
+  // Items that are below threshold
+  const lowStockItems = inventoryItems.filter(item => item.currentStock < item.minThreshold);
   
+  // Calculate stock level percentage
   const getStockPercentage = (current: number, threshold: number) => {
     return Math.min(100, Math.round((current / (threshold * 2)) * 100));
   };
   
+  // Determine badge color based on stock level
   const getStockBadgeVariant = (current: number, threshold: number) => {
     if (current <= threshold * 0.5) return 'destructive';
     if (current <= threshold) return 'warning';
     return 'success';
   };
   
+  // Get text for stock status
   const getStockStatusText = (current: number, threshold: number) => {
     if (current <= threshold * 0.5) return 'Critical';
     if (current <= threshold) return 'Low';
     if (current >= threshold * 2) return 'Overstocked';
     return 'Good';
   };
-
-  const handleDeleteItem = async (id: string) => {
-    try {
-      await deleteInventoryItem(id);
-    } catch (error) {
-      // Error is handled by the hook
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading inventory...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <p className="text-destructive mb-4">Error loading inventory: {error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
@@ -198,10 +289,7 @@ const Inventory: React.FC = () => {
                                       <BarChart2 className="mr-2 h-4 w-4" /> Usage History
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem 
-                                      className="text-destructive"
-                                      onClick={() => handleDeleteItem(item.id)}
-                                    >
+                                    <DropdownMenuItem className="text-destructive">
                                       <Trash2 className="mr-2 h-4 w-4" /> Delete
                                     </DropdownMenuItem>
                                   </DropdownMenuContent>
@@ -223,50 +311,44 @@ const Inventory: React.FC = () => {
               </TabsContent>
               <TabsContent value="grid">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
-                  {filteredItems.length > 0 ? (
-                    filteredItems.map(item => (
-                      <div key={item.id} className="border rounded-lg p-4">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-medium">{item.name}</h3>
-                            <p className="text-sm text-muted-foreground">{item.category}</p>
-                          </div>
-                          <CustomBadge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
-                            {getStockStatusText(item.currentStock, item.minThreshold)}
-                          </CustomBadge>
+                  {filteredItems.map(item => (
+                    <div key={item.id} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-medium">{item.name}</h3>
+                          <p className="text-sm text-muted-foreground">{item.category}</p>
                         </div>
-                        <div className="mt-2">
-                          <div className="flex justify-between text-xs mb-1">
-                            <span>Current: {item.currentStock} {item.unit}</span>
-                            <span>Min: {item.minThreshold} {item.unit}</span>
-                          </div>
-                          <Progress
-                            value={getStockPercentage(item.currentStock, item.minThreshold)}
-                            className="h-2"
-                          />
-                        </div>
-                        <div className="mt-3 flex justify-between items-center">
-                          <span className="text-xs text-muted-foreground">
-                            Supplier: {item.supplier}
-                          </span>
-                          <Button variant="ghost" size="sm">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <CustomBadge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
+                          {getStockStatusText(item.currentStock, item.minThreshold)}
+                        </CustomBadge>
                       </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center py-8">
-                      <p className="text-muted-foreground">No inventory items found</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs mb-1">
+                          <span>Current: {item.currentStock} {item.unit}</span>
+                          <span>Min: {item.minThreshold} {item.unit}</span>
+                        </div>
+                        <Progress
+                          value={getStockPercentage(item.currentStock, item.minThreshold)}
+                          className="h-2"
+                        />
+                      </div>
+                      <div className="mt-3 flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">
+                          Supplier: {item.supplier}
+                        </span>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  )}
+                  ))}
                 </div>
               </TabsContent>
             </Tabs>
           </CardContent>
           <CardFooter className="border-t py-3">
             <div className="text-xs text-muted-foreground">
-              Showing {filteredItems.length} of {items.length} items
+              Showing {filteredItems.length} of {inventoryItems.length} items
             </div>
           </CardFooter>
         </Card>
@@ -280,34 +362,23 @@ const Inventory: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {activitiesLoading ? (
-                <div className="flex items-center justify-center py-4">
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  <span className="text-sm">Loading activities...</span>
-                </div>
-              ) : activities.length > 0 ? (
-                activities.slice(0, 4).map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3 pb-3 border-b last:border-0 last:pb-0">
-                    <div className="bg-muted rounded-full p-2">
-                      <History className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <div className="flex justify-between items-start">
-                        <p className="font-medium text-sm">{activity.action}</p>
-                        <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {activity.item} • {activity.quantity}
-                      </p>
-                      <p className="text-xs text-muted-foreground">By {activity.user}</p>
-                    </div>
+              {recentActivities.map((activity) => (
+                <div key={activity.id} className="flex items-start gap-3 pb-3 border-b last:border-0 last:pb-0">
+                  <div className="bg-muted rounded-full p-2">
+                    <History className="h-4 w-4 text-muted-foreground" />
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-4">
-                  <p className="text-muted-foreground text-sm">No recent activities</p>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex justify-between items-start">
+                      <p className="font-medium text-sm">{activity.action}</p>
+                      <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {activity.item} • {activity.quantity}
+                    </p>
+                    <p className="text-xs text-muted-foreground">By {activity.user}</p>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
             <Button variant="outline" size="sm" className="w-full mt-4">
               View All Activity

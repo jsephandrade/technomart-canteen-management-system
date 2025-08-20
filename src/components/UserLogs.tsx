@@ -16,23 +16,84 @@ import {
   LogIn,
   Settings,
   ShoppingCart,
-  Save,
-  Loader2
+  Save
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useUserLogs } from '@/hooks/useUsers';
+
+interface LogEntry {
+  id: string;
+  action: string;
+  user: string;
+  timestamp: string;
+  details: string;
+  type: 'login' | 'action' | 'system' | 'security';
+}
 
 const UserLogs: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLogType, setSelectedLogType] = useState<string>('all');
   const [timeRange, setTimeRange] = useState<string>('24h');
   
-  const { logs, loading, error } = useUserLogs({
-    type: selectedLogType === 'all' ? undefined : selectedLogType,
-    timeRange
-  });
+  const [logs, setLogs] = useState<LogEntry[]>([
+    {
+      id: '1',
+      action: 'User Login',
+      user: 'admin@canteen.com',
+      timestamp: '2025-04-17 09:32:15',
+      details: 'Successful login from IP 192.168.1.105',
+      type: 'login'
+    },
+    {
+      id: '2',
+      action: 'Menu Item Added',
+      user: 'sarah@canteen.com',
+      timestamp: '2025-04-17 10:15:22',
+      details: 'Added new menu item "Grilled Chicken Sandwich" to lunch menu',
+      type: 'action'
+    },
+    {
+      id: '3',
+      action: 'Inventory Updated',
+      user: 'miguel@canteen.com',
+      timestamp: '2025-04-17 11:25:40',
+      details: 'Updated stock levels for Rice (-5kg) and Tomatoes (-2kg)',
+      type: 'action'
+    },
+    {
+      id: '4',
+      action: 'Payment Processed',
+      user: 'aisha@canteen.com',
+      timestamp: '2025-04-17 12:10:05',
+      details: 'Processed card payment of $45.75 for order #1289',
+      type: 'action'
+    },
+    {
+      id: '5',
+      action: 'Failed Login Attempt',
+      user: 'unknown',
+      timestamp: '2025-04-17 13:27:51',
+      details: 'Failed login attempt for admin@canteen.com from IP 203.45.67.89',
+      type: 'security'
+    },
+    {
+      id: '6',
+      action: 'System Backup',
+      user: 'system',
+      timestamp: '2025-04-17 14:00:00',
+      details: 'Automated system backup completed successfully',
+      type: 'system'
+    },
+    {
+      id: '7',
+      action: 'User Role Changed',
+      user: 'admin@canteen.com',
+      timestamp: '2025-04-17 14:55:12',
+      details: 'Changed role for david@canteen.com from Staff to Cashier',
+      type: 'security'
+    }
+  ]);
   
   const getActionIcon = (type: string) => {
     switch (type) {
@@ -55,37 +116,22 @@ const UserLogs: React.FC = () => {
   };
 
   const filteredLogs = logs.filter(log => {
+    // Filter by search term
     const matchesSearch = 
       log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
       log.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
       log.details.toLowerCase().includes(searchTerm.toLowerCase());
     
-    return matchesSearch;
+    // Filter by log type
+    const matchesType = selectedLogType === 'all' || log.type === selectedLogType;
+    
+    return matchesSearch && matchesType;
   });
 
+  // Sort logs by timestamp (most recent first)
   const sortedLogs = [...filteredLogs].sort((a, b) => 
     new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   );
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading user logs...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <p className="text-destructive mb-4">Error loading user logs: {error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
@@ -206,8 +252,26 @@ const UserLogs: React.FC = () => {
             <CardDescription>Important security notifications</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="text-center py-8">
-              <p className="text-muted-foreground text-sm">Security alerts will appear here when available</p>
+            <div className="rounded-lg bg-red-50 border border-red-200 p-3 flex gap-3">
+              <AlertTriangle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium text-red-900">Failed Login Attempts</h4>
+                <p className="text-sm text-red-700">Multiple failed login attempts detected for admin account from unknown IP address</p>
+                <div className="mt-2 flex gap-2">
+                  <Button size="sm" variant="destructive">Block IP</Button>
+                  <Button size="sm" variant="outline">Dismiss</Button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
+              <div className="flex gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-amber-900">Password Expiring</h4>
+                  <p className="text-sm text-amber-700">2 user passwords will expire in the next 7 days</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -229,24 +293,24 @@ const UserLogs: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border p-3 flex flex-col items-center">
                       <LogIn className="h-8 w-8 text-blue-500 mb-1" />
-                      <div className="text-2xl font-bold">{logs.filter(l => l.type === 'login').length}</div>
+                      <div className="text-2xl font-bold">12</div>
                       <div className="text-xs text-muted-foreground">Logins</div>
                     </div>
                     <div className="rounded-lg border p-3 flex flex-col items-center">
                       <UserCog className="h-8 w-8 text-green-500 mb-1" />
-                      <div className="text-2xl font-bold">{logs.filter(l => l.type === 'action').length}</div>
+                      <div className="text-2xl font-bold">28</div>
                       <div className="text-xs text-muted-foreground">Actions</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border p-3 flex flex-col items-center">
                       <ShieldAlert className="h-8 w-8 text-red-500 mb-1" />
-                      <div className="text-2xl font-bold">{logs.filter(l => l.type === 'security').length}</div>
+                      <div className="text-2xl font-bold">3</div>
                       <div className="text-xs text-muted-foreground">Security</div>
                     </div>
                     <div className="rounded-lg border p-3 flex flex-col items-center">
                       <Settings className="h-8 w-8 text-gray-500 mb-1" />
-                      <div className="text-2xl font-bold">{logs.filter(l => l.type === 'system').length}</div>
+                      <div className="text-2xl font-bold">5</div>
                       <div className="text-xs text-muted-foreground">System</div>
                     </div>
                   </div>
@@ -255,14 +319,14 @@ const UserLogs: React.FC = () => {
               <TabsContent value="week" className="pt-4">
                 <div className="space-y-4">
                   <div className="text-center py-8">
-                    <p className="text-muted-foreground">Weekly log statistics will be available when connected to API</p>
+                    <p className="text-muted-foreground">Weekly log statistics</p>
                   </div>
                 </div>
               </TabsContent>
               <TabsContent value="month" className="pt-4">
                 <div className="space-y-4">
                   <div className="text-center py-8">
-                    <p className="text-muted-foreground">Monthly log statistics will be available when connected to API</p>
+                    <p className="text-muted-foreground">Monthly log statistics</p>
                   </div>
                 </div>
               </TabsContent>

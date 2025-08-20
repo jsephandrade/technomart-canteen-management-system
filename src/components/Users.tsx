@@ -12,16 +12,47 @@ import {
   Search, 
   Shield, 
   UserCheck, 
-  UserX,
-  Loader2
+  UserX 
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { useUsers } from '@/hooks/useUsers';
+import { User } from '@/types';
 
 const Users: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { users, loading, error, deleteUser } = useUsers();
+  
+  const [users, setUsers] = useState<User[]>([
+    {
+      id: '1',
+      name: 'Admin User',
+      email: 'admin@canteen.com',
+      role: 'admin'
+    },
+    {
+      id: '2',
+      name: 'Sarah Johnson',
+      email: 'sarah@canteen.com',
+      role: 'manager'
+    },
+    {
+      id: '3',
+      name: 'Miguel Rodriguez',
+      email: 'miguel@canteen.com',
+      role: 'staff'
+    },
+    {
+      id: '4',
+      name: 'Aisha Patel',
+      email: 'aisha@canteen.com',
+      role: 'cashier'
+    },
+    {
+      id: '5',
+      name: 'David Chen',
+      email: 'david@canteen.com',
+      role: 'staff'
+    }
+  ]);
 
   const [roles] = useState([
     { label: 'Admin', value: 'admin', description: 'Full access to all settings and functions' },
@@ -48,34 +79,6 @@ const Users: React.FC = () => {
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
-
-  const handleDeleteUser = async (id: string) => {
-    try {
-      await deleteUser(id);
-    } catch (error) {
-      // Error is handled by the hook
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading users...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <p className="text-destructive mb-4">Error loading users: {error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
@@ -121,7 +124,6 @@ const Users: React.FC = () => {
                           <td className="p-4 align-middle">
                             <div className="flex items-center gap-3">
                               <Avatar>
-                                <AvatarImage src={user.avatar} />
                                 <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                               </Avatar>
                               <div>
@@ -161,10 +163,7 @@ const Users: React.FC = () => {
                                   <UserX className="mr-2 h-4 w-4" /> Deactivate
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem 
-                                  className="text-destructive"
-                                  onClick={() => handleDeleteUser(user.id)}
-                                >
+                                <DropdownMenuItem className="text-destructive">
                                   <Trash2 className="mr-2 h-4 w-4" /> Delete
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
@@ -222,16 +221,17 @@ const Users: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {users.slice(0, 5).map((user) => (
-                <div key={user.id} className="flex items-center gap-1">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback className="text-xs">{getInitials(user.name)}</AvatarFallback>
-                  </Avatar>
-                  <Badge variant="outline" className="flex gap-1 items-center">
-                    <UserCheck className="h-3 w-3" /> {user.name.split(' ')[0]}
-                  </Badge>
-                </div>
+              {users.map((user, index) => (
+                index < 5 && (
+                  <div key={user.id} className="flex items-center gap-1">
+                    <Avatar className="h-6 w-6">
+                      <AvatarFallback className="text-xs">{getInitials(user.name)}</AvatarFallback>
+                    </Avatar>
+                    <Badge variant="outline" className="flex gap-1 items-center">
+                      <UserCheck className="h-3 w-3" /> {user.name.split(' ')[0]}
+                    </Badge>
+                  </div>
+                )
               ))}
             </div>
           </CardContent>

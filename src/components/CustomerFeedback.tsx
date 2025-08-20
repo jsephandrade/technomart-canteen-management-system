@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useFeedback } from '@/hooks/useFeedback';
+import { feedbackData } from '@/utils/mockData';
 import { Feedback } from '@/types';
 import { Check, MessageCircle, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { toast } from 'sonner';
@@ -15,18 +15,18 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea as TextareaUi } from '@/components/ui/textarea';
 
 const CustomerFeedback: React.FC = () => {
-  const { feedback = [], loading, markResolved } = useFeedback();
+  const [feedback, setFeedback] = useState<Feedback[]>(feedbackData);
   const [activeTab, setActiveTab] = useState('all');
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
   const [responseText, setResponseText] = useState('');
 
-  const handleResolve = async (id: string) => {
-    try {
-      await markResolved(id);
-      toast.success('Feedback marked as resolved');
-    } catch (error) {
-      toast.error('Failed to update feedback status');
-    }
+  const handleResolve = (id: string) => {
+    const updatedFeedback = feedback.map(item => 
+      item.id === id ? { ...item, resolved: !item.resolved } : item
+    );
+    
+    setFeedback(updatedFeedback);
+    toast.success(`Feedback marked as ${updatedFeedback.find(f => f.id === id)?.resolved ? 'resolved' : 'unresolved'}`);
   };
 
   const handleSendResponse = () => {
@@ -70,10 +70,6 @@ const CustomerFeedback: React.FC = () => {
       ? feedback.filter(item => item.resolved) 
       : feedback.filter(item => !item.resolved);
 
-  if (loading) {
-    return <div className="flex items-center justify-center h-64">Loading feedback...</div>;
-  }
-
   return (
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-3xl font-semibold">Customer Feedback</h2>
@@ -109,7 +105,7 @@ const CustomerFeedback: React.FC = () => {
                 </div>
                 <div className="flex items-center">
                   <span className="font-medium mr-2">{sentimentCounts.positive}</span>
-                  <span className="text-muted-foreground text-sm">({feedback.length > 0 ? Math.round(sentimentCounts.positive / feedback.length * 100) : 0}%)</span>
+                  <span className="text-muted-foreground text-sm">({Math.round(sentimentCounts.positive / feedback.length * 100)}%)</span>
                 </div>
               </div>
               
@@ -120,7 +116,7 @@ const CustomerFeedback: React.FC = () => {
                 </div>
                 <div className="flex items-center">
                   <span className="font-medium mr-2">{sentimentCounts.neutral}</span>
-                  <span className="text-muted-foreground text-sm">({feedback.length > 0 ? Math.round(sentimentCounts.neutral / feedback.length * 100) : 0}%)</span>
+                  <span className="text-muted-foreground text-sm">({Math.round(sentimentCounts.neutral / feedback.length * 100)}%)</span>
                 </div>
               </div>
               
@@ -131,7 +127,7 @@ const CustomerFeedback: React.FC = () => {
                 </div>
                 <div className="flex items-center">
                   <span className="font-medium mr-2">{sentimentCounts.negative}</span>
-                  <span className="text-muted-foreground text-sm">({feedback.length > 0 ? Math.round(sentimentCounts.negative / feedback.length * 100) : 0}%)</span>
+                  <span className="text-muted-foreground text-sm">({Math.round(sentimentCounts.negative / feedback.length * 100)}%)</span>
                 </div>
               </div>
             </div>
@@ -149,7 +145,7 @@ const CustomerFeedback: React.FC = () => {
                 <span>Resolved</span>
                 <div className="flex items-center">
                   <span className="font-medium mr-2">{feedback.filter(f => f.resolved).length}</span>
-                  <span className="text-muted-foreground text-sm">({feedback.length > 0 ? Math.round(feedback.filter(f => f.resolved).length / feedback.length * 100) : 0}%)</span>
+                  <span className="text-muted-foreground text-sm">({Math.round(feedback.filter(f => f.resolved).length / feedback.length * 100)}%)</span>
                 </div>
               </div>
               
@@ -157,14 +153,14 @@ const CustomerFeedback: React.FC = () => {
                 <span>Pending</span>
                 <div className="flex items-center">
                   <span className="font-medium mr-2">{feedback.filter(f => !f.resolved).length}</span>
-                  <span className="text-muted-foreground text-sm">({feedback.length > 0 ? Math.round(feedback.filter(f => !f.resolved).length / feedback.length * 100) : 0}%)</span>
+                  <span className="text-muted-foreground text-sm">({Math.round(feedback.filter(f => !f.resolved).length / feedback.length * 100)}%)</span>
                 </div>
               </div>
               
               <div className="w-full bg-muted rounded-full h-2.5 mt-2">
                 <div 
                   className="bg-primary h-2.5 rounded-full" 
-                  style={{ width: `${feedback.length > 0 ? Math.round(feedback.filter(f => f.resolved).length / feedback.length * 100) : 0}%` }}
+                  style={{ width: `${Math.round(feedback.filter(f => f.resolved).length / feedback.length * 100)}%` }}
                 ></div>
               </div>
             </div>
