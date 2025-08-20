@@ -76,7 +76,6 @@ const Dashboard: React.FC = () => {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₱{dailySales.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
               +15% from yesterday
             </p>
@@ -89,7 +88,6 @@ const Dashboard: React.FC = () => {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₱{monthlySales.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
               +8% from last month
             </p>
@@ -102,7 +100,6 @@ const Dashboard: React.FC = () => {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{customerCount}</div>
             <p className="text-xs text-muted-foreground">
               +5% from yesterday
             </p>
@@ -115,7 +112,6 @@ const Dashboard: React.FC = () => {
             <ShoppingBag className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{salesData.length}</div>
             <p className="text-xs text-muted-foreground">
               +12% from yesterday
             </p>
