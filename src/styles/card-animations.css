@@ -1,3 +1,4 @@
+
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -17,8 +18,8 @@
 .card-container {
   position: relative;
   width: 100%;
-  height: 400px;
-  transition: transform 0.7s;
+  height: 480px;
+  transition: transform 0.7s ease-in-out;
   transform-style: preserve-3d;
 }
 
@@ -28,10 +29,42 @@
   height: 100%;
   backface-visibility: hidden;
   border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
 }
 
 .card-back {
   transform: rotateY(180deg);
+}
+
+/* Enhanced animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Focus ring improvements */
+.card-face input:focus {
+  box-shadow: 0 0 0 3px rgba(213, 40, 40, 0.1);
+}
+
+/* Smooth transitions for mobile */
+@media (max-width: 768px) {
+  .card-container {
+    height: auto;
+    min-height: 480px;
+  }
+  
+  .card-face {
+    padding: 1.5rem;
+  }
 }
