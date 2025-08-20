@@ -1,13 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { Employee, ScheduleEntry } from '@/types';
 import { employeeService } from '@/services/employeeService';
 import { toast } from 'sonner';
 
 export const useEmployees = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchEmployees = async () => {
     try {
@@ -24,7 +23,7 @@ export const useEmployees = () => {
     }
   };
 
-  const addEmployee = async (employee: Omit<Employee, 'id'>) => {
+  const addEmployee = async (employee) => {
     try {
       const newEmployee = await employeeService.createEmployee(employee);
       setEmployees(prev => [...prev, newEmployee]);
@@ -37,7 +36,7 @@ export const useEmployees = () => {
     }
   };
 
-  const updateEmployee = async (id: string, updates: Partial<Employee>) => {
+  const updateEmployee = async (id, updates) => {
     try {
       const updatedEmployee = await employeeService.updateEmployee(id, updates);
       setEmployees(prev => prev.map(emp => emp.id === id ? updatedEmployee : emp));
@@ -50,7 +49,7 @@ export const useEmployees = () => {
     }
   };
 
-  const deleteEmployee = async (id: string) => {
+  const deleteEmployee = async (id) => {
     try {
       await employeeService.deleteEmployee(id);
       setEmployees(prev => prev.filter(emp => emp.id !== id));
@@ -78,9 +77,9 @@ export const useEmployees = () => {
 };
 
 export const useSchedule = () => {
-  const [schedule, setSchedule] = useState<ScheduleEntry[]>([]);
+  const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchSchedule = async () => {
     try {
@@ -97,7 +96,7 @@ export const useSchedule = () => {
     }
   };
 
-  const updateScheduleEntry = async (id: string, updates: Partial<ScheduleEntry>) => {
+  const updateScheduleEntry = async (id, updates) => {
     try {
       const updatedEntry = await employeeService.updateSchedule(id, updates);
       setSchedule(prev => prev.map(entry => entry.id === id ? updatedEntry : entry));

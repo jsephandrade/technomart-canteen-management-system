@@ -1,13 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { Feedback } from '@/types';
 import { feedbackService } from '@/services/feedbackService';
 import { toast } from 'sonner';
 
 export const useFeedback = () => {
-  const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [feedback, setFeedback] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchFeedback = async () => {
     try {
@@ -24,7 +23,7 @@ export const useFeedback = () => {
     }
   };
 
-  const markResolved = async (id: string) => {
+  const markResolved = async (id) => {
     try {
       const updatedFeedback = await feedbackService.markFeedbackResolved(id);
       setFeedback(prev => prev.map(item => item.id === id ? updatedFeedback : item));
@@ -37,7 +36,7 @@ export const useFeedback = () => {
     }
   };
 
-  const updateFeedback = async (id: string, updates: Partial<Feedback>) => {
+  const updateFeedback = async (id, updates) => {
     try {
       const updatedFeedback = await feedbackService.updateFeedback(id, updates);
       setFeedback(prev => prev.map(item => item.id === id ? updatedFeedback : item));
@@ -50,7 +49,7 @@ export const useFeedback = () => {
     }
   };
 
-  const createFeedback = async (feedbackData: Omit<Feedback, 'id'>) => {
+  const createFeedback = async (feedbackData) => {
     try {
       const newFeedback = await feedbackService.createFeedback(feedbackData);
       setFeedback(prev => [...prev, newFeedback]);

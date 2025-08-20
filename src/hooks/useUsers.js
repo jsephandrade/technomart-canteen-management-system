@@ -1,13 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { User } from '@/types';
-import { userService, LogEntry } from '@/services/userService';
+import { userService } from '@/services/userService';
 import { toast } from 'sonner';
 
 export const useUsers = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchUsers = async () => {
     try {
@@ -24,7 +23,7 @@ export const useUsers = () => {
     }
   };
 
-  const addUser = async (user: Omit<User, 'id'>) => {
+  const addUser = async (user) => {
     try {
       const newUser = await userService.createUser(user);
       setUsers(prev => [...prev, newUser]);
@@ -37,7 +36,7 @@ export const useUsers = () => {
     }
   };
 
-  const updateUser = async (id: string, updates: Partial<User>) => {
+  const updateUser = async (id, updates) => {
     try {
       const updatedUser = await userService.updateUser(id, updates);
       setUsers(prev => prev.map(user => user.id === id ? updatedUser : user));
@@ -50,7 +49,7 @@ export const useUsers = () => {
     }
   };
 
-  const deleteUser = async (id: string) => {
+  const deleteUser = async (id) => {
     try {
       await userService.deleteUser(id);
       setUsers(prev => prev.filter(user => user.id !== id));
@@ -77,13 +76,10 @@ export const useUsers = () => {
   };
 };
 
-export const useUserLogs = (params?: {
-  type?: string;
-  timeRange?: string;
-}) => {
-  const [logs, setLogs] = useState<LogEntry[]>([]);
+export const useUserLogs = (params) => {
+  const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchLogs = async () => {
     try {

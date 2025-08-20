@@ -1,13 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { MenuItem } from '@/types';
 import { menuService } from '@/services/menuService';
 import { toast } from 'sonner';
 
 export const useMenuItems = () => {
-  const [items, setItems] = useState<MenuItem[]>([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchMenuItems = async () => {
     try {
@@ -24,7 +23,7 @@ export const useMenuItems = () => {
     }
   };
 
-  const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
+  const addMenuItem = async (item) => {
     try {
       const newItem = await menuService.createMenuItem(item);
       setItems(prev => [...prev, newItem]);
@@ -37,7 +36,7 @@ export const useMenuItems = () => {
     }
   };
 
-  const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
+  const updateMenuItem = async (id, updates) => {
     try {
       const updatedItem = await menuService.updateMenuItem(id, updates);
       setItems(prev => prev.map(item => item.id === id ? updatedItem : item));
@@ -50,7 +49,7 @@ export const useMenuItems = () => {
     }
   };
 
-  const deleteMenuItem = async (id: string) => {
+  const deleteMenuItem = async (id) => {
     try {
       await menuService.deleteMenuItem(id);
       setItems(prev => prev.filter(item => item.id !== id));

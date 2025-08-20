@@ -1,12 +1,11 @@
-
 import { useState, useEffect } from 'react';
-import { InventoryItem, InventoryActivity, inventoryService } from '@/services/inventoryService';
+import { inventoryService } from '@/services/inventoryService';
 import { toast } from 'sonner';
 
 export const useInventory = () => {
-  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchInventory = async () => {
     try {
@@ -23,7 +22,7 @@ export const useInventory = () => {
     }
   };
 
-  const addInventoryItem = async (item: Omit<InventoryItem, 'id'>) => {
+  const addInventoryItem = async (item) => {
     try {
       const newItem = await inventoryService.createInventoryItem(item);
       setItems(prev => [...prev, newItem]);
@@ -36,7 +35,7 @@ export const useInventory = () => {
     }
   };
 
-  const updateInventoryItem = async (id: string, updates: Partial<InventoryItem>) => {
+  const updateInventoryItem = async (id, updates) => {
     try {
       const updatedItem = await inventoryService.updateInventoryItem(id, updates);
       setItems(prev => prev.map(item => item.id === id ? updatedItem : item));
@@ -49,7 +48,7 @@ export const useInventory = () => {
     }
   };
 
-  const deleteInventoryItem = async (id: string) => {
+  const deleteInventoryItem = async (id) => {
     try {
       await inventoryService.deleteInventoryItem(id);
       setItems(prev => prev.filter(item => item.id !== id));
@@ -77,9 +76,9 @@ export const useInventory = () => {
 };
 
 export const useInventoryActivities = () => {
-  const [activities, setActivities] = useState<InventoryActivity[]>([]);
+  const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchActivities = async () => {
     try {

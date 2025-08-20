@@ -1,17 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { Sale, DashboardStats } from '@/types';
 import { salesService } from '@/services/salesService';
 import { toast } from 'sonner';
 
-export const useSales = (params?: {
-  startDate?: string;
-  endDate?: string;
-  employeeId?: string;
-}) => {
-  const [sales, setSales] = useState<Sale[]>([]);
+export const useSales = (params) => {
+  const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchSales = async () => {
     try {
@@ -28,7 +23,7 @@ export const useSales = (params?: {
     }
   };
 
-  const createSale = async (sale: Omit<Sale, 'id'>) => {
+  const createSale = async (sale) => {
     try {
       const newSale = await salesService.createSale(sale);
       setSales(prev => [...prev, newSale]);
@@ -55,9 +50,9 @@ export const useSales = (params?: {
 };
 
 export const useDashboardStats = () => {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const fetchStats = async () => {
     try {
