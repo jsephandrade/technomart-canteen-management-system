@@ -37,6 +37,32 @@ export const useFeedback = () => {
     }
   };
 
+  const updateFeedback = async (id: string, updates: Partial<Feedback>) => {
+    try {
+      const updatedFeedback = await feedbackService.updateFeedback(id, updates);
+      setFeedback(prev => prev.map(item => item.id === id ? updatedFeedback : item));
+      toast.success('Feedback updated successfully');
+      return updatedFeedback;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update feedback';
+      toast.error(errorMessage);
+      throw err;
+    }
+  };
+
+  const createFeedback = async (feedbackData: Omit<Feedback, 'id'>) => {
+    try {
+      const newFeedback = await feedbackService.createFeedback(feedbackData);
+      setFeedback(prev => [...prev, newFeedback]);
+      toast.success('Feedback created successfully');
+      return newFeedback;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create feedback';
+      toast.error(errorMessage);
+      throw err;
+    }
+  };
+
   useEffect(() => {
     fetchFeedback();
   }, []);
@@ -46,6 +72,8 @@ export const useFeedback = () => {
     loading,
     error,
     markResolved,
+    updateFeedback,
+    createFeedback,
     refetch: fetchFeedback,
   };
 };

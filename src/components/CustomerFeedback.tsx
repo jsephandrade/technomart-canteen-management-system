@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,18 +15,15 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea as TextareaUi } from '@/components/ui/textarea';
 
 const CustomerFeedback: React.FC = () => {
-  const { data: feedback = [], isLoading, updateFeedback, createFeedback } = useFeedback();
+  const { feedback = [], loading, markResolved } = useFeedback();
   const [activeTab, setActiveTab] = useState('all');
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
   const [responseText, setResponseText] = useState('');
 
   const handleResolve = async (id: string) => {
-    const feedbackItem = feedback.find(item => item.id === id);
-    if (!feedbackItem) return;
-    
     try {
-      await updateFeedback(id, { ...feedbackItem, resolved: !feedbackItem.resolved });
-      toast.success(`Feedback marked as ${!feedbackItem.resolved ? 'resolved' : 'unresolved'}`);
+      await markResolved(id);
+      toast.success('Feedback marked as resolved');
     } catch (error) {
       toast.error('Failed to update feedback status');
     }
@@ -72,7 +70,7 @@ const CustomerFeedback: React.FC = () => {
       ? feedback.filter(item => item.resolved) 
       : feedback.filter(item => !item.resolved);
 
-  if (isLoading) {
+  if (loading) {
     return <div className="flex items-center justify-center h-64">Loading feedback...</div>;
   }
 

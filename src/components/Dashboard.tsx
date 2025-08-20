@@ -7,8 +7,8 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { TrendingUp, TrendingDown, Users, ShoppingBag, DollarSign } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { data: salesData = [], isLoading: salesLoading } = useSales();
-  const { data: menuItems = [], isLoading: menuLoading } = useMenuItems();
+  const { sales: salesData = [], loading: salesLoading } = useSales();
+  const { items: menuItems = [], loading: menuLoading } = useMenuItems();
 
   // Calculate dashboard stats from real data
   const dailySales = salesData
