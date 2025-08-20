@@ -41,19 +41,21 @@ const SignupCard = ({
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
   return (
-    <div className="card-face card-back bg-card p-8 rounded-2xl shadow-lg border border-border backdrop-blur-sm">
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-2">Create Account</h3>
-        <p className="text-muted-foreground text-sm">Join us and get started today</p>
+    <div className="card-face card-back bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-gray-100">
+      {/* Header Section */}
+      <div className="text-center mb-6">
+        <h3 className="text-3xl font-bold text-dark-grey mb-3">Create Account</h3>
+        <p className="text-gray-600 text-base">Join us and get started today</p>
       </div>
       
+      {/* Form Section */}
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label htmlFor="firstName" className="block text-sm font-medium text-foreground mb-2">
+          <div className="space-y-2">
+            <label htmlFor="firstName" className="block text-sm font-semibold text-dark-grey">
               First Name
             </label>
-            <div className={`relative transition-all duration-200 ${focusedField === 'firstName' ? 'transform scale-[1.02]' : ''}`}>
+            <div className={`relative transition-all duration-200 ${focusedField === 'firstName' ? 'transform scale-[1.01]' : ''}`}>
               <Input
                 id="firstName"
                 type="text"
@@ -62,17 +64,17 @@ const SignupCard = ({
                 onFocus={() => setFocusedField('firstName')}
                 onBlur={() => setFocusedField(null)}
                 placeholder="John"
-                className="h-12 px-4 text-base bg-background border-2 border-input focus:border-primary focus:ring-0 transition-all duration-200 rounded-lg"
+                className="h-11 px-4 text-base bg-white border-2 border-gray-200 focus:border-thalo-blue focus:ring-0 transition-all duration-200 rounded-xl hover:border-gray-300"
                 required
               />
             </div>
           </div>
           
-          <div className="space-y-1">
-            <label htmlFor="lastName" className="block text-sm font-medium text-foreground mb-2">
+          <div className="space-y-2">
+            <label htmlFor="lastName" className="block text-sm font-semibold text-dark-grey">
               Last Name
             </label>
-            <div className={`relative transition-all duration-200 ${focusedField === 'lastName' ? 'transform scale-[1.02]' : ''}`}>
+            <div className={`relative transition-all duration-200 ${focusedField === 'lastName' ? 'transform scale-[1.01]' : ''}`}>
               <Input
                 id="lastName"
                 type="text"
@@ -81,18 +83,18 @@ const SignupCard = ({
                 onFocus={() => setFocusedField('lastName')}
                 onBlur={() => setFocusedField(null)}
                 placeholder="Doe"
-                className="h-12 px-4 text-base bg-background border-2 border-input focus:border-primary focus:ring-0 transition-all duration-200 rounded-lg"
+                className="h-11 px-4 text-base bg-white border-2 border-gray-200 focus:border-thalo-blue focus:ring-0 transition-all duration-200 rounded-xl hover:border-gray-300"
                 required
               />
             </div>
           </div>
         </div>
         
-        <div className="space-y-1">
-          <label htmlFor="contactNumber" className="block text-sm font-medium text-foreground mb-2">
+        <div className="space-y-2">
+          <label htmlFor="contactNumber" className="block text-sm font-semibold text-dark-grey">
             Contact Number
           </label>
-          <div className={`relative transition-all duration-200 ${focusedField === 'contactNumber' ? 'transform scale-[1.02]' : ''}`}>
+          <div className={`relative transition-all duration-200 ${focusedField === 'contactNumber' ? 'transform scale-[1.01]' : ''}`}>
             <Input
               id="contactNumber"
               type="tel"
@@ -101,17 +103,17 @@ const SignupCard = ({
               onFocus={() => setFocusedField('contactNumber')}
               onBlur={() => setFocusedField(null)}
               placeholder="+1 (555) 000-0000"
-              className="h-12 px-4 text-base bg-background border-2 border-input focus:border-primary focus:ring-0 transition-all duration-200 rounded-lg"
+              className="h-11 px-4 text-base bg-white border-2 border-gray-200 focus:border-thalo-blue focus:ring-0 transition-all duration-200 rounded-xl hover:border-gray-300"
               required
             />
           </div>
         </div>
         
-        <div className="space-y-1">
-          <label htmlFor="signup-email" className="block text-sm font-medium text-foreground mb-2">
+        <div className="space-y-2">
+          <label htmlFor="signup-email" className="block text-sm font-semibold text-dark-grey">
             Email Address
           </label>
-          <div className={`relative transition-all duration-200 ${focusedField === 'email' ? 'transform scale-[1.02]' : ''}`}>
+          <div className={`relative transition-all duration-200 ${focusedField === 'email' ? 'transform scale-[1.01]' : ''}`}>
             <Input
               id="signup-email"
               type="email"
@@ -120,17 +122,17 @@ const SignupCard = ({
               onFocus={() => setFocusedField('email')}
               onBlur={() => setFocusedField(null)}
               placeholder="john.doe@example.com"
-              className="h-12 px-4 text-base bg-background border-2 border-input focus:border-primary focus:ring-0 transition-all duration-200 rounded-lg"
+              className="h-11 px-4 text-base bg-white border-2 border-gray-200 focus:border-thalo-blue focus:ring-0 transition-all duration-200 rounded-xl hover:border-gray-300"
               required
             />
           </div>
         </div>
         
-        <div className="space-y-1">
-          <label htmlFor="signup-password" className="block text-sm font-medium text-foreground mb-2">
+        <div className="space-y-2">
+          <label htmlFor="signup-password" className="block text-sm font-semibold text-dark-grey">
             Password
           </label>
-          <div className={`relative transition-all duration-200 ${focusedField === 'password' ? 'transform scale-[1.02]' : ''}`}>
+          <div className={`relative transition-all duration-200 ${focusedField === 'password' ? 'transform scale-[1.01]' : ''}`}>
             <Input
               id="signup-password"
               type={showPassword ? "text" : "password"}
@@ -139,13 +141,13 @@ const SignupCard = ({
               onFocus={() => setFocusedField('password')}
               onBlur={() => setFocusedField(null)}
               placeholder="Create a strong password"
-              className="h-12 px-4 pr-12 text-base bg-background border-2 border-input focus:border-primary focus:ring-0 transition-all duration-200 rounded-lg"
+              className="h-11 px-4 pr-12 text-base bg-white border-2 border-gray-200 focus:border-thalo-blue focus:ring-0 transition-all duration-200 rounded-xl hover:border-gray-300"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200 p-1 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-dark-grey transition-colors duration-200 p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-thalo-blue focus:ring-offset-2"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -156,11 +158,11 @@ const SignupCard = ({
         <Button
           type="submit"
           disabled={pending}
-          className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg disabled:transform-none disabled:shadow-none flex items-center justify-center gap-2 mt-6"
+          className="w-full h-12 bg-primary-red hover:bg-primary-red/90 text-white font-semibold text-base rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg disabled:transform-none disabled:shadow-none flex items-center justify-center gap-2 mt-6"
         >
           {pending ? (
             <>
-              <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
               Creating Account...
             </>
           ) : (
@@ -172,21 +174,23 @@ const SignupCard = ({
         </Button>
       </form>
       
-      <div className="mt-6 relative">
+      {/* Divider */}
+      <div className="my-6 relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
+          <div className="w-full border-t border-gray-200"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-card text-muted-foreground font-medium">Or continue with</span>
+          <span className="px-6 bg-white text-gray-500 font-medium">Or continue with</span>
         </div>
       </div>
       
-      <div className="mt-4 grid grid-cols-2 gap-4">
+      {/* Social Login Buttons */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
         <Button
           type="button"
           variant="outline"
           onClick={() => handleSocial('google')}
-          className="h-12 flex items-center justify-center gap-3 border-2 hover:border-thalo-blue hover:text-thalo-blue transition-all duration-200 transform hover:scale-[1.02]"
+          className="h-12 flex items-center justify-center gap-3 border-2 border-gray-200 hover:border-thalo-blue hover:text-thalo-blue hover:bg-blue-50 transition-all duration-200 transform hover:scale-[1.02] rounded-xl"
           disabled={pending}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -202,7 +206,7 @@ const SignupCard = ({
           type="button"
           variant="outline"
           onClick={() => handleSocial('facebook')}
-          className="h-12 flex items-center justify-center gap-3 border-2 hover:border-thalo-blue hover:text-thalo-blue transition-all duration-200 transform hover:scale-[1.02]"
+          className="h-12 flex items-center justify-center gap-3 border-2 border-gray-200 hover:border-thalo-blue hover:text-thalo-blue hover:bg-blue-50 transition-all duration-200 transform hover:scale-[1.02] rounded-xl"
           disabled={pending}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
@@ -212,12 +216,13 @@ const SignupCard = ({
         </Button>
       </div>
       
-      <div className="mt-6 text-center">
-        <p className="text-muted-foreground text-sm mb-2">Already have an account?</p>
+      {/* Footer */}
+      <div className="text-center">
+        <p className="text-gray-600 text-sm mb-3">Already have an account?</p>
         <Button 
           variant="ghost"
           onClick={toggleCard} 
-          className="text-thalo-blue hover:text-thalo-blue/80 hover:bg-thalo-blue/10 font-semibold transition-all duration-200 px-6 py-2 rounded-lg"
+          className="text-thalo-blue hover:text-thalo-blue/80 hover:bg-blue-50 font-semibold transition-all duration-200 px-6 py-2 rounded-xl"
           type="button"
         >
           Sign In Instead

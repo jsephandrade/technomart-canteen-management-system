@@ -31,25 +31,28 @@ const LoginCard = ({
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
   return (
-    <div className="card-face card-front bg-card p-8 rounded-2xl shadow-lg border border-border backdrop-blur-sm">
+    <div className="card-face card-front bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-gray-100">
+      {/* Header Section */}
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-2">Welcome Back</h3>
-        <p className="text-muted-foreground text-sm">Please sign in to your account</p>
+        <h3 className="text-3xl font-bold text-dark-grey mb-3">Welcome Back</h3>
+        <p className="text-gray-600 text-base">Sign in to your account to continue</p>
       </div>
       
+      {/* Error Message */}
       {error && (
-        <div className="p-4 mb-6 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-sm flex items-center gap-2 animate-fade-in" role="alert" aria-live="polite">
-          <div className="w-4 h-4 rounded-full bg-destructive flex-shrink-0"></div>
-          {error}
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-primary-red rounded-xl text-sm flex items-start gap-3 animate-fade-in" role="alert" aria-live="polite">
+          <div className="w-2 h-2 rounded-full bg-primary-red mt-2 flex-shrink-0"></div>
+          <span className="leading-relaxed">{error}</span>
         </div>
       )}
       
+      {/* Form Section */}
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-        <div className="space-y-1">
-          <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+        <div className="space-y-2">
+          <label htmlFor="email" className="block text-sm font-semibold text-dark-grey">
             Email Address
           </label>
-          <div className={`relative transition-all duration-200 ${focusedField === 'email' ? 'transform scale-[1.02]' : ''}`}>
+          <div className={`relative transition-all duration-200 ${focusedField === 'email' ? 'transform scale-[1.01]' : ''}`}>
             <Input
               id="email"
               type="email"
@@ -57,19 +60,19 @@ const LoginCard = ({
               onChange={(e) => setEmail(e.target.value)}
               onFocus={() => setFocusedField('email')}
               onBlur={() => setFocusedField(null)}
-              placeholder="Enter your email"
-              className="h-12 px-4 text-base bg-background border-2 border-input focus:border-primary focus:ring-0 transition-all duration-200 rounded-lg"
+              placeholder="Enter your email address"
+              className="h-12 px-4 text-base bg-white border-2 border-gray-200 focus:border-thalo-blue focus:ring-0 transition-all duration-200 rounded-xl hover:border-gray-300"
               required
               aria-describedby={error ? "email-error" : undefined}
             />
           </div>
         </div>
         
-        <div className="space-y-1">
-          <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
+        <div className="space-y-2">
+          <label htmlFor="password" className="block text-sm font-semibold text-dark-grey">
             Password
           </label>
-          <div className={`relative transition-all duration-200 ${focusedField === 'password' ? 'transform scale-[1.02]' : ''}`}>
+          <div className={`relative transition-all duration-200 ${focusedField === 'password' ? 'transform scale-[1.01]' : ''}`}>
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
@@ -78,14 +81,14 @@ const LoginCard = ({
               onFocus={() => setFocusedField('password')}
               onBlur={() => setFocusedField(null)}
               placeholder="Enter your password"
-              className="h-12 px-4 pr-12 text-base bg-background border-2 border-input focus:border-primary focus:ring-0 transition-all duration-200 rounded-lg"
+              className="h-12 px-4 pr-12 text-base bg-white border-2 border-gray-200 focus:border-thalo-blue focus:ring-0 transition-all duration-200 rounded-xl hover:border-gray-300"
               required
               aria-describedby={error ? "password-error" : undefined}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200 p-1 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-dark-grey transition-colors duration-200 p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-thalo-blue focus:ring-offset-2"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -96,12 +99,12 @@ const LoginCard = ({
         <Button
           type="submit"
           disabled={pending}
-          className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg disabled:transform-none disabled:shadow-none flex items-center justify-center gap-2"
+          className="w-full h-12 bg-primary-red hover:bg-primary-red/90 text-white font-semibold text-base rounded-xl transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg disabled:transform-none disabled:shadow-none flex items-center justify-center gap-2 mt-8"
         >
           {pending ? (
             <>
-              <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
-              Signing In...
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              Signing in...
             </>
           ) : (
             <>
@@ -112,21 +115,23 @@ const LoginCard = ({
         </Button>
       </form>
       
-      <div className="mt-8 relative">
+      {/* Divider */}
+      <div className="my-8 relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
+          <div className="w-full border-t border-gray-200"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-card text-muted-foreground font-medium">Or continue with</span>
+          <span className="px-6 bg-white text-gray-500 font-medium">Or continue with</span>
         </div>
       </div>
       
-      <div className="mt-6 grid grid-cols-2 gap-4">
+      {/* Social Login Buttons */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
         <Button
           type="button"
           variant="outline"
           onClick={() => handleSocial('google')}
-          className="h-12 flex items-center justify-center gap-3 border-2 hover:border-thalo-blue hover:text-thalo-blue transition-all duration-200 transform hover:scale-[1.02]"
+          className="h-12 flex items-center justify-center gap-3 border-2 border-gray-200 hover:border-thalo-blue hover:text-thalo-blue hover:bg-blue-50 transition-all duration-200 transform hover:scale-[1.02] rounded-xl"
           disabled={pending}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -142,7 +147,7 @@ const LoginCard = ({
           type="button"
           variant="outline"
           onClick={() => handleSocial('facebook')}
-          className="h-12 flex items-center justify-center gap-3 border-2 hover:border-thalo-blue hover:text-thalo-blue transition-all duration-200 transform hover:scale-[1.02]"
+          className="h-12 flex items-center justify-center gap-3 border-2 border-gray-200 hover:border-thalo-blue hover:text-thalo-blue hover:bg-blue-50 transition-all duration-200 transform hover:scale-[1.02] rounded-xl"
           disabled={pending}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
@@ -152,12 +157,13 @@ const LoginCard = ({
         </Button>
       </div>
       
-      <div className="mt-8 text-center">
-        <p className="text-muted-foreground text-sm mb-2">Don't have an account?</p>
+      {/* Footer */}
+      <div className="text-center">
+        <p className="text-gray-600 text-sm mb-3">Don't have an account?</p>
         <Button 
           variant="ghost"
           onClick={toggleCard} 
-          className="text-thalo-blue hover:text-thalo-blue/80 hover:bg-thalo-blue/10 font-semibold transition-all duration-200 px-6 py-2 rounded-lg"
+          className="text-thalo-blue hover:text-thalo-blue/80 hover:bg-blue-50 font-semibold transition-all duration-200 px-6 py-2 rounded-xl"
           type="button"
         >
           Create New Account
