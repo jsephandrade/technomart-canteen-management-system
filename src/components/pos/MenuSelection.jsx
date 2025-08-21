@@ -20,14 +20,33 @@ const MenuSelection = ({
   setSearchTerm,
   onAddToOrder
 }) => {
-  const filteredMenuItems =
-    categories
-      .find(cat => cat.id === activeCategory)
-      ?.items.filter(
-        item =>
-          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchTerm.toLowerCase())
-      ) || []
+  // Search across all categories when there's a search term
+  const getFilteredItems = () => {
+    if (searchTerm.trim()) {
+      const allItems = []
+      categories.forEach(category => {
+        category.items
+          .filter(
+            item =>
+              item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              item.description.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .forEach(item => {
+            allItems.push({ ...item, categoryName: category.name })
+          })
+      })
+      return allItems
+    } else {
+      // Return items from active category without category name when not searching
+      return (
+        categories
+          .find(cat => cat.id === activeCategory)
+          ?.items.map(item => ({ ...item, categoryName: "" })) || []
+      )
+    }
+  }
+
+  const filteredItems = getFilteredItems()
 
   return (
     <div className="md:col-span-2">
@@ -56,34 +75,16 @@ const MenuSelection = ({
           </div>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden flex flex-col">
-          <Tabs
-            defaultValue={categories[0].id}
-            value={activeCategory}
-            onValueChange={setActiveCategory}
-            className="flex-1 flex flex-col"
-          >
-            <div className="border-b">
-              <TabsList className="w-full justify-start overflow-auto p-0 h-auto">
-                {categories.map(category => (
-                  <TabsTrigger
-                    key={category.id}
-                    value={category.id}
-                    className="px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-colors"
-                  >
-                    {category.name}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </div>
-            {categories.map(category => (
-              <TabsContent
-                key={category.id}
-                value={category.id}
-                className="flex-1 overflow-y-auto p-0 mt-0"
-              >
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
-                  {filteredMenuItems.length > 0 ? (
-                    filteredMenuItems.map(item => (
+          {searchTerm.trim() ? (
+            // Search results view
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-4">
+                <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                  Search results for "{searchTerm}"
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {filteredItems.length > 0 ? (
+                    filteredItems.map(item => (
                       <div
                         key={item.id}
                         className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
@@ -100,9 +101,14 @@ const MenuSelection = ({
                         <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
                           {item.description}
                         </p>
-                        <p className="text-sm font-semibold">
-                          ₱{item.price.toFixed(2)}
-                        </p>
+                        <div className="flex justify-between items-center">
+                          <p className="text-sm font-semibold">
+                            ₱{item.price.toFixed(2)}
+                          </p>
+                          <Badge variant="outline" className="text-xs">
+                            {item.categoryName}
+                          </Badge>
+                        </div>
                       </div>
                     ))
                   ) : (
@@ -114,9 +120,72 @@ const MenuSelection = ({
                     </div>
                   )}
                 </div>
-              </TabsContent>
-            ))}
-          </Tabs>
+              </div>
+            </div>
+          ) : (
+            // Category tabs view
+            <Tabs
+              defaultValue={categories[0].id}
+              value={activeCategory}
+              onValueChange={setActiveCategory}
+              className="flex-1 flex flex-col"
+            >
+              <div className="border-b">
+                <TabsList className="w-full justify-start overflow-auto p-0 h-auto">
+                  {categories.map(category => (
+                    <TabsTrigger
+                      key={category.id}
+                      value={category.id}
+                      className="px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-colors"
+                    >
+                      {category.name}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
+              {categories.map(category => (
+                <TabsContent
+                  key={category.id}
+                  value={category.id}
+                  className="flex-1 overflow-y-auto p-0 mt-0"
+                >
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
+                    {filteredItems.length > 0 ? (
+                      filteredItems.map(item => (
+                        <div
+                          key={item.id}
+                          className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
+                          onClick={() => onAddToOrder(item)}
+                        >
+                          <div className="flex justify-between items-start mb-1">
+                            <h4 className="font-medium">{item.name}</h4>
+                            {item.popular && (
+                              <Badge variant="secondary" className="text-xs">
+                                Popular
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                            {item.description}
+                          </p>
+                          <p className="text-sm font-semibold">
+                            ₱{item.price.toFixed(2)}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-span-full text-center py-12">
+                        <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground/50 mb-3" />
+                        <p className="text-muted-foreground">
+                          No items in this category
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          )}
         </CardContent>
         <CardFooter className="border-t pt-3">
           <div className="flex justify-between w-full text-xs text-muted-foreground">
