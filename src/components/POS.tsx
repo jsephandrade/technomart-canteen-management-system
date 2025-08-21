@@ -21,6 +21,7 @@ import {
   Clock,
   Package,
   Check,
+  X,
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { MenuItem } from '@/types';
@@ -51,10 +52,60 @@ interface Category {
   items: MenuItem[];
 }
 
+interface HistoryOrder {
+  id: string;
+  orderNumber: string;
+  items: OrderItem[];
+  total: number;
+  timestamp: Date;
+  paymentMethod: string;
+}
+
 const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentOrder, setCurrentOrder] = useState<OrderItem[]>([]);
-  // Filipino categories and items (no images)
+  const [discount, setDiscount] = useState<{ type: 'percentage' | 'fixed'; value: number }>({ type: 'percentage', value: 0 });
+  const [isDiscountModalOpen, setIsDiscountModalOpen] = useState<boolean>(false);
+  const [isOrderHistoryModalOpen, setIsOrderHistoryModalOpen] = useState<boolean>(false);
+  const [discountInput, setDiscountInput] = useState<string>('');
+  const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
+
+  // Sample order history data
+  const [orderHistory] = useState<HistoryOrder[]>([
+    {
+      id: 'h001',
+      orderNumber: 'W-045',
+      items: [
+        { id: 'hi1', menuItemId: '1', name: 'Bam-i', price: 30, quantity: 2 },
+        { id: 'hi2', menuItemId: '8', name: 'Coke', price: 20, quantity: 1 }
+      ],
+      total: 80,
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      paymentMethod: 'Cash'
+    },
+    {
+      id: 'h002',
+      orderNumber: 'W-044',
+      items: [
+        { id: 'hi3', menuItemId: '11', name: 'Rice + Vegetable + Lumpia', price: 45, quantity: 1 }
+      ],
+      total: 45,
+      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+      paymentMethod: 'Card'
+    },
+    {
+      id: 'h003',
+      orderNumber: 'W-043',
+      items: [
+        { id: 'hi4', menuItemId: '5', name: 'Ginaling', price: 60, quantity: 1 },
+        { id: 'hi5', menuItemId: '2', name: 'Bihon', price: 20, quantity: 2 }
+      ],
+      total: 100,
+      timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
+      paymentMethod: 'Mobile'
+    }
+  ]);
+  
   const [categories] = useState<Category[]>([
     {
       id: '1',
@@ -209,19 +260,50 @@ const POS: React.FC = () => {
   
   const clearOrder = () => {
     setCurrentOrder([]);
+    setDiscount({ type: 'percentage', value: 0 });
   };
   
   const calculateSubtotal = () => {
     return currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
   
+  const calculateDiscountAmount = () => {
+    const subtotal = calculateSubtotal();
+    if (discount.type === 'percentage') {
+      return (subtotal * discount.value) / 100;
+    } else {
+      return Math.min(discount.value, subtotal);
+    }
+  };
+  
   const calculateTotal = () => {
-    return calculateSubtotal();
+    return Math.max(0, calculateSubtotal() - calculateDiscountAmount());
+  };
+
+  const applyDiscount = () => {
+    const value = parseFloat(discountInput);
+    if (isNaN(value) || value < 0) {
+      alert('Please enter a valid discount value');
+      return;
+    }
+    
+    if (discountType === 'percentage' && value > 100) {
+      alert('Percentage discount cannot exceed 100%');
+      return;
+    }
+    
+    setDiscount({ type: discountType, value });
+    setIsDiscountModalOpen(false);
+    setDiscountInput('');
+  };
+
+  const removeDiscount = () => {
+    setDiscount({ type: 'percentage', value: 0 });
   };
 
   const processPayment = () => {
     // This would typically integrate with a payment gateway
-    alert(`Payment of $${calculateTotal().toFixed(2)} processed via ${paymentMethod}`);
+    alert(`Payment of ₱${calculateTotal().toFixed(2)} processed via ${paymentMethod}`);
     clearOrder();
     setIsPaymentModalOpen(false);
   };
@@ -371,6 +453,7 @@ const POS: React.FC = () => {
               </CardFooter>
             </Card>
           </div>
+          
           {/* Order Side */}
           <div className="md:col-span-1">
             <Card className="h-full flex flex-col">
@@ -437,6 +520,22 @@ const POS: React.FC = () => {
                       <span>Subtotal</span>
                       <span>₱{calculateSubtotal().toFixed(2)}</span>
                     </div>
+                    {discount.value > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span className="flex items-center gap-1">
+                          Discount ({discount.type === 'percentage' ? `${discount.value}%` : `₱${discount.value}`})
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-4 w-4 text-red-500 hover:text-red-700"
+                            onClick={removeDiscount}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </span>
+                        <span>-₱{calculateDiscountAmount().toFixed(2)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between font-semibold text-base pt-2 border-t">
                       <span>Total</span>
                       <span>₱{calculateTotal().toFixed(2)}</span>
@@ -466,16 +565,159 @@ const POS: React.FC = () => {
                   </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-2 w-full">
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsDiscountModalOpen(true)}
+                  >
                     <Tag className="h-4 w-4 mr-1" /> Apply Discount
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsOrderHistoryModalOpen(true)}
+                  >
                     <Receipt className="h-4 w-4 mr-1" /> Order History
                   </Button>
                 </div>
               </CardFooter>
               
-              {/* Simple Payment Modal (would typically be a separate component) */}
+              {/* Apply Discount Modal */}
+              {isDiscountModalOpen && (
+                <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
+                  <Card className="w-full max-w-md mx-4">
+                    <CardHeader>
+                      <CardTitle>Apply Discount</CardTitle>
+                      <CardDescription>Enter discount details</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex gap-2">
+                        <button
+                          className={`flex-1 p-3 rounded-md border text-sm ${discountType === 'percentage' ? 'bg-primary text-primary-foreground' : 'bg-transparent'}`}
+                          onClick={() => setDiscountType('percentage')}
+                        >
+                          <Percent className="h-4 w-4 mx-auto mb-1" />
+                          Percentage
+                        </button>
+                        <button
+                          className={`flex-1 p-3 rounded-md border text-sm ${discountType === 'fixed' ? 'bg-primary text-primary-foreground' : 'bg-transparent'}`}
+                          onClick={() => setDiscountType('fixed')}
+                        >
+                          <DollarSign className="h-4 w-4 mx-auto mb-1" />
+                          Fixed Amount
+                        </button>
+                      </div>
+                      
+                      <div>
+                        <Input
+                          type="number"
+                          placeholder={discountType === 'percentage' ? 'Enter percentage (0-100)' : 'Enter amount (₱)'}
+                          value={discountInput}
+                          onChange={(e) => setDiscountInput(e.target.value)}
+                          min="0"
+                          max={discountType === 'percentage' ? '100' : undefined}
+                        />
+                      </div>
+                      
+                      {discountInput && (
+                        <div className="bg-muted p-3 rounded-md">
+                          <p className="text-sm">
+                            <strong>Preview:</strong>
+                          </p>
+                          <p className="text-sm">
+                            Subtotal: ₱{calculateSubtotal().toFixed(2)}
+                          </p>
+                          <p className="text-sm text-green-600">
+                            Discount: -₱{(() => {
+                              const value = parseFloat(discountInput) || 0;
+                              const subtotal = calculateSubtotal();
+                              if (discountType === 'percentage') {
+                                return ((subtotal * value) / 100).toFixed(2);
+                              } else {
+                                return Math.min(value, subtotal).toFixed(2);
+                              }
+                            })()}
+                          </p>
+                          <p className="text-sm font-semibold">
+                            Total: ₱{(() => {
+                              const value = parseFloat(discountInput) || 0;
+                              const subtotal = calculateSubtotal();
+                              let discountAmount = 0;
+                              if (discountType === 'percentage') {
+                                discountAmount = (subtotal * value) / 100;
+                              } else {
+                                discountAmount = Math.min(value, subtotal);
+                              }
+                              return Math.max(0, subtotal - discountAmount).toFixed(2);
+                            })()}
+                          </p>
+                        </div>
+                      )}
+                    </CardContent>
+                    <CardFooter className="flex gap-3">
+                      <Button className="flex-1" onClick={applyDiscount}>
+                        Apply Discount
+                      </Button>
+                      <Button variant="outline" onClick={() => {
+                        setIsDiscountModalOpen(false);
+                        setDiscountInput('');
+                      }}>
+                        Cancel
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </div>
+              )}
+
+              {/* Order History Modal */}
+              {isOrderHistoryModalOpen && (
+                <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
+                  <Card className="w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden">
+                    <CardHeader>
+                      <CardTitle>Order History</CardTitle>
+                      <CardDescription>Recent completed orders</CardDescription>
+                    </CardHeader>
+                    <CardContent className="overflow-y-auto">
+                      <div className="space-y-4">
+                        {orderHistory.map((order) => (
+                          <div key={order.id} className="border rounded-md p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <div>
+                                <h3 className="font-semibold">#{order.orderNumber}</h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {order.timestamp.toLocaleDateString()} {order.timestamp.toLocaleTimeString()}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  Payment: {order.paymentMethod}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-semibold">₱{order.total.toFixed(2)}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="bg-muted/50 p-3 rounded-md">
+                              {order.items.map((item, idx) => (
+                                <div key={idx} className="flex justify-between text-sm">
+                                  <span>{item.quantity}x {item.name}</span>
+                                  <span>₱{(item.price * item.quantity).toFixed(2)}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button className="w-full" onClick={() => setIsOrderHistoryModalOpen(false)}>
+                        Close
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </div>
+              )}
+              
+              {/* Payment Modal */}
               {isPaymentModalOpen && (
                 <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
                   <Card className="w-full max-w-md mx-4">
@@ -533,6 +775,12 @@ const POS: React.FC = () => {
                           <span className="text-sm">Subtotal:</span>
                           <span className="text-sm">₱{calculateSubtotal().toFixed(2)}</span>
                         </div>
+                        {discount.value > 0 && (
+                          <div className="flex justify-between mb-2">
+                            <span className="text-sm text-green-600">Discount:</span>
+                            <span className="text-sm text-green-600">-₱{calculateDiscountAmount().toFixed(2)}</span>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                     <CardFooter className="flex gap-3">
