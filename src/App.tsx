@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import HelpPage from "./pages/HelpPage";
+import SettingsPage from "./pages/SettingsPage";
 import MainLayout from "./layouts/MainLayout";
 import MenuManagement from "./components/MenuManagement";
 import SalesAnalytics from "./components/SalesAnalytics";
@@ -89,6 +89,11 @@ const ProtectedRoutes = () => {
         <Route path="/notifications" element={
           <MainLayout title="Notifications">
             <Notifications />
+          </MainLayout>
+        } />
+        <Route path="/settings" element={
+          <MainLayout title="Settings">
+            <SettingsPage />
           </MainLayout>
         } />
         <Route path="/help" element={

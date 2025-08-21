@@ -62,7 +62,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
               <Button variant="outline" asChild>
                 <Link to="/help">Help</Link>
               </Button>
-              <Button variant="outline">Settings</Button>
+              <Button variant="outline" asChild>
+                <Link to="/settings">Settings</Link>
+              </Button>
               <Button variant="ghost" onClick={logout} title="Logout">
                 <LogOut className="mr-1" />
                 Logout
