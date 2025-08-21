@@ -2,20 +2,18 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Utensils, Plus, Minus, X, DollarSign } from 'lucide-react';
+import { X } from 'lucide-react';
+import { MenuItem } from '@/types';
+import { Category } from '@/types/pos';
+import CateringMenuSelection from './CateringMenuSelection';
+import CurrentCateringOrder from './CurrentCateringOrder';
 
-interface MenuItem {
+interface OrderItem {
   id: string;
+  menuItemId: string;
   name: string;
-  category: string;
   price: number;
-  description: string;
-  popular: boolean;
+  quantity: number;
 }
 
 interface EventMenuItem {
@@ -55,56 +53,128 @@ export const MenuItemsModal: React.FC<MenuItemsModalProps> = ({
   menuItems,
   onUpdateMenuItems
 }) => {
-  const [selectedItems, setSelectedItems] = useState<Record<string, number>>({});
+  const [selectedItems, setSelectedItems] = useState<OrderItem[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('1');
+  const [paymentType, setPaymentType] = useState<'full' | 'downpayment'>('downpayment');
+  const [amountPaid, setAmountPaid] = useState('');
 
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    if (quantity <= 0) {
-      const { [itemId]: removed, ...rest } = selectedItems;
-      setSelectedItems(rest);
+  // Sample categories - same as POS
+  const categories: Category[] = [
+    {
+      id: '1',
+      name: 'Noodles',
+      items: menuItems.filter(item => item.category === 'Noodles')
+    },
+    {
+      id: '2',
+      name: 'Sandwich',
+      items: menuItems.filter(item => item.category === 'Sandwich')
+    },
+    {
+      id: '3',
+      name: 'Main Dish',
+      items: menuItems.filter(item => item.category === 'Main Dish')
+    },
+    {
+      id: '4',
+      name: 'Viand',
+      items: menuItems.filter(item => item.category === 'Viand')
+    },
+    {
+      id: '5',
+      name: 'Drinks',
+      items: menuItems.filter(item => item.category === 'Drinks')
+    },
+    {
+      id: '6',
+      name: 'Combo Meals',
+      items: menuItems.filter(item => item.category === 'Combo Meals')
+    }
+  ];
+
+  const addToOrder = (menuItem: MenuItem) => {
+    setSelectedItems(prevItems => {
+      const existingItemIndex = prevItems.findIndex(item => item.menuItemId === menuItem.id);
+      
+      if (existingItemIndex !== -1) {
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex].quantity += 1;
+        return updatedItems;
+      } else {
+        return [
+          ...prevItems,
+          {
+            id: `order-item-${Date.now()}`,
+            menuItemId: menuItem.id,
+            name: menuItem.name,
+            price: menuItem.price,
+            quantity: 1
+          }
+        ];
+      }
+    });
+  };
+
+  const updateQuantity = (itemId: string, change: 1 | -1) => {
+    setSelectedItems(prevItems => {
+      return prevItems.map(item => {
+        if (item.id === itemId) {
+          const newQuantity = item.quantity + change;
+          return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
+        }
+        return item;
+      }).filter(item => item.quantity > 0);
+    });
+  };
+
+  const removeItem = (itemId: string) => {
+    setSelectedItems(prevItems => prevItems.filter(item => item.id !== itemId));
+  };
+
+  const clearOrder = () => {
+    setSelectedItems([]);
+    setAmountPaid('');
+  };
+
+  const calculateSubtotal = () => {
+    return selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  const calculateDownpayment = () => {
+    return calculateSubtotal() * 0.5;
+  };
+
+  const calculateBalance = () => {
+    const subtotal = calculateSubtotal();
+    const paidAmount = parseFloat(amountPaid) || 0;
+    
+    if (paymentType === 'full') {
+      return subtotal - paidAmount;
     } else {
-      setSelectedItems(prev => ({
-        ...prev,
-        [itemId]: quantity
-      }));
+      return subtotal - paidAmount;
     }
   };
 
   const handleSave = () => {
     if (event) {
-      const eventMenuItems: EventMenuItem[] = Object.entries(selectedItems).map(([itemId, quantity]) => {
-        const item = menuItems.find(m => m.id === itemId);
-        return {
-          menuItemId: itemId,
-          quantity,
-          price: item ? item.price * quantity : 0
-        };
-      });
+      const eventMenuItems: EventMenuItem[] = selectedItems.map(item => ({
+        menuItemId: item.menuItemId,
+        quantity: item.quantity,
+        price: item.price * item.quantity
+      }));
       
       onUpdateMenuItems(event.id, eventMenuItems);
       onOpenChange(false);
+      clearOrder();
     }
   };
-
-  const getTotalCost = () => {
-    return Object.entries(selectedItems).reduce((total, [itemId, quantity]) => {
-      const item = menuItems.find(m => m.id === itemId);
-      return total + (item ? item.price * quantity : 0);
-    }, 0);
-  };
-
-  const categorizedItems = menuItems.reduce((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = [];
-    }
-    acc[item.category].push(item);
-    return acc;
-  }, {} as Record<string, MenuItem[]>);
 
   if (!event) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-7xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Menu Items Selection</span>
@@ -112,101 +182,48 @@ export const MenuItemsModal: React.FC<MenuItemsModalProps> = ({
               <X className="h-4 w-4" />
             </Button>
           </DialogTitle>
-          <p className="text-sm text-muted-foreground">{event.name} - {event.attendees} attendees</p>
         </DialogHeader>
         
-        <div className="space-y-6">
-          {Object.entries(categorizedItems).map(([category, items]) => (
-            <Card key={category}>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Utensils className="h-4 w-4" />
-                  {category}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {items.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium">{item.name}</h4>
-                        {item.popular && (
-                          <Badge variant="secondary" className="text-xs">Popular</Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                      <div className="flex items-center gap-1 mt-2">
-                        <DollarSign className="h-3 w-3" />
-                        <span className="font-medium">${item.price.toFixed(2)}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleQuantityChange(item.id, (selectedItems[item.id] || 0) - 1)}
-                        disabled={!selectedItems[item.id]}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                      
-                      <Input
-                        type="number"
-                        min="0"
-                        value={selectedItems[item.id] || 0}
-                        onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value) || 0)}
-                        className="w-16 text-center"
-                      />
-                      
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleQuantityChange(item.id, (selectedItems[item.id] || 0) + 1)}
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          ))}
-
-          {Object.keys(selectedItems).length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Object.entries(selectedItems).map(([itemId, quantity]) => {
-                    const item = menuItems.find(m => m.id === itemId);
-                    return item ? (
-                      <div key={itemId} className="flex justify-between items-center">
-                        <span>{item.name} x{quantity}</span>
-                        <span className="font-medium">${(item.price * quantity).toFixed(2)}</span>
-                      </div>
-                    ) : null;
-                  })}
-                  <div className="border-t pt-2 mt-2">
-                    <div className="flex justify-between items-center font-semibold">
-                      <span>Total Cost:</span>
-                      <span>${getTotalCost().toFixed(2)}</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+        <div className="grid gap-4 grid-cols-1 lg:grid-cols-3 h-[calc(90vh-200px)]">
+          <div className="lg:col-span-2">
+            <CateringMenuSelection
+              categories={categories}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              onAddToOrder={addToOrder}
+              eventName={event.name}
+              attendees={event.attendees}
+            />
+          </div>
+          
+          <div className="lg:col-span-1">
+            <CurrentCateringOrder
+              selectedItems={selectedItems}
+              paymentType={paymentType}
+              amountPaid={amountPaid}
+              onUpdateQuantity={updateQuantity}
+              onRemoveItem={removeItem}
+              onClearOrder={clearOrder}
+              onPaymentTypeChange={setPaymentType}
+              onAmountPaidChange={setAmountPaid}
+              calculateSubtotal={calculateSubtotal}
+              calculateDownpayment={calculateDownpayment}
+              calculateBalance={calculateBalance}
+            />
+          </div>
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>
-            Save Menu Items
+          <Button 
+            onClick={handleSave}
+            disabled={selectedItems.length === 0}
+          >
+            Save Menu Items & Payment
           </Button>
         </DialogFooter>
       </DialogContent>
