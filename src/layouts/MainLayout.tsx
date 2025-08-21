@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import { useAuth } from "@/components/AuthContext";
 import { LogOut } from "lucide-react";
+import { Link } from 'react-router-dom';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -58,7 +59,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
               <h1 className="text-xl font-semibold">{title || 'Canteen Management System'}</h1>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline">Help</Button>
+              <Button variant="outline" asChild>
+                <Link to="/help">Help</Link>
+              </Button>
               <Button variant="outline">Settings</Button>
               <Button variant="ghost" onClick={logout} title="Logout">
                 <LogOut className="mr-1" />

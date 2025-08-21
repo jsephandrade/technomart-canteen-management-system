@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -5,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import HelpPage from "./pages/HelpPage";
 import MainLayout from "./layouts/MainLayout";
 import MenuManagement from "./components/MenuManagement";
 import SalesAnalytics from "./components/SalesAnalytics";
@@ -87,6 +89,11 @@ const ProtectedRoutes = () => {
         <Route path="/notifications" element={
           <MainLayout title="Notifications">
             <Notifications />
+          </MainLayout>
+        } />
+        <Route path="/help" element={
+          <MainLayout title="Help Center">
+            <HelpPage />
           </MainLayout>
         } />
         <Route path="*" element={<NotFound />} />
