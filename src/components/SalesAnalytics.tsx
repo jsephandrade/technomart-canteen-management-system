@@ -47,13 +47,24 @@ const getSalesByItem = (data: Sale[]) => {
   
   return Object.entries(itemSales)
     .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 5);
+    .sort((a, b) => b.value - a.value);
+};
+
+// Helper function to get top selling items
+const getTopSellingItems = (data: Sale[]) => {
+  return getSalesByItem(data).slice(0, 5);
+};
+
+// Helper function to get lowest selling items
+const getLowestSellingItems = (data: Sale[]) => {
+  const allItems = getSalesByItem(data);
+  return allItems.slice(-5).reverse(); // Get last 5 and reverse to show lowest first
 };
 
 const dailySalesData = groupSalesByDate(salesData);
 const paymentMethodData = getSalesByPaymentMethod(salesData);
-const topSellingItemsData = getSalesByItem(salesData);
+const topSellingItemsData = getTopSellingItems(salesData);
+const lowestSellingItemsData = getLowestSellingItems(salesData);
 
 // Colors for pie chart
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -174,15 +185,15 @@ const SalesAnalytics: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-3xl font-semibold">Sales Analytics</h2>
       
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs defaultValue="financial" className="w-full">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="items">Top Items</TabsTrigger>
+          <TabsTrigger value="financial">Financial</TabsTrigger>
+          <TabsTrigger value="menu">Menu</TabsTrigger>
+          <TabsTrigger value="payment">Payment</TabsTrigger>
           <TabsTrigger value="payments">Payment Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6 space-y-6">
+        <TabsContent value="financial" className="mt-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -210,105 +221,6 @@ const SalesAnalytics: React.FC = () => {
                       name="Sales (₱)" 
                     />
                   </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Sales by Payment Method</CardTitle>
-                <CardDescription>
-                  Distribution of sales by payment type
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={paymentMethodData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {paymentMethodData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => {
-                      // Check if value is a number before calling toFixed
-                      const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
-                      return [formattedValue, 'Amount'];
-                    }} />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Sales Summary</CardTitle>
-              <CardDescription>
-                Key performance indicators for your canteen
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Sales</h3>
-                <p className="text-2xl font-bold">
-                  ₱{salesData.reduce((acc, sale) => acc + sale.total, 0).toFixed(2)}
-                </p>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Orders</h3>
-                <p className="text-2xl font-bold">{salesData.length}</p>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Average Order Value</h3>
-                <p className="text-2xl font-bold">
-                  ₱{(salesData.reduce((acc, sale) => acc + sale.total, 0) / salesData.length).toFixed(2)}
-                </p>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Items Sold</h3>
-                <p className="text-2xl font-bold">
-                  {salesData.reduce((acc, sale) => {
-                    return acc + sale.items.reduce((itemsAcc, item) => itemsAcc + item.quantity, 0);
-                  }, 0)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="analytics" className="mt-6 space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Peak Hours Analysis</CardTitle>
-                <CardDescription>
-                  Sales performance throughout the day
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={peakHoursData}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="hour" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="sales" name="Sales (₱)" fill="hsl(var(--primary))" />
-                    <Bar dataKey="orders" name="Orders" fill="hsl(var(--secondary))" />
-                  </BarChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
@@ -353,32 +265,37 @@ const SalesAnalytics: React.FC = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Performance Insights</CardTitle>
+              <CardTitle>Financial Summary</CardTitle>
               <CardDescription>
-                Key insights from your sales data
+                Key financial indicators for your canteen
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-2">Peak Hour</h3>
-                <p className="text-2xl font-bold mb-1">1:00 PM</p>
-                <p className="text-sm text-muted-foreground">Highest daily sales period</p>
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Sales</h3>
+                <p className="text-2xl font-bold">
+                  ₱{salesData.reduce((acc, sale) => acc + sale.total, 0).toFixed(2)}
+                </p>
               </div>
               <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-2">Best Month</h3>
-                <p className="text-2xl font-bold mb-1">June</p>
-                <p className="text-sm text-muted-foreground">₱17,300 total sales</p>
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Orders</h3>
+                <p className="text-2xl font-bold">{salesData.length}</p>
               </div>
               <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-2">Growth Rate</h3>
-                <p className="text-2xl font-bold mb-1">+23%</p>
-                <p className="text-sm text-muted-foreground">Compared to last quarter</p>
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Average Order Value</h3>
+                <p className="text-2xl font-bold">
+                  ₱{(salesData.reduce((acc, sale) => acc + sale.total, 0) / salesData.length).toFixed(2)}
+                </p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Monthly Growth</h3>
+                <p className="text-2xl font-bold text-green-600">+23%</p>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="items" className="mt-6">
+        <TabsContent value="menu" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -398,12 +315,11 @@ const SalesAnalytics: React.FC = () => {
                     <XAxis type="number" />
                     <YAxis dataKey="name" type="category" />
                     <Tooltip formatter={(value) => {
-                      // Check if value is a number before calling toFixed
                       const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
                       return [formattedValue, 'Revenue'];
                     }} />
                     <Legend />
-                    <Bar dataKey="value" name="Revenue (₱)" fill="hsl(var(--secondary))" />
+                    <Bar dataKey="value" name="Revenue (₱)" fill="hsl(var(--primary))" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -411,40 +327,156 @@ const SalesAnalytics: React.FC = () => {
             
             <Card>
               <CardHeader>
-                <CardTitle>Item Performance Analysis</CardTitle>
+                <CardTitle>Lowest Selling Items</CardTitle>
                 <CardDescription>
-                  Detailed breakdown of top performing items
+                  Items that need attention or promotion
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {topSellingItemsData.map((item, index) => {
-                    const menuItem = menuItems.find(mi => mi.name === item.name);
-                    const profitMargin = menuItem ? ((item.value - (menuItem.price * 0.4)) / item.value) * 100 : 0;
-                    
-                    return (
-                      <div key={index} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">{item.name}</span>
-                          <span className="font-medium">₱{item.value.toFixed(2)}</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2.5">
-                          <div 
-                            className="bg-secondary h-2.5 rounded-full" 
-                            style={{ width: `${profitMargin}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>Profit margin</span>
-                          <span>{profitMargin.toFixed(1)}%</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={lowestSellingItemsData}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" />
+                    <Tooltip formatter={(value) => {
+                      const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
+                      return [formattedValue, 'Revenue'];
+                    }} />
+                    <Legend />
+                    <Bar dataKey="value" name="Revenue (₱)" fill="hsl(var(--destructive))" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
           </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Menu Performance Insights</CardTitle>
+              <CardDescription>
+                Analysis of menu item performance
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Best Performer</h3>
+                <p className="text-xl font-bold mb-1">{topSellingItemsData[0]?.name}</p>
+                <p className="text-sm text-muted-foreground">₱{topSellingItemsData[0]?.value.toFixed(2)} revenue</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Needs Attention</h3>
+                <p className="text-xl font-bold mb-1">{lowestSellingItemsData[0]?.name}</p>
+                <p className="text-sm text-muted-foreground">₱{lowestSellingItemsData[0]?.value.toFixed(2)} revenue</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Total Menu Items</h3>
+                <p className="text-2xl font-bold mb-1">{menuItems.length}</p>
+                <p className="text-sm text-muted-foreground">Active items</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="payment" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Sales by Payment Method</CardTitle>
+                <CardDescription>
+                  Distribution of sales by payment type
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={paymentMethodData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {paymentMethodData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => {
+                      const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
+                      return [formattedValue, 'Amount'];
+                    }} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment Method Breakdown</CardTitle>
+                <CardDescription>
+                  Detailed analysis by payment method
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={paymentMethodData}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => {
+                      const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
+                      return [formattedValue, 'Amount'];
+                    }} />
+                    <Legend />
+                    <Bar dataKey="value" name="Sales (₱)" fill="hsl(var(--secondary))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Insights</CardTitle>
+              <CardDescription>
+                Key insights about payment preferences
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Most Popular</h3>
+                <p className="text-2xl font-bold mb-1">{paymentMethodData[0]?.name}</p>
+                <p className="text-sm text-muted-foreground">₱{paymentMethodData[0]?.value.toFixed(2)} total</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Digital Payments</h3>
+                <p className="text-2xl font-bold mb-1">
+                  {Math.round(((paymentMethodData.find(p => p.name === 'Card')?.value || 0) + 
+                               (paymentMethodData.find(p => p.name === 'Mobile')?.value || 0)) / 
+                              paymentMethodData.reduce((acc, p) => acc + p.value, 0) * 100)}%
+                </p>
+                <p className="text-sm text-muted-foreground">Of total sales</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Cash Transactions</h3>
+                <p className="text-2xl font-bold mb-1">
+                  {Math.round((paymentMethodData.find(p => p.name === 'Cash')?.value || 0) / 
+                             paymentMethodData.reduce((acc, p) => acc + p.value, 0) * 100)}%
+                </p>
+                <p className="text-sm text-muted-foreground">Of total sales</p>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="payments" className="mt-6">
