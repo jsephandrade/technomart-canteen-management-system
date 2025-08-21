@@ -92,9 +92,6 @@ const MenuSelection: React.FC<MenuSelectionProps> = ({
                       >
                         <div className="flex justify-between items-start mb-1">
                           <h4 className="font-medium">{item.name}</h4>
-                          {item.popular && (
-                            <Badge variant="secondary" className="text-xs">Popular</Badge>
-                          )}
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{item.description}</p>
                         <div className="flex justify-between items-center">
@@ -151,9 +148,6 @@ const MenuSelection: React.FC<MenuSelectionProps> = ({
                         >
                           <div className="flex justify-between items-start mb-1">
                             <h4 className="font-medium">{item.name}</h4>
-                            {item.popular && (
-                              <Badge variant="secondary" className="text-xs">Popular</Badge>
-                            )}
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{item.description}</p>
                           <p className="text-sm font-semibold">₱{item.price.toFixed(2)}</p>
