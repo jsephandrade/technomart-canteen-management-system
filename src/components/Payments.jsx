@@ -8,13 +8,11 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { CustomBadge } from '@/components/ui/custom-badge';
 import {
   CreditCard,
   Search,
   Download,
-  Filter,
   Receipt,
   ArrowUpDown,
   MoreVertical,
@@ -42,11 +40,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// Removed Tabs imports since we no longer show Settings
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch'; // NEW
+
 const Payments = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [dateRange, setDateRange] = useState('7d');
+
+  // Local state for payment method activation
+  const [methodActive, setMethodActive] = useState({
+    cash: true,
+    card: true,
+    mobile: true,
+  });
+
   const [payments, setPayments] = useState([
     {
       id: '1',
@@ -110,6 +119,7 @@ const Payments = () => {
       customer: 'David Brown',
     },
   ]);
+
   const getPaymentMethodIcon = (method) => {
     switch (method) {
       case 'cash':
@@ -122,6 +132,7 @@ const Payments = () => {
         return <CircleDollarSign className="h-4 w-4" />;
     }
   };
+
   const getStatusBadgeVariant = (status) => {
     switch (status) {
       case 'completed':
@@ -136,6 +147,7 @@ const Payments = () => {
         return 'default';
     }
   };
+
   const getTotalAmount = (status = 'all') => {
     return payments
       .filter((payment) => status === 'all' || payment.status === status)
@@ -145,21 +157,26 @@ const Payments = () => {
       }, 0)
       .toFixed(2);
   };
+
   const filteredPayments = payments.filter((payment) => {
-    // Filter by search term
     const matchesSearch =
       payment.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (payment.customer &&
         payment.customer.toLowerCase().includes(searchTerm.toLowerCase()));
-    // Filter by status
+
     const matchesStatus =
       selectedStatus === 'all' || payment.status === selectedStatus;
-    return matchesSearch && matchesStatus;
+
+    // Optional: if you want inactive methods to be hidden from lists
+    const methodIsActive = methodActive[payment.method] ?? true;
+
+    return matchesSearch && matchesStatus && methodIsActive;
   });
-  // Sort payments by date (most recent first)
+
   const sortedPayments = [...filteredPayments].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <div className="md:col-span-2 space-y-4">
@@ -177,15 +194,10 @@ const Payments = () => {
               >
                 <Download className="h-4 w-4 mr-1" /> Export
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <Filter className="h-4 w-4 mr-1" /> Filter
-              </Button>
+              {/* Filter button removed */}
             </div>
           </CardHeader>
+
           <CardContent className="space-y-4">
             <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
               <div className="relative flex-1">
@@ -299,10 +311,6 @@ const Payments = () => {
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
-                                  <Receipt className="mr-2 h-4 w-4" /> View
-                                  Receipt
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
                                   <Download className="mr-2 h-4 w-4" /> Download
                                   Invoice
                                 </DropdownMenuItem>
@@ -335,6 +343,7 @@ const Payments = () => {
               </div>
             </div>
           </CardContent>
+
           <CardFooter className="border-t py-3 flex justify-between">
             <div className="text-xs text-muted-foreground">
               Showing {sortedPayments.length} of {payments.length} transactions
@@ -369,10 +378,10 @@ const Payments = () => {
                           payment.status === 'completed'
                             ? 'bg-green-100'
                             : payment.status === 'failed'
-                              ? 'bg-red-100'
-                              : payment.status === 'refunded'
-                                ? 'bg-amber-100'
-                                : 'bg-gray-100'
+                            ? 'bg-red-100'
+                            : payment.status === 'refunded'
+                            ? 'bg-amber-100'
+                            : 'bg-gray-100'
                         }`}
                       >
                         {payment.status === 'completed' && (
@@ -399,16 +408,12 @@ const Payments = () => {
                           </CustomBadge>
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {payment.customer
-                            ? payment.customer
-                            : 'Walk-in Customer'}
+                          {payment.customer ? payment.customer : 'Walk-in Customer'}
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium">
-                        ₱{payment.amount.toFixed(2)}
-                      </div>
+                      <div className="font-medium">₱{payment.amount.toFixed(2)}</div>
                       <div className="text-xs text-muted-foreground capitalize">
                         {payment.method}
                       </div>
@@ -433,68 +438,82 @@ const Payments = () => {
             <CardDescription>Configure accepted payment types</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="active">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-              </TabsList>
-              <TabsContent value="active" className="pt-4">
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center border p-3 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <Banknote className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="font-medium">Cash</p>
-                        <p className="text-xs text-muted-foreground">
-                          Physical currency
-                        </p>
-                      </div>
-                    </div>
-                    <Badge>Active</Badge>
-                  </div>
-
-                  <div className="flex justify-between items-center border p-3 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <CreditCard className="h-5 w-5 text-blue-600" />
-                      <div>
-                        <p className="font-medium">Credit/Debit Cards</p>
-                        <p className="text-xs text-muted-foreground">
-                          Visa, Mastercard, Amex
-                        </p>
-                      </div>
-                    </div>
-                    <Badge>Active</Badge>
-                  </div>
-
-                  <div className="flex justify-between items-center border p-3 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <Smartphone className="h-5 w-5 text-purple-600" />
-                      <div>
-                        <p className="font-medium">Mobile Payments</p>
-                        <p className="text-xs text-muted-foreground">
-                          Apple Pay, Google Pay
-                        </p>
-                      </div>
-                    </div>
-                    <Badge>Active</Badge>
+            {/* Removed Tabs & Settings. Show direct list with switches */}
+            <div className="space-y-4">
+              {/* Cash */}
+              <div className="flex justify-between items-center border p-3 rounded-md">
+                <div className="flex items-center gap-3">
+                  <Banknote className="h-5 w-5 text-green-600" />
+                  <div>
+                    <p className="font-medium">Cash</p>
+                    <p className="text-xs text-muted-foreground">Physical currency</p>
                   </div>
                 </div>
-              </TabsContent>
-              <TabsContent value="settings" className="pt-4">
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">
-                    Payment method configuration
-                  </p>
-                  <Button className="mt-4" variant="outline" size="sm">
-                    Configure Settings
-                  </Button>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {methodActive.cash ? 'Active' : 'Inactive'}
+                  </span>
+                  <Switch
+                    checked={methodActive.cash}
+                    onCheckedChange={(v) =>
+                      setMethodActive((prev) => ({ ...prev, cash: v }))
+                    }
+                    aria-label="Toggle cash method"
+                  />
                 </div>
-              </TabsContent>
-            </Tabs>
+              </div>
+
+              {/* Card */}
+              <div className="flex justify-between items-center border p-3 rounded-md">
+                <div className="flex items-center gap-3">
+                  <CreditCard className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="font-medium">Credit/Debit Cards</p>
+                    <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {methodActive.card ? 'Active' : 'Inactive'}
+                  </span>
+                  <Switch
+                    checked={methodActive.card}
+                    onCheckedChange={(v) =>
+                      setMethodActive((prev) => ({ ...prev, card: v }))
+                    }
+                    aria-label="Toggle card method"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile */}
+              <div className="flex justify-between items-center border p-3 rounded-md">
+                <div className="flex items-center gap-3">
+                  <Smartphone className="h-5 w-5 text-purple-600" />
+                  <div>
+                    <p className="font-medium">Mobile Payments</p>
+                    <p className="text-xs text-muted-foreground">Apple Pay, Google Pay</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {methodActive.mobile ? 'Active' : 'Inactive'}
+                  </span>
+                  <Switch
+                    checked={methodActive.mobile}
+                    onCheckedChange={(v) =>
+                      setMethodActive((prev) => ({ ...prev, mobile: v }))
+                    }
+                    aria-label="Toggle mobile method"
+                  />
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
     </div>
   );
 };
+
 export default Payments;
