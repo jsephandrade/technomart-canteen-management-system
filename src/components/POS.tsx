@@ -95,6 +95,18 @@ const POS: React.FC = () => {
         { id: '9', name: 'Royal', description: 'Sweet Filipino orange soda.', price: 20, category: 'Drinks', available: true, popular: false },
         { id: '10', name: 'Sprite', description: 'Lemon-lime flavored soda.', price: 20, category: 'Drinks', available: true, popular: false }
       ]
+    },
+    {
+      id: '6',
+      name: 'Combo Meals',
+      items: [
+        { id: '11', name: 'Rice + Vegetable + Lumpia', description: 'Complete combo meal with rice, vegetables, and lumpia.', price: 45, category: 'Combo Meals', available: true, popular: true },
+        { id: '12', name: 'Rice + Hamburger + Egg', description: 'Hearty combo with rice, hamburger, and egg.', price: 45, category: 'Combo Meals', available: true, popular: true },
+        { id: '13', name: 'Rice + Bihon/Bam-i + Siomai', description: 'Traditional combo with rice, noodles, and siomai.', price: 45, category: 'Combo Meals', available: true, popular: true },
+        { id: '14', name: 'Rice + Chorizo + Boiled Egg', description: 'Flavorful combo with rice, chorizo, and boiled egg.', price: 45, category: 'Combo Meals', available: true, popular: false },
+        { id: '15', name: 'Rice + Hotdog + Nugahong', description: 'Classic combo with rice, hotdog, and nugahong.', price: 45, category: 'Combo Meals', available: true, popular: false },
+        { id: '16', name: 'Rice + Fried Egg + Chorizo', description: 'Simple yet satisfying combo with rice, fried egg, and chorizo.', price: 45, category: 'Combo Meals', available: true, popular: false }
+      ]
     }
   ]);
   
