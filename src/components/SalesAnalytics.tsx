@@ -47,16 +47,50 @@ const getSalesByItem = (data: Sale[]) => {
   
   return Object.entries(itemSales)
     .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 5);
+    .sort((a, b) => b.value - a.value);
+};
+
+// Helper function to get top selling items
+const getTopSellingItems = (data: Sale[]) => {
+  return getSalesByItem(data).slice(0, 5);
+};
+
+// Helper function to get lowest selling items
+const getLowestSellingItems = (data: Sale[]) => {
+  const allItems = getSalesByItem(data);
+  return allItems.slice(-5).reverse(); // Get last 5 and reverse to show lowest first
 };
 
 const dailySalesData = groupSalesByDate(salesData);
 const paymentMethodData = getSalesByPaymentMethod(salesData);
-const topSellingItemsData = getSalesByItem(salesData);
+const topSellingItemsData = getTopSellingItems(salesData);
+const lowestSellingItemsData = getLowestSellingItems(salesData);
 
 // Colors for pie chart
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+// Historical analytics data
+const peakHoursData = [
+  { hour: '8:00', sales: 45, orders: 8 },
+  { hour: '9:00', sales: 78, orders: 12 },
+  { hour: '10:00', sales: 120, orders: 18 },
+  { hour: '11:00', sales: 185, orders: 25 },
+  { hour: '12:00', sales: 280, orders: 35 },
+  { hour: '13:00', sales: 320, orders: 42 },
+  { hour: '14:00', sales: 195, orders: 28 },
+  { hour: '15:00', sales: 165, orders: 22 },
+  { hour: '16:00', sales: 140, orders: 19 },
+  { hour: '17:00', sales: 110, orders: 15 }
+];
+
+const monthlyComparison = [
+  { month: 'Jan', sales: 12500, orders: 450 },
+  { month: 'Feb', sales: 13200, orders: 480 },
+  { month: 'Mar', sales: 14800, orders: 520 },
+  { month: 'Apr', sales: 16200, orders: 580 },
+  { month: 'May', sales: 15900, orders: 565 },
+  { month: 'Jun', sales: 17300, orders: 620 }
+];
 
 // Mock payments data
 interface Payment {
@@ -151,16 +185,15 @@ const SalesAnalytics: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-3xl font-semibold">Sales Analytics</h2>
       
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs defaultValue="financial" className="w-full">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
-          <TabsTrigger value="items">Top Items</TabsTrigger>
-          {/* Add new Payment Analytics Tab */}
+          <TabsTrigger value="financial">Financial</TabsTrigger>
+          <TabsTrigger value="menu">Menu</TabsTrigger>
+          <TabsTrigger value="payment">Payment</TabsTrigger>
           <TabsTrigger value="payments">Payment Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6 space-y-6">
+        <TabsContent value="financial" className="mt-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -194,6 +227,164 @@ const SalesAnalytics: React.FC = () => {
 
             <Card>
               <CardHeader>
+                <CardTitle>Monthly Performance</CardTitle>
+                <CardDescription>
+                  6-month sales and order trends
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={monthlyComparison}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="sales" 
+                      stroke="hsl(var(--primary))" 
+                      strokeWidth={2}
+                      name="Sales (₱)" 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="orders" 
+                      stroke="hsl(var(--secondary))" 
+                      strokeWidth={2}
+                      name="Total Orders" 
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Financial Summary</CardTitle>
+              <CardDescription>
+                Key financial indicators for your canteen
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Sales</h3>
+                <p className="text-2xl font-bold">
+                  ₱{salesData.reduce((acc, sale) => acc + sale.total, 0).toFixed(2)}
+                </p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Orders</h3>
+                <p className="text-2xl font-bold">{salesData.length}</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Average Order Value</h3>
+                <p className="text-2xl font-bold">
+                  ₱{(salesData.reduce((acc, sale) => acc + sale.total, 0) / salesData.length).toFixed(2)}
+                </p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Monthly Growth</h3>
+                <p className="text-2xl font-bold text-green-600">+23%</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="menu" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Selling Items</CardTitle>
+                <CardDescription>
+                  Items with the highest sales revenue
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={topSellingItemsData}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" />
+                    <Tooltip formatter={(value) => {
+                      const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
+                      return [formattedValue, 'Revenue'];
+                    }} />
+                    <Legend />
+                    <Bar dataKey="value" name="Revenue (₱)" fill="hsl(var(--primary))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Lowest Selling Items</CardTitle>
+                <CardDescription>
+                  Items that need attention or promotion
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={lowestSellingItemsData}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" />
+                    <Tooltip formatter={(value) => {
+                      const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
+                      return [formattedValue, 'Revenue'];
+                    }} />
+                    <Legend />
+                    <Bar dataKey="value" name="Revenue (₱)" fill="hsl(var(--destructive))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Menu Performance Insights</CardTitle>
+              <CardDescription>
+                Analysis of menu item performance
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Best Performer</h3>
+                <p className="text-xl font-bold mb-1">{topSellingItemsData[0]?.name}</p>
+                <p className="text-sm text-muted-foreground">₱{topSellingItemsData[0]?.value.toFixed(2)} revenue</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Needs Attention</h3>
+                <p className="text-xl font-bold mb-1">{lowestSellingItemsData[0]?.name}</p>
+                <p className="text-sm text-muted-foreground">₱{lowestSellingItemsData[0]?.value.toFixed(2)} revenue</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Total Menu Items</h3>
+                <p className="text-2xl font-bold mb-1">{menuItems.length}</p>
+                <p className="text-sm text-muted-foreground">Active items</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="payment" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
                 <CardTitle>Sales by Payment Method</CardTitle>
                 <CardDescription>
                   Distribution of sales by payment type
@@ -217,7 +408,6 @@ const SalesAnalytics: React.FC = () => {
                       ))}
                     </Pie>
                     <Tooltip formatter={(value) => {
-                      // Check if value is a number before calling toFixed
                       const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
                       return [formattedValue, 'Amount'];
                     }} />
@@ -226,149 +416,67 @@ const SalesAnalytics: React.FC = () => {
                 </ResponsiveContainer>
               </CardContent>
             </Card>
-          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Sales Summary</CardTitle>
-              <CardDescription>
-                Key performance indicators for your canteen
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Sales</h3>
-                <p className="text-2xl font-bold">
-                  ₱{salesData.reduce((acc, sale) => acc + sale.total, 0).toFixed(2)}
-                </p>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Orders</h3>
-                <p className="text-2xl font-bold">{salesData.length}</p>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Average Order Value</h3>
-                <p className="text-2xl font-bold">
-                  ₱{(salesData.reduce((acc, sale) => acc + sale.total, 0) / salesData.length).toFixed(2)}
-                </p>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Items Sold</h3>
-                <p className="text-2xl font-bold">
-                  {salesData.reduce((acc, sale) => {
-                    return acc + sale.items.reduce((itemsAcc, item) => itemsAcc + item.quantity, 0);
-                  }, 0)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="trends" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sales Forecast</CardTitle>
-              <CardDescription>
-                Predictive analytics based on historical data
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={[
-                    { date: "Mon", actual: 850, forecast: 800 },
-                    { date: "Tue", actual: 740, forecast: 720 },
-                    { date: "Wed", actual: 900, forecast: 870 },
-                    { date: "Thu", actual: 1100, forecast: 1050 },
-                    { date: "Fri", actual: 1250, forecast: 1200 },
-                    { date: "Sat", actual: 1400, forecast: 1380 },
-                    { date: "Sun", actual: 1000, forecast: 1100 },
-                    { date: "Mon (Next)", actual: null, forecast: 950 },
-                    { date: "Tue (Next)", actual: null, forecast: 1000 },
-                    { date: "Wed (Next)", actual: null, forecast: 1100 },
-                  ]}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="actual" stroke="hsl(var(--primary))" name="Actual Sales (₱)" strokeWidth={2} />
-                  <Line type="monotone" dataKey="forecast" stroke="hsl(var(--secondary))" strokeDasharray="5 5" name="Forecasted Sales (₱)" />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="items" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Top Selling Items</CardTitle>
+                <CardTitle>Payment Method Breakdown</CardTitle>
                 <CardDescription>
-                  Items with the highest sales revenue
+                  Detailed analysis by payment method
                 </CardDescription>
               </CardHeader>
               <CardContent className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                    data={topSellingItemsData}
-                    layout="vertical"
-                    margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
+                    data={paymentMethodData}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
                     <Tooltip formatter={(value) => {
-                      // Check if value is a number before calling toFixed
                       const formattedValue = typeof value === 'number' ? `₱${value.toFixed(2)}` : `₱${value}`;
-                      return [formattedValue, 'Revenue'];
+                      return [formattedValue, 'Amount'];
                     }} />
                     <Legend />
-                    <Bar dataKey="value" name="Revenue (₱)" fill="hsl(var(--secondary))" />
+                    <Bar dataKey="value" name="Sales (₱)" fill="hsl(var(--secondary))" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Item Performance Analysis</CardTitle>
-                <CardDescription>
-                  Detailed breakdown of top performing items
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {topSellingItemsData.map((item, index) => {
-                    const menuItem = menuItems.find(mi => mi.name === item.name);
-                    const profitMargin = menuItem ? ((item.value - (menuItem.price * 0.4)) / item.value) * 100 : 0;
-                    
-                    return (
-                      <div key={index} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">{item.name}</span>
-                          <span className="font-medium">₱{item.value.toFixed(2)}</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2.5">
-                          <div 
-                            className="bg-secondary h-2.5 rounded-full" 
-                            style={{ width: `${profitMargin}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>Profit margin</span>
-                          <span>{profitMargin.toFixed(1)}%</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
           </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Insights</CardTitle>
+              <CardDescription>
+                Key insights about payment preferences
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Most Popular</h3>
+                <p className="text-2xl font-bold mb-1">{paymentMethodData[0]?.name}</p>
+                <p className="text-sm text-muted-foreground">₱{paymentMethodData[0]?.value.toFixed(2)} total</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Digital Payments</h3>
+                <p className="text-2xl font-bold mb-1">
+                  {Math.round(((paymentMethodData.find(p => p.name === 'Card')?.value || 0) + 
+                               (paymentMethodData.find(p => p.name === 'Mobile')?.value || 0)) / 
+                              paymentMethodData.reduce((acc, p) => acc + p.value, 0) * 100)}%
+                </p>
+                <p className="text-sm text-muted-foreground">Of total sales</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Cash Transactions</h3>
+                <p className="text-2xl font-bold mb-1">
+                  {Math.round((paymentMethodData.find(p => p.name === 'Cash')?.value || 0) / 
+                             paymentMethodData.reduce((acc, p) => acc + p.value, 0) * 100)}%
+                </p>
+                <p className="text-sm text-muted-foreground">Of total sales</p>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="payments" className="mt-6">
