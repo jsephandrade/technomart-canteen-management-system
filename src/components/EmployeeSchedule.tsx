@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -261,61 +260,89 @@ const EmployeeSchedule: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-8 gap-2 mb-2 font-medium">
-                <div className="col-span-2">Employee</div>
-                {daysOfWeek.map(day => (
-                  <div key={day} className="text-center">{day.slice(0, 3)}</div>
-                ))}
-              </div>
-              <div className="space-y-4">
-                {employeeList.map(employee => (
-                  <div key={employee.id} className="grid grid-cols-8 gap-2 items-center">
-                    <div className="col-span-2 flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                        {employee.name.charAt(0)}
+              <div className="overflow-x-auto">
+                <div className="min-w-[800px]">
+                  {/* Header Row */}
+                  <div className="grid grid-cols-8 gap-2 mb-4 pb-2 border-b">
+                    <div className="col-span-1 font-semibold text-left">Employee</div>
+                    {daysOfWeek.map(day => (
+                      <div key={day} className="text-center font-semibold text-sm">
+                        {day.slice(0, 3)}
                       </div>
-                      <span className="font-medium">{employee.name}</span>
-                    </div>
-                    
-                    {daysOfWeek.map(day => {
-                      const entry = schedule.find(s => 
-                        s.employeeId === employee.id && s.day === day
-                      );
-                      
-                      return (
-                        <div key={day} className="text-center h-12 relative">
-                          {entry ? (
-                            <div className="bg-primary/10 p-1 rounded text-xs h-full flex flex-col items-center justify-center">
-                              <span>{entry.startTime} - {entry.endTime}</span>
-                              <div className="flex gap-1 mt-1">
-                                <button onClick={() => setEditingSchedule(entry)} className="text-primary hover:text-primary/80">
-                                  <Edit size={12} />
-                                </button>
-                                <button onClick={() => handleDeleteSchedule(entry.id)} className="text-destructive hover:text-destructive/80">
-                                  <Trash2 size={12} />
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="border border-dashed border-muted h-full rounded flex items-center justify-center">
-                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => {
-                                setNewScheduleEntry({
-                                  employeeId: employee.id,
-                                  day: day,
-                                  startTime: '',
-                                  endTime: ''
-                                });
-                                setDialogOpen(true);
-                              }}>
-                                <Plus size={12} />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                    ))}
                   </div>
-                ))}
+                  
+                  {/* Schedule Rows */}
+                  <div className="space-y-3">
+                    {employeeList.map(employee => (
+                      <div key={employee.id} className="grid grid-cols-8 gap-2 items-center min-h-[60px]">
+                        <div className="col-span-1 flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                            {employee.name.charAt(0)}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-medium text-sm truncate block">{employee.name}</span>
+                            <span className="text-xs text-muted-foreground truncate block">{employee.position}</span>
+                          </div>
+                        </div>
+                        
+                        {daysOfWeek.map(day => {
+                          const entry = schedule.find(s => 
+                            s.employeeId === employee.id && s.day === day
+                          );
+                          
+                          return (
+                            <div key={day} className="flex items-center justify-center">
+                              {entry ? (
+                                <div className="bg-primary/10 border border-primary/20 p-2 rounded-md w-full text-xs">
+                                  <div className="text-center font-medium mb-1">
+                                    {entry.startTime} - {entry.endTime}
+                                  </div>
+                                  <div className="flex gap-1 justify-center">
+                                    <button 
+                                      onClick={() => setEditingSchedule(entry)} 
+                                      className="text-primary hover:text-primary/80 p-1"
+                                      title="Edit schedule"
+                                    >
+                                      <Edit size={10} />
+                                    </button>
+                                    <button 
+                                      onClick={() => handleDeleteSchedule(entry.id)} 
+                                      className="text-destructive hover:text-destructive/80 p-1"
+                                      title="Delete schedule"
+                                    >
+                                      <Trash2 size={10} />
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="border-2 border-dashed border-muted rounded-md w-full h-12 flex items-center justify-center hover:border-primary/30 transition-colors">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="h-8 w-8 p-0 hover:bg-primary/10" 
+                                    onClick={() => {
+                                      setNewScheduleEntry({
+                                        employeeId: employee.id,
+                                        day: day,
+                                        startTime: '',
+                                        endTime: ''
+                                      });
+                                      setDialogOpen(true);
+                                    }}
+                                    title={`Add schedule for ${day}`}
+                                  >
+                                    <Plus size={14} />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
