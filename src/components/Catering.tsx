@@ -25,6 +25,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { NewEventModal } from './catering/NewEventModal';
 import { CalendarViewModal } from './catering/CalendarViewModal';
+import { EventDetailsModal } from './catering/EventDetailsModal';
+import { StaffAssignmentModal } from './catering/StaffAssignmentModal';
+import { MenuItemsModal } from './catering/MenuItemsModal';
+import { toast } from 'sonner';
 
 interface CateringEvent {
   id: string;
@@ -56,6 +60,10 @@ const Catering: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('upcoming');
   const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showEventDetailsModal, setShowEventDetailsModal] = useState(false);
+  const [showStaffAssignmentModal, setShowStaffAssignmentModal] = useState(false);
+  const [showMenuItemsModal, setShowMenuItemsModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CateringEvent | null>(null);
   
   const [events, setEvents] = useState<CateringEvent[]>([
     {
@@ -173,6 +181,41 @@ const Catering: React.FC = () => {
 
   const handleCreateEvent = (newEvent: CateringEvent) => {
     setEvents(prev => [...prev, newEvent]);
+    toast.success('Event created successfully!');
+  };
+
+  const handleViewDetails = (event: CateringEvent) => {
+    setSelectedEvent(event);
+    setShowEventDetailsModal(true);
+  };
+
+  const handleStaffAssignment = (event: CateringEvent) => {
+    setSelectedEvent(event);
+    setShowStaffAssignmentModal(true);
+  };
+
+  const handleMenuItems = (event: CateringEvent) => {
+    setSelectedEvent(event);
+    setShowMenuItemsModal(true);
+  };
+
+  const handleCancelEvent = (event: CateringEvent) => {
+    setEvents(prev => 
+      prev.map(e => 
+        e.id === event.id 
+          ? { ...e, status: 'cancelled' as const }
+          : e
+      )
+    );
+    toast.success(`Event "${event.name}" has been cancelled.`);
+  };
+
+  const handleAssignStaff = (eventId: string, staffIds: string[]) => {
+    toast.success(`${staffIds.length} staff member(s) assigned to the event.`);
+  };
+
+  const handleUpdateMenuItems = (eventId: string, menuItems: any[]) => {
+    toast.success('Menu items updated successfully!');
   };
   
   const getInitials = (name: string) => {
@@ -296,17 +339,20 @@ const Catering: React.FC = () => {
                                     <DropdownMenuContent align="end">
                                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                       <DropdownMenuSeparator />
-                                      <DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleViewDetails(event)}>
                                         <ClipboardCheck className="mr-2 h-4 w-4" /> View Details
                                       </DropdownMenuItem>
-                                      <DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleStaffAssignment(event)}>
                                         <Users className="mr-2 h-4 w-4" /> Staff Assignment
                                       </DropdownMenuItem>
-                                      <DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleMenuItems(event)}>
                                         <Utensils className="mr-2 h-4 w-4" /> Menu Items
                                       </DropdownMenuItem>
                                       <DropdownMenuSeparator />
-                                      <DropdownMenuItem className="text-destructive">
+                                      <DropdownMenuItem 
+                                        className="text-destructive"
+                                        onClick={() => handleCancelEvent(event)}
+                                      >
                                         <MoreVertical className="mr-2 h-4 w-4" /> Cancel Event
                                       </DropdownMenuItem>
                                     </DropdownMenuContent>
@@ -528,6 +574,27 @@ const Catering: React.FC = () => {
         open={showCalendarModal}
         onOpenChange={setShowCalendarModal}
         events={events}
+      />
+
+      <EventDetailsModal
+        open={showEventDetailsModal}
+        onOpenChange={setShowEventDetailsModal}
+        event={selectedEvent}
+      />
+
+      <StaffAssignmentModal
+        open={showStaffAssignmentModal}
+        onOpenChange={setShowStaffAssignmentModal}
+        event={selectedEvent}
+        onAssignStaff={handleAssignStaff}
+      />
+
+      <MenuItemsModal
+        open={showMenuItemsModal}
+        onOpenChange={setShowMenuItemsModal}
+        event={selectedEvent}
+        menuItems={cateringMenu}
+        onUpdateMenuItems={handleUpdateMenuItems}
       />
     </>
   );
