@@ -13,7 +13,17 @@ import { Edit, Plus, Trash2, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 
 const MenuManagement: React.FC = () => {
-  const [items, setItems] = useState<MenuItem[]>(menuItems);
+  // Add combo meals to the initial items
+  const comboMeals: MenuItem[] = [
+    { id: '11', name: 'Rice + Vegetable + Lumpia', description: 'Complete combo meal with rice, vegetables, and lumpia.', price: 45, category: 'Combo Meals', available: true, popular: true },
+    { id: '12', name: 'Rice + Hamburger + Egg', description: 'Hearty combo with rice, hamburger, and egg.', price: 45, category: 'Combo Meals', available: true, popular: true },
+    { id: '13', name: 'Rice + Bihon/Bam-i + Siomai', description: 'Traditional combo with rice, noodles, and siomai.', price: 45, category: 'Combo Meals', available: true, popular: true },
+    { id: '14', name: 'Rice + Chorizo + Boiled Egg', description: 'Flavorful combo with rice, chorizo, and boiled egg.', price: 45, category: 'Combo Meals', available: true, popular: false },
+    { id: '15', name: 'Rice + Hotdog + Nugahong', description: 'Classic combo with rice, hotdog, and nugahong.', price: 45, category: 'Combo Meals', available: true, popular: false },
+    { id: '16', name: 'Rice + Fried Egg + Chorizo', description: 'Simple yet satisfying combo with rice, fried egg, and chorizo.', price: 45, category: 'Combo Meals', available: true, popular: false }
+  ];
+
+  const [items, setItems] = useState<MenuItem[]>([...menuItems, ...comboMeals]);
   const [newItem, setNewItem] = useState<Partial<MenuItem>>({
     name: '',
     description: '',
