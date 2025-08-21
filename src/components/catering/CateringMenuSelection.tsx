@@ -44,15 +44,11 @@ const CateringMenuSelection: React.FC<CateringMenuSelectionProps> = ({
           });
       });
       return allItems;
-    } else {
-      // Return items from active category without category name when not searching
-      return categories
-        .find(cat => cat.id === activeCategory)?.items
-        .map(item => ({ ...item, categoryName: '' })) || [];
     }
+    return [];
   };
 
-  const filteredItems = getFilteredItems();
+  const searchResults = getFilteredItems();
 
   return (
     <Card className="h-full flex flex-col">
@@ -86,8 +82,8 @@ const CateringMenuSelection: React.FC<CateringMenuSelectionProps> = ({
                 Search results for "{searchTerm}"
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {filteredItems.length > 0 ? (
-                  filteredItems.map((item) => (
+                {searchResults.length > 0 ? (
+                  searchResults.map((item) => (
                     <div 
                       key={item.id} 
                       className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
@@ -145,8 +141,8 @@ const CateringMenuSelection: React.FC<CateringMenuSelectionProps> = ({
                 className="flex-1 overflow-y-auto p-0 mt-0"
               >
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
-                  {filteredItems.length > 0 ? (
-                    filteredItems.map((item) => (
+                  {category.items.length > 0 ? (
+                    category.items.map((item) => (
                       <div 
                         key={item.id} 
                         className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
