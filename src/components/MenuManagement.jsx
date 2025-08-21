@@ -27,7 +27,7 @@ import { Edit, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 const MenuManagement = () => {
-  // Add combo meals to the initial items
+  // Combo meals without "popular"
   const comboMeals = [
     {
       id: "11",
@@ -35,8 +35,7 @@ const MenuManagement = () => {
       description: "Complete combo meal with rice, vegetables, and lumpia.",
       price: 45,
       category: "Combo Meals",
-      available: true,
-      popular: true
+      available: true
     },
     {
       id: "12",
@@ -44,8 +43,7 @@ const MenuManagement = () => {
       description: "Hearty combo with rice, hamburger, and egg.",
       price: 45,
       category: "Combo Meals",
-      available: true,
-      popular: true
+      available: true
     },
     {
       id: "13",
@@ -53,8 +51,7 @@ const MenuManagement = () => {
       description: "Traditional combo with rice, noodles, and siomai.",
       price: 45,
       category: "Combo Meals",
-      available: true,
-      popular: true
+      available: true
     },
     {
       id: "14",
@@ -62,8 +59,7 @@ const MenuManagement = () => {
       description: "Flavorful combo with rice, chorizo, and boiled egg.",
       price: 45,
       category: "Combo Meals",
-      available: true,
-      popular: false
+      available: true
     },
     {
       id: "15",
@@ -71,8 +67,7 @@ const MenuManagement = () => {
       description: "Classic combo with rice, hotdog, and nugahong.",
       price: 45,
       category: "Combo Meals",
-      available: true,
-      popular: false
+      available: true
     },
     {
       id: "16",
@@ -81,8 +76,7 @@ const MenuManagement = () => {
         "Simple yet satisfying combo with rice, fried egg, and chorizo.",
       price: 45,
       category: "Combo Meals",
-      available: true,
-      popular: false
+      available: true
     }
   ]
 
@@ -92,8 +86,7 @@ const MenuManagement = () => {
     description: "",
     price: 0,
     category: "",
-    available: true,
-    popular: false
+    available: true
   })
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState(null)
@@ -110,8 +103,7 @@ const MenuManagement = () => {
       ...newItem,
       id: `P${items.length + 1}`,
       price: Number(newItem.price),
-      available: newItem.available ?? true,
-      popular: newItem.popular ?? false
+      available: newItem.available ?? true
     }
 
     setItems([...items, itemToAdd])
@@ -120,8 +112,7 @@ const MenuManagement = () => {
       description: "",
       price: 0,
       category: "",
-      available: true,
-      popular: false
+      available: true
     })
     setDialogOpen(false)
     toast.success("Menu item added successfully")
@@ -230,18 +221,6 @@ const MenuManagement = () => {
                   }
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="popular" className="text-right">
-                  Popular
-                </Label>
-                <Switch
-                  id="popular"
-                  checked={newItem.popular}
-                  onCheckedChange={checked =>
-                    setNewItem({ ...newItem, popular: checked })
-                  }
-                />
-              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogOpen(false)}>
@@ -268,12 +247,7 @@ const MenuManagement = () => {
             {items.map(item => (
               <Card key={item.id}>
                 <CardHeader>
-                  <div className="flex justify-between">
-                    <CardTitle>{item.name}</CardTitle>
-                    {item.popular && (
-                      <Badge className="bg-secondary">Popular</Badge>
-                    )}
-                  </div>
+                  <CardTitle>{item.name}</CardTitle>
                   <CardDescription>{item.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -318,12 +292,7 @@ const MenuManagement = () => {
                 .map(item => (
                   <Card key={item.id}>
                     <CardHeader>
-                      <div className="flex justify-between">
-                        <CardTitle>{item.name}</CardTitle>
-                        {item.popular && (
-                          <Badge className="bg-secondary">Popular</Badge>
-                        )}
-                      </div>
+                      <CardTitle>{item.name}</CardTitle>
                       <CardDescription>{item.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -443,18 +412,6 @@ const MenuManagement = () => {
                   checked={editingItem.available}
                   onCheckedChange={checked =>
                     setEditingItem({ ...editingItem, available: checked })
-                  }
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-popular" className="text-right">
-                  Popular
-                </Label>
-                <Switch
-                  id="edit-popular"
-                  checked={editingItem.popular}
-                  onCheckedChange={checked =>
-                    setEditingItem({ ...editingItem, popular: checked })
                   }
                 />
               </div>
