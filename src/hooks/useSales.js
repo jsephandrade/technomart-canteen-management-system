@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { salesService } from '@/services/salesService';
 import { toast } from 'sonner';
@@ -15,7 +14,8 @@ export const useSales = (params) => {
       const data = await salesService.getSales(params);
       setSales(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch sales data';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch sales data';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -26,11 +26,12 @@ export const useSales = (params) => {
   const createSale = async (sale) => {
     try {
       const newSale = await salesService.createSale(sale);
-      setSales(prev => [...prev, newSale]);
+      setSales((prev) => [...prev, newSale]);
       toast.success('Sale recorded successfully');
       return newSale;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to record sale';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to record sale';
       toast.error(errorMessage);
       throw err;
     }
@@ -61,7 +62,8 @@ export const useDashboardStats = () => {
       const data = await salesService.getDashboardStats();
       setStats(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch dashboard stats';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch dashboard stats';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {

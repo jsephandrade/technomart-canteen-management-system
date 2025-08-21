@@ -1,15 +1,15 @@
-import React from "react"
-import { Linkedin } from "lucide-react"
+import React from 'react';
+import { Linkedin } from 'lucide-react';
 
 const socialProviders = [
   {
-    name: "Google"
+    name: 'Google',
   },
   {
-    name: "Linkedin",
-    icon: Linkedin
-  }
-]
+    name: 'Linkedin',
+    icon: Linkedin,
+  },
+];
 
 const LoginCard = ({
   email,
@@ -20,7 +20,7 @@ const LoginCard = ({
   handleSocial,
   toggleCard,
   error,
-  pending
+  pending,
 }) => {
   return (
     <div className="card-face card-front bg-white p-6 rounded-xl shadow-lg">
@@ -35,7 +35,7 @@ const LoginCard = ({
           <input
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
@@ -45,7 +45,7 @@ const LoginCard = ({
           <input
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
@@ -56,7 +56,7 @@ const LoginCard = ({
           disabled={pending}
           className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300"
         >
-          {pending ? "Processing..." : "Login"}
+          {pending ? 'Processing...' : 'Login'}
         </button>
       </form>
 
@@ -72,7 +72,7 @@ const LoginCard = ({
       <div className="mt-4 grid grid-cols-2 gap-3">
         <button
           type="button"
-          onClick={() => handleSocial("google")}
+          onClick={() => handleSocial('google')}
           className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           disabled={pending}
         >
@@ -98,7 +98,7 @@ const LoginCard = ({
         </button>
         <button
           type="button"
-          onClick={() => handleSocial("facebook")}
+          onClick={() => handleSocial('facebook')}
           className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           disabled={pending}
         >
@@ -119,7 +119,7 @@ const LoginCard = ({
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginCard
+export default LoginCard;

@@ -14,7 +14,8 @@ export const useInventory = () => {
       const data = await inventoryService.getInventoryItems();
       setItems(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch inventory';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch inventory';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -25,11 +26,12 @@ export const useInventory = () => {
   const addInventoryItem = async (item) => {
     try {
       const newItem = await inventoryService.createInventoryItem(item);
-      setItems(prev => [...prev, newItem]);
+      setItems((prev) => [...prev, newItem]);
       toast.success('Inventory item added successfully');
       return newItem;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to add inventory item';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to add inventory item';
       toast.error(errorMessage);
       throw err;
     }
@@ -37,12 +39,18 @@ export const useInventory = () => {
 
   const updateInventoryItem = async (id, updates) => {
     try {
-      const updatedItem = await inventoryService.updateInventoryItem(id, updates);
-      setItems(prev => prev.map(item => item.id === id ? updatedItem : item));
+      const updatedItem = await inventoryService.updateInventoryItem(
+        id,
+        updates
+      );
+      setItems((prev) =>
+        prev.map((item) => (item.id === id ? updatedItem : item))
+      );
       toast.success('Inventory item updated successfully');
       return updatedItem;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update inventory item';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to update inventory item';
       toast.error(errorMessage);
       throw err;
     }
@@ -51,10 +59,11 @@ export const useInventory = () => {
   const deleteInventoryItem = async (id) => {
     try {
       await inventoryService.deleteInventoryItem(id);
-      setItems(prev => prev.filter(item => item.id !== id));
+      setItems((prev) => prev.filter((item) => item.id !== id));
       toast.success('Inventory item deleted successfully');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete inventory item';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to delete inventory item';
       toast.error(errorMessage);
       throw err;
     }
@@ -87,7 +96,10 @@ export const useInventoryActivities = () => {
       const data = await inventoryService.getInventoryActivities();
       setActivities(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch inventory activities';
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Failed to fetch inventory activities';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {

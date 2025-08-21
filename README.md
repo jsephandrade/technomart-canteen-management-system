@@ -18,7 +18,7 @@ An intelligent canteen ordering system built for the CTU-MC Multipurpose Coopera
 
 ## 📸 Screenshots
 
- ![Dashboard](dashboard.png) 
+![Dashboard](dashboard.png)
 
 ---
 
@@ -45,3 +45,4 @@ npm install
 
 # Run development server
 npm run dev
+```

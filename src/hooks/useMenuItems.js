@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { menuService } from '@/services/menuService';
 import { toast } from 'sonner';
@@ -15,7 +14,8 @@ export const useMenuItems = () => {
       const data = await menuService.getMenuItems();
       setItems(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch menu items';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch menu items';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -26,11 +26,12 @@ export const useMenuItems = () => {
   const addMenuItem = async (item) => {
     try {
       const newItem = await menuService.createMenuItem(item);
-      setItems(prev => [...prev, newItem]);
+      setItems((prev) => [...prev, newItem]);
       toast.success('Menu item added successfully');
       return newItem;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to add menu item';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to add menu item';
       toast.error(errorMessage);
       throw err;
     }
@@ -39,11 +40,14 @@ export const useMenuItems = () => {
   const updateMenuItem = async (id, updates) => {
     try {
       const updatedItem = await menuService.updateMenuItem(id, updates);
-      setItems(prev => prev.map(item => item.id === id ? updatedItem : item));
+      setItems((prev) =>
+        prev.map((item) => (item.id === id ? updatedItem : item))
+      );
       toast.success('Menu item updated successfully');
       return updatedItem;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update menu item';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to update menu item';
       toast.error(errorMessage);
       throw err;
     }
@@ -52,10 +56,11 @@ export const useMenuItems = () => {
   const deleteMenuItem = async (id) => {
     try {
       await menuService.deleteMenuItem(id);
-      setItems(prev => prev.filter(item => item.id !== id));
+      setItems((prev) => prev.filter((item) => item.id !== id));
       toast.success('Menu item deleted successfully');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete menu item';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to delete menu item';
       toast.error(errorMessage);
       throw err;
     }

@@ -1,15 +1,15 @@
-import React from "react"
-import { Linkedin } from "lucide-react"
+import React from 'react';
+import { Linkedin } from 'lucide-react';
 
 const socialProviders = [
   {
-    name: "Google"
+    name: 'Google',
   },
   {
-    name: "Linkedin",
-    icon: Linkedin
-  }
-]
+    name: 'Linkedin',
+    icon: Linkedin,
+  },
+];
 
 const SignupCard = ({
   firstName,
@@ -25,7 +25,7 @@ const SignupCard = ({
   handleSubmit,
   handleSocial,
   toggleCard,
-  pending
+  pending,
 }) => {
   return (
     <div className="card-face card-back bg-white p-6 rounded-xl shadow-lg">
@@ -35,7 +35,7 @@ const SignupCard = ({
           <input
             type="text"
             value={firstName}
-            onChange={e => setFirstName(e.target.value)}
+            onChange={(e) => setFirstName(e.target.value)}
             placeholder="First Name"
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
@@ -43,7 +43,7 @@ const SignupCard = ({
           <input
             type="text"
             value={lastName}
-            onChange={e => setLastName(e.target.value)}
+            onChange={(e) => setLastName(e.target.value)}
             placeholder="Last Name"
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
             required
@@ -52,7 +52,7 @@ const SignupCard = ({
         <input
           type="tel"
           value={contactNumber}
-          onChange={e => setContactNumber(e.target.value)}
+          onChange={(e) => setContactNumber(e.target.value)}
           placeholder="Contact Number"
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
@@ -60,7 +60,7 @@ const SignupCard = ({
         <input
           type="email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
@@ -68,7 +68,7 @@ const SignupCard = ({
         <input
           type="password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
           required
@@ -78,7 +78,7 @@ const SignupCard = ({
           disabled={pending}
           className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300"
         >
-          {pending ? "Processing..." : "Sign Up"}
+          {pending ? 'Processing...' : 'Sign Up'}
         </button>
       </form>
 
@@ -94,7 +94,7 @@ const SignupCard = ({
       <div className="mt-4 grid grid-cols-2 gap-3">
         <button
           type="button"
-          onClick={() => handleSocial("google")}
+          onClick={() => handleSocial('google')}
           className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           disabled={pending}
         >
@@ -120,7 +120,7 @@ const SignupCard = ({
         </button>
         <button
           type="button"
-          onClick={() => handleSocial("facebook")}
+          onClick={() => handleSocial('facebook')}
           className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           disabled={pending}
         >
@@ -141,7 +141,7 @@ const SignupCard = ({
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignupCard
+export default SignupCard;

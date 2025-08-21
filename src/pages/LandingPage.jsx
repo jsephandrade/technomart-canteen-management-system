@@ -1,59 +1,59 @@
-import React, { useState } from "react"
-import { useAuth } from "@/components/AuthContext"
-import LoginCard from "@/components/auth/LoginCard"
-import SignupCard from "@/components/auth/SignupCard"
-import "../styles/card-animations.css"
+import React, { useState } from 'react';
+import { useAuth } from '@/components/AuthContext';
+import LoginCard from '@/components/auth/LoginCard';
+import SignupCard from '@/components/auth/SignupCard';
+import '../styles/card-animations.css';
 
 const LandingPage = () => {
-  const { login, socialLogin } = useAuth()
-  const [showSignup, setShowSignup] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [contactNumber, setContactNumber] = useState("")
-  const [pending, setPending] = useState(false)
-  const [error, setError] = useState("")
+  const { login, socialLogin } = useAuth();
+  const [showSignup, setShowSignup] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setPending(true)
-    setError("")
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPending(true);
+    setError('');
 
     if (!showSignup) {
       // Login functionality
-      const ok = await login(email, password)
-      if (!ok) setError("Invalid credentials.")
+      const ok = await login(email, password);
+      if (!ok) setError('Invalid credentials.');
     } else {
       // Simulated signup - just pretend it worked
       // Simulate a short delay to make it feel real
       setTimeout(() => {
         // After "signup", switch to login form
-        setShowSignup(false)
+        setShowSignup(false);
         // Optionally show a success message
-        alert("Account created successfully! Please log in.")
+        alert('Account created successfully! Please log in.');
         // Clear the form
-        setFirstName("")
-        setLastName("")
-        setContactNumber("")
-      }, 1000)
+        setFirstName('');
+        setLastName('');
+        setContactNumber('');
+      }, 1000);
     }
 
-    setPending(false)
-  }
+    setPending(false);
+  };
 
-  const handleSocial = async provider => {
-    setPending(true)
-    setError("")
-    await socialLogin(provider)
-    setPending(false)
-  }
+  const handleSocial = async (provider) => {
+    setPending(true);
+    setError('');
+    await socialLogin(provider);
+    setPending(false);
+  };
 
   const toggleCard = () => {
-    setShowSignup(prev => !prev)
+    setShowSignup((prev) => !prev);
     // Reset form fields when toggling
-    setError("")
-  }
+    setError('');
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -76,7 +76,7 @@ const LandingPage = () => {
 
           <div className="relative w-full max-w-md mx-auto md:mx-0 perspective-1000">
             <div
-              className={`card-container ${showSignup ? "rotate-y-180" : ""}`}
+              className={`card-container ${showSignup ? 'rotate-y-180' : ''}`}
             >
               <LoginCard
                 email={email}
@@ -125,7 +125,7 @@ const LandingPage = () => {
         &copy; {new Date().getFullYear()} TechnoMart Canteen System
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default LandingPage
+export default LandingPage;

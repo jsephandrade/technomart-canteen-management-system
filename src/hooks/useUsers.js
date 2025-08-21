@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { userService } from '@/services/userService';
 import { toast } from 'sonner';
@@ -15,7 +14,8 @@ export const useUsers = () => {
       const data = await userService.getUsers();
       setUsers(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch users';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch users';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -26,11 +26,12 @@ export const useUsers = () => {
   const addUser = async (user) => {
     try {
       const newUser = await userService.createUser(user);
-      setUsers(prev => [...prev, newUser]);
+      setUsers((prev) => [...prev, newUser]);
       toast.success('User added successfully');
       return newUser;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to add user';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to add user';
       toast.error(errorMessage);
       throw err;
     }
@@ -39,11 +40,14 @@ export const useUsers = () => {
   const updateUser = async (id, updates) => {
     try {
       const updatedUser = await userService.updateUser(id, updates);
-      setUsers(prev => prev.map(user => user.id === id ? updatedUser : user));
+      setUsers((prev) =>
+        prev.map((user) => (user.id === id ? updatedUser : user))
+      );
       toast.success('User updated successfully');
       return updatedUser;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update user';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to update user';
       toast.error(errorMessage);
       throw err;
     }
@@ -52,10 +56,11 @@ export const useUsers = () => {
   const deleteUser = async (id) => {
     try {
       await userService.deleteUser(id);
-      setUsers(prev => prev.filter(user => user.id !== id));
+      setUsers((prev) => prev.filter((user) => user.id !== id));
       toast.success('User deleted successfully');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete user';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to delete user';
       toast.error(errorMessage);
       throw err;
     }
@@ -88,7 +93,8 @@ export const useUserLogs = (params) => {
       const data = await userService.getUserLogs(params);
       setLogs(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch user logs';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch user logs';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
