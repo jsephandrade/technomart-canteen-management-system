@@ -43,18 +43,7 @@ const HelpPage: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Video Tutorials</CardTitle>
-            <CardDescription>Watch step-by-step guides</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Access our video library to see demonstrations of key features and workflows.
-            </p>
-            <Button variant="outline" className="w-full">Watch Tutorials</Button>
-          </CardContent>
-        </Card>
+        
       </div>
 
       <Card className="mb-8">
