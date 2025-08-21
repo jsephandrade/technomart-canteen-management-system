@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,10 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Settings, User, Bell, Shield, Palette } from 'lucide-react';
-
 const SettingsPage = () => {
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div className="flex items-center space-x-2">
         <Settings className="h-6 w-6" />
         <h1 className="text-2xl font-bold">Settings</h1>
@@ -130,41 +127,8 @@ const SettingsPage = () => {
         </Card>
 
         {/* Appearance Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Palette className="h-5 w-5" />
-              <span>Appearance</span>
-            </CardTitle>
-            <CardDescription>
-              Customize the look and feel of the application
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="darkMode">Dark Mode</Label>
-                <p className="text-sm text-muted-foreground">
-                  Switch to dark theme
-                </p>
-              </div>
-              <Switch id="darkMode" />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="compactMode">Compact Mode</Label>
-                <p className="text-sm text-muted-foreground">
-                  Reduce spacing for a more compact interface
-                </p>
-              </div>
-              <Switch id="compactMode" />
-            </div>
-          </CardContent>
-        </Card>
+        
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default SettingsPage;
