@@ -109,14 +109,14 @@ const EmployeeSchedule: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-semibold">Employee Schedule</h2>
+        <h2 className="text-2xl font-semibold">Employee</h2>
         <div className="flex gap-2">
           <Dialog open={employeeDialogOpen} onOpenChange={setEmployeeDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
-                <Users size={16} /> Manage Employees
+              <Button variant="outline" size="sm" className="flex items-center gap-1">
+                <Users size={14} /> Manage
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -174,8 +174,8 @@ const EmployeeSchedule: React.FC = () => {
 
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <Plus size={16} /> Add Schedule
+              <Button size="sm" className="flex items-center gap-1">
+                <Plus size={14} /> Add Schedule
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -250,38 +250,38 @@ const EmployeeSchedule: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader>
-              <CardTitle>Weekly Schedule</CardTitle>
-              <CardDescription>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Weekly Schedule</CardTitle>
+              <CardDescription className="text-sm">
                 Employee shifts for the current week
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-3">
               <div className="overflow-x-auto">
-                <div className="min-w-[800px]">
+                <div className="min-w-[700px]">
                   {/* Header Row */}
-                  <div className="grid grid-cols-8 gap-2 mb-4 pb-2 border-b">
-                    <div className="col-span-1 font-semibold text-left">Employee</div>
+                  <div className="grid grid-cols-8 gap-1 mb-2 pb-1 border-b">
+                    <div className="col-span-1 font-semibold text-left text-xs">Employee</div>
                     {daysOfWeek.map(day => (
-                      <div key={day} className="text-center font-semibold text-sm">
+                      <div key={day} className="text-center font-semibold text-xs">
                         {day.slice(0, 3)}
                       </div>
                     ))}
                   </div>
                   
                   {/* Schedule Rows */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {employeeList.map(employee => (
-                      <div key={employee.id} className="grid grid-cols-8 gap-2 items-center min-h-[60px]">
-                        <div className="col-span-1 flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                      <div key={employee.id} className="grid grid-cols-8 gap-1 items-center min-h-[45px]">
+                        <div className="col-span-1 flex items-center gap-1">
+                          <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
                             {employee.name.charAt(0)}
                           </div>
                           <div className="min-w-0">
-                            <span className="font-medium text-sm truncate block">{employee.name}</span>
+                            <span className="font-medium text-xs truncate block">{employee.name}</span>
                             <span className="text-xs text-muted-foreground truncate block">{employee.position}</span>
                           </div>
                         </div>
@@ -294,33 +294,33 @@ const EmployeeSchedule: React.FC = () => {
                           return (
                             <div key={day} className="flex items-center justify-center">
                               {entry ? (
-                                <div className="bg-primary/10 border border-primary/20 p-2 rounded-md w-full text-xs">
-                                  <div className="text-center font-medium mb-1">
+                                <div className="bg-primary/10 border border-primary/20 p-1 rounded-md w-full text-xs">
+                                  <div className="text-center font-medium mb-1 text-xs">
                                     {entry.startTime} - {entry.endTime}
                                   </div>
                                   <div className="flex gap-1 justify-center">
                                     <button 
                                       onClick={() => setEditingSchedule(entry)} 
-                                      className="text-primary hover:text-primary/80 p-1"
+                                      className="text-primary hover:text-primary/80 p-0.5"
                                       title="Edit schedule"
                                     >
-                                      <Edit size={10} />
+                                      <Edit size={8} />
                                     </button>
                                     <button 
                                       onClick={() => handleDeleteSchedule(entry.id)} 
-                                      className="text-destructive hover:text-destructive/80 p-1"
+                                      className="text-destructive hover:text-destructive/80 p-0.5"
                                       title="Delete schedule"
                                     >
-                                      <Trash2 size={10} />
+                                      <Trash2 size={8} />
                                     </button>
                                   </div>
                                 </div>
                               ) : (
-                                <div className="border-2 border-dashed border-muted rounded-md w-full h-12 flex items-center justify-center hover:border-primary/30 transition-colors">
+                                <div className="border-2 border-dashed border-muted rounded-md w-full h-8 flex items-center justify-center hover:border-primary/30 transition-colors">
                                   <Button 
                                     variant="ghost" 
                                     size="sm" 
-                                    className="h-8 w-8 p-0 hover:bg-primary/10" 
+                                    className="h-6 w-6 p-0 hover:bg-primary/10" 
                                     onClick={() => {
                                       setNewScheduleEntry({
                                         employeeId: employee.id,
@@ -332,7 +332,7 @@ const EmployeeSchedule: React.FC = () => {
                                     }}
                                     title={`Add schedule for ${day}`}
                                   >
-                                    <Plus size={14} />
+                                    <Plus size={12} />
                                   </Button>
                                 </div>
                               )}
@@ -349,40 +349,40 @@ const EmployeeSchedule: React.FC = () => {
         </div>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Calendar View</CardTitle>
-            <CardDescription>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Calendar View</CardTitle>
+            <CardDescription className="text-sm">
               Monthly schedule overview
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 p-3">
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              className="border rounded-md"
+              className="border rounded-md text-sm"
             />
             
             {date && (
               <div>
-                <h4 className="font-medium mb-2">
+                <h4 className="font-medium mb-2 text-sm">
                   {date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                 </h4>
                 <div className="space-y-2">
                   {schedule
                     .filter(entry => entry.day === date.toLocaleDateString('en-US', { weekday: 'long' }))
                     .map(entry => (
-                      <div key={entry.id} className="flex justify-between items-center p-2 bg-muted rounded">
+                      <div key={entry.id} className="flex justify-between items-center p-2 bg-muted rounded text-sm">
                         <div>
-                          <p className="font-medium">{entry.employeeName}</p>
-                          <p className="text-sm text-muted-foreground">{entry.startTime} - {entry.endTime}</p>
+                          <p className="font-medium text-sm">{entry.employeeName}</p>
+                          <p className="text-xs text-muted-foreground">{entry.startTime} - {entry.endTime}</p>
                         </div>
-                        <Badge variant="outline">{entry.day}</Badge>
+                        <Badge variant="outline" className="text-xs">{entry.day}</Badge>
                       </div>
                     ))}
                   
                   {schedule.filter(entry => entry.day === date.toLocaleDateString('en-US', { weekday: 'long' })).length === 0 && (
-                    <p className="text-sm text-muted-foreground">No schedules for this day</p>
+                    <p className="text-xs text-muted-foreground">No schedules for this day</p>
                   )}
                 </div>
               </div>
@@ -393,33 +393,33 @@ const EmployeeSchedule: React.FC = () => {
 
       {/* Employee Summary */}
       <Card>
-        <CardHeader>
-          <CardTitle>Staff Overview</CardTitle>
-          <CardDescription>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Staff Overview</CardTitle>
+          <CardDescription className="text-sm">
             Current team members and their positions
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <CardContent className="p-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {employeeList.map(employee => (
-              <div key={employee.id} className="bg-card border rounded-lg p-4 flex flex-col">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mr-3 text-lg font-semibold">
+              <div key={employee.id} className="bg-card border rounded-lg p-3 flex flex-col">
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-2 text-sm font-semibold">
                     {employee.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-semibold">{employee.name}</p>
-                    <p className="text-sm text-muted-foreground">{employee.position}</p>
+                    <p className="font-semibold text-sm">{employee.name}</p>
+                    <p className="text-xs text-muted-foreground">{employee.position}</p>
                   </div>
                 </div>
-                <div className="text-sm space-y-1">
+                <div className="text-xs space-y-1">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Hourly Rate:</span>
                     <span>${employee.hourlyRate.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Contact:</span>
-                    <span className="truncate max-w-[150px]">{employee.contact}</span>
+                    <span className="truncate max-w-[100px]">{employee.contact}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Weekly Hours:</span>
