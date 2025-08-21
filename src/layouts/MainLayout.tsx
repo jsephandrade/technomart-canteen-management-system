@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { NavigationSidebar } from '@/components/NavigationSidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import { Menu, Bell } from 'lucide-react';
 import { useAuth } from "@/components/AuthContext";
 import { LogOut } from "lucide-react";
 import { Link } from 'react-router-dom';
@@ -59,6 +60,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({
               <h1 className="text-xl font-semibold">{title || 'Canteen Management System'}</h1>
             </div>
             <div className="flex items-center gap-4">
+              <Button variant="outline" asChild>
+                <Link to="/notifications">
+                  <Bell className="h-4 w-4" />
+                </Link>
+              </Button>
               <Button variant="outline" asChild>
                 <Link to="/help">Help</Link>
               </Button>
