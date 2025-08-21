@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 import {
   SidebarProvider,
   Sidebar,
@@ -6,17 +6,19 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarTrigger,
-  SidebarInset,
-} from '@/components/ui/sidebar';
-import { NavigationSidebar } from '@/components/NavigationSidebar';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/components/AuthContext';
-import { LogOut } from 'lucide-react';
+  SidebarInset
+} from "@/components/ui/sidebar"
+import { NavigationSidebar } from "@/components/NavigationSidebar"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { Button } from "@/components/ui/button"
+import { Bell } from "lucide-react"
+import { useAuth } from "@/components/AuthContext"
+import { LogOut } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const MainLayout = ({ children, title }) => {
-  const isMobile = useIsMobile();
-  const { user, logout } = useAuth();
+  const isMobile = useIsMobile()
+  const { user, logout } = useAuth()
 
   return (
     <SidebarProvider defaultOpen={!isMobile}>
@@ -59,12 +61,21 @@ const MainLayout = ({ children, title }) => {
             <div className="flex items-center">
               <SidebarTrigger className="mr-2" />
               <h1 className="text-xl font-semibold">
-                {title || 'Canteen Management System'}
+                {title || "Canteen Management System"}
               </h1>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline">Help</Button>
-              <Button variant="outline">Settings</Button>
+              <Button variant="outline" asChild>
+                <Link to="/notifications">
+                  <Bell className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link to="/help">Help</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link to="/settings">Settings</Link>
+              </Button>
               <Button variant="ghost" onClick={logout} title="Logout">
                 <LogOut className="mr-1" />
                 Logout
@@ -77,6 +88,6 @@ const MainLayout = ({ children, title }) => {
         </SidebarInset>
       </div>
     </SidebarProvider>
-  );
-};
-export default MainLayout;
+  )
+}
+export default MainLayout

@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from "react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
+  CardFooter
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Input } from "@/components/ui/input"
 import {
   ShoppingCart,
   Search,
@@ -25,209 +25,275 @@ import {
   Tag,
   Clock,
   Package,
-  Check,
-} from 'lucide-react';
+  Check
+} from "lucide-react"
+
 const POS = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentOrder, setCurrentOrder] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("")
+  const [currentOrder, setCurrentOrder] = useState([])
   // Filipino categories and items (no images)
   const [categories] = useState([
     {
-      id: '1',
-      name: 'Noodles',
+      id: "1",
+      name: "Noodles",
       items: [
         {
-          id: '1',
-          name: 'Bam-i',
-          description: 'A festive noodle dish with canton & bihon.',
+          id: "1",
+          name: "Bam-i",
+          description: "A festive noodle dish with canton & bihon.",
           price: 30,
-          category: 'Noodles',
+          category: "Noodles",
           available: true,
-          popular: true,
+          popular: true
         },
         {
-          id: '2',
-          name: 'Bihon',
-          description: 'Stir-fried vermicelli rice noodles.',
+          id: "2",
+          name: "Bihon",
+          description: "Stir-fried vermicelli rice noodles.",
           price: 20,
-          category: 'Noodles',
+          category: "Noodles",
           available: true,
-          popular: true,
-        },
-      ],
+          popular: true
+        }
+      ]
     },
     {
-      id: '2',
-      name: 'Sandwich',
+      id: "2",
+      name: "Sandwich",
       items: [
         {
-          id: '3',
-          name: 'Beef loaf',
-          description: 'Savory Filipino-style sandwich with beef loaf slices.',
+          id: "3",
+          name: "Beef loaf",
+          description: "Savory Filipino-style sandwich with beef loaf slices.",
           price: 15,
-          category: 'Sandwich',
+          category: "Sandwich",
           available: true,
-          popular: false,
-        },
-      ],
+          popular: false
+        }
+      ]
     },
     {
-      id: '3',
-      name: 'Main Dish',
+      id: "3",
+      name: "Main Dish",
       items: [
         {
-          id: '4',
-          name: 'Longganisa',
-          description: 'Filipino sweet pork sausage.',
+          id: "4",
+          name: "Longganisa",
+          description: "Filipino sweet pork sausage.",
           price: 15,
-          category: 'Main Dish',
+          category: "Main Dish",
           available: true,
-          popular: false,
+          popular: false
         },
         {
-          id: '5',
-          name: 'Ginaling',
-          description: 'Ground meat sautéed with vegetables.',
+          id: "5",
+          name: "Ginaling",
+          description: "Ground meat sautéed with vegetables.",
           price: 60,
-          category: 'Main Dish',
+          category: "Main Dish",
           available: true,
-          popular: true,
+          popular: true
         },
         {
-          id: '6',
-          name: 'Menudo',
-          description: 'Pork and liver stew.',
+          id: "6",
+          name: "Menudo",
+          description: "Pork and liver stew.",
           price: 60,
-          category: 'Main Dish',
+          category: "Main Dish",
           available: true,
-          popular: true,
-        },
-      ],
+          popular: true
+        }
+      ]
     },
     {
-      id: '4',
-      name: 'Viand',
+      id: "4",
+      name: "Viand",
       items: [
         {
-          id: '7',
-          name: 'Monggos',
-          description: 'Hearty mung bean stew.',
+          id: "7",
+          name: "Monggos",
+          description: "Hearty mung bean stew.",
           price: 20,
-          category: 'Viand',
+          category: "Viand",
           available: true,
-          popular: false,
-        },
-      ],
+          popular: false
+        }
+      ]
     },
     {
-      id: '5',
-      name: 'Drinks',
+      id: "5",
+      name: "Drinks",
       items: [
         {
-          id: '8',
-          name: 'Coke',
-          description: 'Refreshing Coca-Cola soft drink.',
+          id: "8",
+          name: "Coke",
+          description: "Refreshing Coca-Cola soft drink.",
           price: 20,
-          category: 'Drinks',
+          category: "Drinks",
           available: true,
-          popular: false,
+          popular: false
         },
         {
-          id: '9',
-          name: 'Royal',
-          description: 'Sweet Filipino orange soda.',
+          id: "9",
+          name: "Royal",
+          description: "Sweet Filipino orange soda.",
           price: 20,
-          category: 'Drinks',
+          category: "Drinks",
           available: true,
-          popular: false,
+          popular: false
         },
         {
-          id: '10',
-          name: 'Sprite',
-          description: 'Lemon-lime flavored soda.',
+          id: "10",
+          name: "Sprite",
+          description: "Lemon-lime flavored soda.",
           price: 20,
-          category: 'Drinks',
+          category: "Drinks",
           available: true,
-          popular: false,
-        },
-      ],
+          popular: false
+        }
+      ]
     },
-  ]);
-  const [activeCategory, setActiveCategory] = useState(categories[0].id);
-  const [paymentMethod, setPaymentMethod] = useState('card');
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('pos');
+    {
+      id: "6",
+      name: "Combo Meals",
+      items: [
+        {
+          id: "11",
+          name: "Rice + Vegetable + Lumpia",
+          description: "Complete combo meal with rice, vegetables, and lumpia.",
+          price: 45,
+          category: "Combo Meals",
+          available: true,
+          popular: true
+        },
+        {
+          id: "12",
+          name: "Rice + Hamburger + Egg",
+          description: "Hearty combo with rice, hamburger, and egg.",
+          price: 45,
+          category: "Combo Meals",
+          available: true,
+          popular: true
+        },
+        {
+          id: "13",
+          name: "Rice + Bihon/Bam-i + Siomai",
+          description: "Traditional combo with rice, noodles, and siomai.",
+          price: 45,
+          category: "Combo Meals",
+          available: true,
+          popular: true
+        },
+        {
+          id: "14",
+          name: "Rice + Chorizo + Boiled Egg",
+          description: "Flavorful combo with rice, chorizo, and boiled egg.",
+          price: 45,
+          category: "Combo Meals",
+          available: true,
+          popular: false
+        },
+        {
+          id: "15",
+          name: "Rice + Hotdog + Nugahong",
+          description: "Classic combo with rice, hotdog, and nugahong.",
+          price: 45,
+          category: "Combo Meals",
+          available: true,
+          popular: false
+        },
+        {
+          id: "16",
+          name: "Rice + Fried Egg + Chorizo",
+          description:
+            "Simple yet satisfying combo with rice, fried egg, and chorizo.",
+          price: 45,
+          category: "Combo Meals",
+          available: true,
+          popular: false
+        }
+      ]
+    }
+  ])
+
+  const [activeCategory, setActiveCategory] = useState(categories[0].id)
+  const [paymentMethod, setPaymentMethod] = useState("card")
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState("pos")
+
   // Sample queue data - in a real app this would come from an API or database
   const [orderQueue, setOrderQueue] = useState([
     {
-      id: '1001',
-      orderNumber: 'W-001',
-      type: 'walk-in',
+      id: "1001",
+      orderNumber: "W-001",
+      type: "walk-in",
       items: [
-        { id: 'oi1', menuItemId: '1', name: 'Bam-i', price: 30, quantity: 2 },
+        { id: "oi1", menuItemId: "1", name: "Bam-i", price: 30, quantity: 2 },
         {
-          id: 'oi2',
-          menuItemId: '4',
-          name: 'Longganisa',
+          id: "oi2",
+          menuItemId: "4",
+          name: "Longganisa",
           price: 15,
-          quantity: 1,
-        },
+          quantity: 1
+        }
       ],
-      status: 'pending',
-      timeReceived: new Date(Date.now() - 5 * 60 * 1000), // 5 mins ago
+      status: "pending",
+      timeReceived: new Date(Date.now() - 5 * 60 * 1000) // 5 mins ago
     },
     {
-      id: '1002',
-      orderNumber: 'O-101',
-      type: 'online',
+      id: "1002",
+      orderNumber: "O-101",
+      type: "online",
       items: [
         {
-          id: 'oi3',
-          menuItemId: '5',
-          name: 'Ginaling',
+          id: "oi3",
+          menuItemId: "5",
+          name: "Ginaling",
           price: 60,
-          quantity: 1,
+          quantity: 1
         },
-        { id: 'oi4', menuItemId: '8', name: 'Coke', price: 20, quantity: 2 },
+        { id: "oi4", menuItemId: "8", name: "Coke", price: 20, quantity: 2 }
       ],
-      status: 'preparing',
+      status: "preparing",
       timeReceived: new Date(Date.now() - 12 * 60 * 1000), // 12 mins ago
-      customerName: 'Juan Dela Cruz',
+      customerName: "Juan Dela Cruz"
     },
     {
-      id: '1003',
-      orderNumber: 'W-002',
-      type: 'walk-in',
+      id: "1003",
+      orderNumber: "W-002",
+      type: "walk-in",
       items: [
-        { id: 'oi5', menuItemId: '6', name: 'Menudo', price: 60, quantity: 1 },
+        { id: "oi5", menuItemId: "6", name: "Menudo", price: 60, quantity: 1 }
       ],
-      status: 'ready',
-      timeReceived: new Date(Date.now() - 15 * 60 * 1000), // 15 mins ago
+      status: "ready",
+      timeReceived: new Date(Date.now() - 15 * 60 * 1000) // 15 mins ago
     },
     {
-      id: '1004',
-      orderNumber: 'O-102',
-      type: 'online',
+      id: "1004",
+      orderNumber: "O-102",
+      type: "online",
       items: [
-        { id: 'oi6', menuItemId: '2', name: 'Bihon', price: 20, quantity: 3 },
-        { id: 'oi7', menuItemId: '9', name: 'Royal', price: 20, quantity: 3 },
+        { id: "oi6", menuItemId: "2", name: "Bihon", price: 20, quantity: 3 },
+        { id: "oi7", menuItemId: "9", name: "Royal", price: 20, quantity: 3 }
       ],
-      status: 'pending',
+      status: "pending",
       timeReceived: new Date(Date.now() - 3 * 60 * 1000), // 3 mins ago
-      customerName: 'Maria Santos',
-    },
-  ]);
-  const addToOrder = (menuItem) => {
-    setCurrentOrder((prevOrder) => {
+      customerName: "Maria Santos"
+    }
+  ])
+
+  const addToOrder = menuItem => {
+    setCurrentOrder(prevOrder => {
       // Check if item already exists in order
       const existingItemIndex = prevOrder.findIndex(
-        (item) => item.menuItemId === menuItem.id
-      );
+        item => item.menuItemId === menuItem.id
+      )
+
       if (existingItemIndex !== -1) {
         // Item exists, increase quantity
-        const updatedOrder = [...prevOrder];
-        updatedOrder[existingItemIndex].quantity += 1;
-        return updatedOrder;
+        const updatedOrder = [...prevOrder]
+        updatedOrder[existingItemIndex].quantity += 1
+        return updatedOrder
       } else {
         // Item doesn't exist, add new item
         return [
@@ -237,101 +303,117 @@ const POS = () => {
             menuItemId: menuItem.id,
             name: menuItem.name,
             price: menuItem.price,
-            quantity: 1,
-          },
-        ];
+            quantity: 1
+          }
+        ]
       }
-    });
-  };
+    })
+  }
+
   const updateQuantity = (orderItemId, change) => {
-    setCurrentOrder((prevOrder) => {
-      const updatedOrder = prevOrder.map((item) => {
+    setCurrentOrder(prevOrder => {
+      const updatedOrder = prevOrder.map(item => {
         if (item.id === orderItemId) {
-          const newQuantity = item.quantity + change;
-          return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
+          const newQuantity = item.quantity + change
+          return newQuantity > 0 ? { ...item, quantity: newQuantity } : item
         }
-        return item;
-      });
-      return updatedOrder;
-    });
-  };
-  const removeFromOrder = (orderItemId) => {
-    setCurrentOrder((prevOrder) =>
-      prevOrder.filter((item) => item.id !== orderItemId)
-    );
-  };
+        return item
+      })
+      return updatedOrder
+    })
+  }
+
+  const removeFromOrder = orderItemId => {
+    setCurrentOrder(prevOrder =>
+      prevOrder.filter(item => item.id !== orderItemId)
+    )
+  }
+
   const clearOrder = () => {
-    setCurrentOrder([]);
-  };
+    setCurrentOrder([])
+  }
+
   const calculateSubtotal = () => {
     return currentOrder.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
-    );
-  };
+    )
+  }
+
   const calculateTotal = () => {
-    return calculateSubtotal();
-  };
+    return calculateSubtotal()
+  }
+
   const processPayment = () => {
     // This would typically integrate with a payment gateway
     alert(
-      `Payment of $${calculateTotal().toFixed(2)} processed via ${paymentMethod}`
-    );
-    clearOrder();
-    setIsPaymentModalOpen(false);
-  };
+      `Payment of $${calculateTotal().toFixed(
+        2
+      )} processed via ${paymentMethod}`
+    )
+    clearOrder()
+    setIsPaymentModalOpen(false)
+  }
+
   const updateOrderStatus = (orderId, newStatus) => {
-    setOrderQueue((prevQueue) =>
-      prevQueue.map((order) =>
+    setOrderQueue(prevQueue =>
+      prevQueue.map(order =>
         order.id === orderId ? { ...order, status: newStatus } : order
       )
-    );
-  };
+    )
+  }
+
   // Filter menu items based on search
   const filteredMenuItems =
     categories
-      .find((cat) => cat.id === activeCategory)
+      .find(cat => cat.id === activeCategory)
       ?.items.filter(
-        (item) =>
+        item =>
           item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.description.toLowerCase().includes(searchTerm.toLowerCase())
-      ) || [];
+      ) || []
+
   // Filter orders by type
-  const walkInOrders = orderQueue.filter((order) => order.type === 'walk-in');
-  const onlineOrders = orderQueue.filter((order) => order.type === 'online');
+  const walkInOrders = orderQueue.filter(order => order.type === "walk-in")
+  const onlineOrders = orderQueue.filter(order => order.type === "online")
+
   // Format time ago
-  const formatTimeAgo = (date) => {
-    const now = new Date();
+  const formatTimeAgo = date => {
+    const now = new Date()
     const diffInMinutes = Math.floor(
       (now.getTime() - date.getTime()) / (1000 * 60)
-    );
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes === 1) return '1 minute ago';
-    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
-    const hours = Math.floor(diffInMinutes / 60);
-    if (hours === 1) return '1 hour ago';
-    return `${hours} hours ago`;
-  };
-  const getStatusColor = (status) => {
+    )
+
+    if (diffInMinutes < 1) return "Just now"
+    if (diffInMinutes === 1) return "1 minute ago"
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`
+
+    const hours = Math.floor(diffInMinutes / 60)
+    if (hours === 1) return "1 hour ago"
+    return `${hours} hours ago`
+  }
+
+  const getStatusColor = status => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'preparing':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'ready':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'completed':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+      case "preparing":
+        return "bg-blue-100 text-blue-800 border-blue-200"
+      case "ready":
+        return "bg-green-100 text-green-800 border-green-200"
+      case "completed":
+        return "bg-gray-100 text-gray-800 border-gray-200"
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return "bg-gray-100 text-gray-800 border-gray-200"
     }
-  };
+  }
+
   return (
     <div className="space-y-4">
       {/* Top nav tabs */}
       <Tabs
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value)}
+        onValueChange={value => setActiveTab(value)}
         className="w-full"
       >
         <TabsList className="w-full grid grid-cols-2">
@@ -341,7 +423,7 @@ const POS = () => {
       </Tabs>
 
       {/* Point of Sale Content */}
-      {activeTab === 'pos' && (
+      {activeTab === "pos" && (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
           {/* Menu Selection Side */}
           <div className="md:col-span-2">
@@ -364,7 +446,7 @@ const POS = () => {
                       placeholder="Search menu items..."
                       className="pl-8"
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={e => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
@@ -378,7 +460,7 @@ const POS = () => {
                 >
                   <div className="border-b">
                     <TabsList className="w-full justify-start overflow-auto p-0 h-auto">
-                      {categories.map((category) => (
+                      {categories.map(category => (
                         <TabsTrigger
                           key={category.id}
                           value={category.id}
@@ -389,7 +471,7 @@ const POS = () => {
                       ))}
                     </TabsList>
                   </div>
-                  {categories.map((category) => (
+                  {categories.map(category => (
                     <TabsContent
                       key={category.id}
                       value={category.id}
@@ -397,7 +479,7 @@ const POS = () => {
                     >
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
                         {filteredMenuItems.length > 0 ? (
-                          filteredMenuItems.map((item) => (
+                          filteredMenuItems.map(item => (
                             <div
                               key={item.id}
                               className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
@@ -440,7 +522,7 @@ const POS = () => {
                 <div className="flex justify-between w-full text-xs text-muted-foreground">
                   <span>Cashier: Admin User</span>
                   <span>
-                    {new Date().toLocaleDateString()}{' '}
+                    {new Date().toLocaleDateString()}{" "}
                     {new Date().toLocaleTimeString()}
                   </span>
                 </div>
@@ -460,7 +542,7 @@ const POS = () => {
               <CardContent className="flex-1 overflow-auto">
                 {currentOrder.length > 0 ? (
                   <div className="space-y-3">
-                    {currentOrder.map((item) => (
+                    {currentOrder.map(item => (
                       <div
                         key={item.id}
                         className="flex justify-between items-start p-2 border rounded-md"
@@ -578,8 +660,12 @@ const POS = () => {
 
                       <div className="flex flex-col gap-3">
                         <button
-                          className={`flex items-center gap-3 p-3 rounded-md border ${paymentMethod === 'card' ? 'bg-primary text-primary-foreground' : 'bg-transparent'}`}
-                          onClick={() => setPaymentMethod('card')}
+                          className={`flex items-center gap-3 p-3 rounded-md border ${
+                            paymentMethod === "card"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-transparent"
+                          }`}
+                          onClick={() => setPaymentMethod("card")}
                         >
                           <CreditCard className="h-5 w-5" />
                           <div className="text-left">
@@ -589,8 +675,12 @@ const POS = () => {
                         </button>
 
                         <button
-                          className={`flex items-center gap-3 p-3 rounded-md border ${paymentMethod === 'cash' ? 'bg-primary text-primary-foreground' : 'bg-transparent'}`}
-                          onClick={() => setPaymentMethod('cash')}
+                          className={`flex items-center gap-3 p-3 rounded-md border ${
+                            paymentMethod === "cash"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-transparent"
+                          }`}
+                          onClick={() => setPaymentMethod("cash")}
                         >
                           <DollarSign className="h-5 w-5" />
                           <div className="text-left">
@@ -600,8 +690,12 @@ const POS = () => {
                         </button>
 
                         <button
-                          className={`flex items-center gap-3 p-3 rounded-md border ${paymentMethod === 'mobile' ? 'bg-primary text-primary-foreground' : 'bg-transparent'}`}
-                          onClick={() => setPaymentMethod('mobile')}
+                          className={`flex items-center gap-3 p-3 rounded-md border ${
+                            paymentMethod === "mobile"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-transparent"
+                          }`}
+                          onClick={() => setPaymentMethod("mobile")}
                         >
                           <Smartphone className="h-5 w-5" />
                           <div className="text-left">
@@ -649,7 +743,7 @@ const POS = () => {
       )}
 
       {/* Order Queue Content */}
-      {activeTab === 'queue' && (
+      {activeTab === "queue" && (
         <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
           {/* Walk-in Orders */}
           <Card>
@@ -673,7 +767,7 @@ const POS = () => {
             <CardContent className="p-0">
               {walkInOrders.length > 0 ? (
                 <div className="divide-y">
-                  {walkInOrders.map((order) => (
+                  {walkInOrders.map(order => (
                     <div key={order.id} className="p-4 flex flex-col gap-3">
                       <div className="flex justify-between items-start">
                         <div>
@@ -681,12 +775,14 @@ const POS = () => {
                             #{order.orderNumber}
                           </h3>
                           <p className="text-sm text-muted-foreground flex items-center gap-1">
-                            <Clock className="h-3.5 w-3.5" />{' '}
+                            <Clock className="h-3.5 w-3.5" />{" "}
                             {formatTimeAgo(order.timeReceived)}
                           </p>
                         </div>
                         <div
-                          className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}
+                          className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                            order.status
+                          )}`}
                         >
                           {order.status.charAt(0).toUpperCase() +
                             order.status.slice(1)}
@@ -710,35 +806,35 @@ const POS = () => {
                       </div>
 
                       <div className="flex gap-2">
-                        {order.status === 'pending' && (
+                        {order.status === "pending" && (
                           <Button
                             size="sm"
                             className="flex-1"
                             onClick={() =>
-                              updateOrderStatus(order.id, 'preparing')
+                              updateOrderStatus(order.id, "preparing")
                             }
                           >
                             Start Preparing
                           </Button>
                         )}
 
-                        {order.status === 'preparing' && (
+                        {order.status === "preparing" && (
                           <Button
                             size="sm"
                             className="flex-1"
-                            onClick={() => updateOrderStatus(order.id, 'ready')}
+                            onClick={() => updateOrderStatus(order.id, "ready")}
                           >
                             Mark Ready
                           </Button>
                         )}
 
-                        {order.status === 'ready' && (
+                        {order.status === "ready" && (
                           <Button
                             size="sm"
                             variant="default"
                             className="flex-1 bg-green-600 hover:bg-green-700"
                             onClick={() =>
-                              updateOrderStatus(order.id, 'completed')
+                              updateOrderStatus(order.id, "completed")
                             }
                           >
                             <Check className="h-4 w-4 mr-1" /> Complete Order
@@ -783,7 +879,7 @@ const POS = () => {
             <CardContent className="p-0">
               {onlineOrders.length > 0 ? (
                 <div className="divide-y">
-                  {onlineOrders.map((order) => (
+                  {onlineOrders.map(order => (
                     <div key={order.id} className="p-4 flex flex-col gap-3">
                       <div className="flex justify-between items-start">
                         <div>
@@ -794,12 +890,14 @@ const POS = () => {
                             {order.customerName}
                           </p>
                           <p className="text-sm text-muted-foreground flex items-center gap-1">
-                            <Clock className="h-3.5 w-3.5" />{' '}
+                            <Clock className="h-3.5 w-3.5" />{" "}
                             {formatTimeAgo(order.timeReceived)}
                           </p>
                         </div>
                         <div
-                          className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}
+                          className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                            order.status
+                          )}`}
                         >
                           {order.status.charAt(0).toUpperCase() +
                             order.status.slice(1)}
@@ -823,35 +921,35 @@ const POS = () => {
                       </div>
 
                       <div className="flex gap-2">
-                        {order.status === 'pending' && (
+                        {order.status === "pending" && (
                           <Button
                             size="sm"
                             className="flex-1"
                             onClick={() =>
-                              updateOrderStatus(order.id, 'preparing')
+                              updateOrderStatus(order.id, "preparing")
                             }
                           >
                             Start Preparing
                           </Button>
                         )}
 
-                        {order.status === 'preparing' && (
+                        {order.status === "preparing" && (
                           <Button
                             size="sm"
                             className="flex-1"
-                            onClick={() => updateOrderStatus(order.id, 'ready')}
+                            onClick={() => updateOrderStatus(order.id, "ready")}
                           >
                             Mark Ready
                           </Button>
                         )}
 
-                        {order.status === 'ready' && (
+                        {order.status === "ready" && (
                           <Button
                             size="sm"
                             variant="default"
                             className="flex-1 bg-green-600 hover:bg-green-700"
                             onClick={() =>
-                              updateOrderStatus(order.id, 'completed')
+                              updateOrderStatus(order.id, "completed")
                             }
                           >
                             <Check className="h-4 w-4 mr-1" /> Complete Order
@@ -891,19 +989,19 @@ const POS = () => {
                 <div className="bg-yellow-50 p-4 rounded-md">
                   <p className="text-sm font-medium text-yellow-800">Pending</p>
                   <p className="text-3xl font-bold text-yellow-800">
-                    {orderQueue.filter((o) => o.status === 'pending').length}
+                    {orderQueue.filter(o => o.status === "pending").length}
                   </p>
                 </div>
                 <div className="bg-blue-50 p-4 rounded-md">
                   <p className="text-sm font-medium text-blue-800">Preparing</p>
                   <p className="text-3xl font-bold text-blue-800">
-                    {orderQueue.filter((o) => o.status === 'preparing').length}
+                    {orderQueue.filter(o => o.status === "preparing").length}
                   </p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-md">
                   <p className="text-sm font-medium text-green-800">Ready</p>
                   <p className="text-3xl font-bold text-green-800">
-                    {orderQueue.filter((o) => o.status === 'ready').length}
+                    {orderQueue.filter(o => o.status === "ready").length}
                   </p>
                 </div>
               </div>
@@ -912,6 +1010,7 @@ const POS = () => {
         </div>
       )}
     </div>
-  );
-};
-export default POS;
+  )
+}
+
+export default POS
