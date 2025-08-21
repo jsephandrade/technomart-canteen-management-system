@@ -56,7 +56,7 @@ export const NavigationSidebar: React.FC = () => {
       icon: TrendingUp
     },
     {
-      name: 'Employee Schedule',
+      name: 'Employee',
       href: '/employees',
       icon: CalendarClock
     },
