@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +34,7 @@ interface CateringEvent {
 }
 
 const Catering: React.FC = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentTab, setCurrentTab] = useState<string>('upcoming');
   const [showNewEventModal, setShowNewEventModal] = useState(false);
@@ -182,6 +184,10 @@ const Catering: React.FC = () => {
 
   const handleUpdateMenuItems = (eventId: string, menuItems: any[]) => {
     toast.success('Menu items updated successfully!');
+  };
+
+  const handleViewFullMenu = () => {
+    navigate('/pos');
   };
 
   const getInitials = (name: string) => {
@@ -449,7 +455,7 @@ const Catering: React.FC = () => {
                     </Button>
                   </div>)}
               </div>
-              <Button className="w-full mt-4" variant="outline" size="sm">
+              <Button className="w-full mt-4" variant="outline" size="sm" onClick={handleViewFullMenu}>
                 View Full Menu ({cateringMenu.length} items)
               </Button>
             </CardContent>
