@@ -5,7 +5,16 @@ import { salesData, menuItems } from '@/utils/mockData';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Sale } from '@/types';
 import { Button } from '@/components/ui/button';
-import { BarChart as BarChartIcon } from 'lucide-react';
+import { Download } from 'lucide-react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+// Extend jsPDF type to include autoTable
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+  }
+}
 
 // Helper function to group sales by date
 const groupSalesByDate = (data: Sale[]) => {
@@ -201,13 +210,141 @@ const mockPayments: Payment[] = [{
 const SalesAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('week');
   const [payments, setPayments] = useState<Payment[]>(mockPayments);
+
   const getTotalAmount = (status: string = 'all') => {
     return payments.filter(payment => status === 'all' || payment.status === status).reduce((total, payment) => {
       if (payment.status === 'refunded') return total;
       return total + payment.amount;
     }, 0).toFixed(2);
   };
-  return <div className="space-y-6 animate-fade-in">
+
+  const generateFinancialReport = () => {
+    const doc = new jsPDF();
+    const currentDate = new Date().toLocaleDateString();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.text('Financial Analytics Report', 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${currentDate}`, 20, 30);
+    
+    // Financial Summary
+    doc.setFontSize(16);
+    doc.text('Financial Summary', 20, 50);
+    
+    const totalSales = salesData.reduce((acc, sale) => acc + sale.total, 0);
+    const totalOrders = salesData.length;
+    const avgOrderValue = totalSales / totalOrders;
+    
+    doc.setFontSize(12);
+    doc.text(`Total Sales: ₱${totalSales.toFixed(2)}`, 20, 65);
+    doc.text(`Total Orders: ${totalOrders}`, 20, 75);
+    doc.text(`Average Order Value: ₱${avgOrderValue.toFixed(2)}`, 20, 85);
+    doc.text(`Monthly Growth: +23%`, 20, 95);
+    
+    // Daily Sales Table
+    doc.text('Daily Sales Breakdown', 20, 115);
+    const dailySalesTable = dailySalesData.map(item => [item.date, `₱${item.total.toFixed(2)}`]);
+    
+    doc.autoTable({
+      startY: 125,
+      head: [['Date', 'Sales Amount']],
+      body: dailySalesTable,
+    });
+    
+    doc.save('financial-analytics-report.pdf');
+  };
+
+  const generateMenuReport = () => {
+    const doc = new jsPDF();
+    const currentDate = new Date().toLocaleDateString();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.text('Menu Analytics Report', 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${currentDate}`, 20, 30);
+    
+    // Menu Performance Summary
+    doc.setFontSize(16);
+    doc.text('Menu Performance Summary', 20, 50);
+    
+    doc.setFontSize(12);
+    doc.text(`Best Performer: ${topSellingItemsData[0]?.name}`, 20, 65);
+    doc.text(`Revenue: ₱${topSellingItemsData[0]?.value.toFixed(2)}`, 20, 75);
+    doc.text(`Needs Attention: ${lowestSellingItemsData[0]?.name}`, 20, 85);
+    doc.text(`Total Menu Items: ${menuItems.length}`, 20, 95);
+    
+    // Top Selling Items Table
+    doc.text('Top Selling Items', 20, 115);
+    const topItemsTable = topSellingItemsData.map(item => [item.name, `₱${item.value.toFixed(2)}`]);
+    
+    doc.autoTable({
+      startY: 125,
+      head: [['Item Name', 'Revenue']],
+      body: topItemsTable,
+    });
+    
+    // Lowest Selling Items Table
+    const finalY = (doc as any).lastAutoTable.finalY + 20;
+    doc.text('Lowest Selling Items', 20, finalY);
+    const lowestItemsTable = lowestSellingItemsData.map(item => [item.name, `₱${item.value.toFixed(2)}`]);
+    
+    doc.autoTable({
+      startY: finalY + 10,
+      head: [['Item Name', 'Revenue']],
+      body: lowestItemsTable,
+    });
+    
+    doc.save('menu-analytics-report.pdf');
+  };
+
+  const generatePaymentReport = () => {
+    const doc = new jsPDF();
+    const currentDate = new Date().toLocaleDateString();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.text('Payment Analytics Report', 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${currentDate}`, 20, 30);
+    
+    // Payment Summary
+    doc.setFontSize(16);
+    doc.text('Payment Method Summary', 20, 50);
+    
+    const mostPopular = paymentMethodData[0];
+    const digitalPayments = ((paymentMethodData.find(p => p.name === 'Card')?.value || 0) + 
+                           (paymentMethodData.find(p => p.name === 'Mobile')?.value || 0));
+    const totalPayments = paymentMethodData.reduce((acc, p) => acc + p.value, 0);
+    const digitalPercentage = Math.round(digitalPayments / totalPayments * 100);
+    const cashPercentage = Math.round((paymentMethodData.find(p => p.name === 'Cash')?.value || 0) / totalPayments * 100);
+    
+    doc.setFontSize(12);
+    doc.text(`Most Popular: ${mostPopular?.name}`, 20, 65);
+    doc.text(`Total: ₱${mostPopular?.value.toFixed(2)}`, 20, 75);
+    doc.text(`Digital Payments: ${digitalPercentage}%`, 20, 85);
+    doc.text(`Cash Transactions: ${cashPercentage}%`, 20, 95);
+    
+    // Payment Breakdown Table
+    doc.text('Payment Method Breakdown', 20, 115);
+    const paymentTable = paymentMethodData.map(item => [
+      item.name, 
+      `₱${item.value.toFixed(2)}`, 
+      `${Math.round(item.value / totalPayments * 100)}%`
+    ]);
+    
+    doc.autoTable({
+      startY: 125,
+      head: [['Payment Method', 'Amount', 'Percentage']],
+      body: paymentTable,
+    });
+    
+    doc.save('payment-analytics-report.pdf');
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
       <h2 className="text-3xl font-semibold">Sales Analytics</h2>
       
       <Tabs defaultValue="financial" className="w-full">
@@ -215,10 +352,17 @@ const SalesAnalytics: React.FC = () => {
           <TabsTrigger value="financial">Financial</TabsTrigger>
           <TabsTrigger value="menu">Menu</TabsTrigger>
           <TabsTrigger value="payment">Payment</TabsTrigger>
-          
         </TabsList>
 
         <TabsContent value="financial" className="mt-6 space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold">Financial Analytics</h3>
+            <Button onClick={generateFinancialReport} className="gap-2">
+              <Download className="h-4 w-4" />
+              Generate PDF Report
+            </Button>
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -309,6 +453,14 @@ const SalesAnalytics: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="menu" className="mt-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-semibold">Menu Analytics</h3>
+            <Button onClick={generateMenuReport} className="gap-2">
+              <Download className="h-4 w-4" />
+              Generate PDF Report
+            </Button>
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -397,6 +549,14 @@ const SalesAnalytics: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="payment" className="mt-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-semibold">Payment Analytics</h3>
+            <Button onClick={generatePaymentReport} className="gap-2">
+              <Download className="h-4 w-4" />
+              Generate PDF Report
+            </Button>
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -484,43 +644,9 @@ const SalesAnalytics: React.FC = () => {
             </CardContent>
           </Card>
         </TabsContent>
-
-        <TabsContent value="payments" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment Analytics</CardTitle>
-              <CardDescription>Transaction analytics and insights</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Today's Total</p>
-                  <p className="text-2xl font-bold">₱{getTotalAmount()}</p>
-                </div>
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Transactions</p>
-                  <p className="text-2xl font-bold">{payments.length}</p>
-                </div>
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Avg. Transaction</p>
-                  <p className="text-2xl font-bold">
-                    ₱{(parseFloat(getTotalAmount()) / payments.filter(p => p.status !== 'refunded').length).toFixed(2)}
-                  </p>
-                </div>
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Success Rate</p>
-                  <p className="text-2xl font-bold">
-                    {Math.round(payments.filter(p => p.status === 'completed').length / payments.length * 100)}%
-                  </p>
-                </div>
-              </div>
-              <Button className="w-full mt-4" variant="outline" size="sm">
-                <BarChartIcon className="h-4 w-4 mr-1" /> Detailed Reports
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
-    </div>;
+    </div>
+  );
 };
+
 export default SalesAnalytics;
