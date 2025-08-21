@@ -1,193 +1,244 @@
-import React, { useState } from 'react';
+import React, { useState } from "react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { CustomBadge } from '@/components/ui/custom-badge';
+  CardFooter
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { CustomBadge } from "@/components/ui/custom-badge"
 import {
   Search,
   PlusCircle,
   ArrowUpDown,
   MoreVertical,
-  Truck,
   PenSquare,
-  Trash2,
-  BarChart2,
-  History,
-} from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
+  Ban,
+  History
+} from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Progress } from "@/components/ui/progress"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  SelectValue
+} from "@/components/ui/select"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast } from "sonner"
+import AddItemModal from "@/components/inventory/AddItemModal"
+import EditItemModal from "@/components/inventory/EditItemModal"
+
 const Inventory = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingItem, setEditingItem] = useState(null)
+
   const [inventoryItems, setInventoryItems] = useState([
     {
-      id: '1',
-      name: 'Rice',
-      category: 'Grains',
+      id: "1",
+      name: "Rice",
+      category: "Grains",
       currentStock: 25,
       minThreshold: 10,
-      unit: 'kg',
-      lastUpdated: '2025-04-15',
-      supplier: 'Global Foods',
+      unit: "kg",
+      lastUpdated: "2025-04-15",
+      supplier: "Global Foods"
     },
     {
-      id: '2',
-      name: 'Chicken Breast',
-      category: 'Meat',
+      id: "2",
+      name: "Chicken Breast",
+      category: "Meat",
       currentStock: 8,
       minThreshold: 5,
-      unit: 'kg',
-      lastUpdated: '2025-04-16',
-      supplier: 'Fresh Farms',
+      unit: "kg",
+      lastUpdated: "2025-04-16",
+      supplier: "Fresh Farms"
     },
     {
-      id: '3',
-      name: 'Olive Oil',
-      category: 'Condiments',
+      id: "3",
+      name: "Olive Oil",
+      category: "Condiments",
       currentStock: 2,
       minThreshold: 3,
-      unit: 'bottles',
-      lastUpdated: '2025-04-16',
-      supplier: 'Gourmet Supplies',
+      unit: "bottles",
+      lastUpdated: "2025-04-16",
+      supplier: "Gourmet Supplies"
     },
     {
-      id: '4',
-      name: 'Tomatoes',
-      category: 'Vegetables',
+      id: "4",
+      name: "Tomatoes",
+      category: "Vegetables",
       currentStock: 15,
       minThreshold: 8,
-      unit: 'kg',
-      lastUpdated: '2025-04-17',
-      supplier: 'Local Farms',
+      unit: "kg",
+      lastUpdated: "2025-04-17",
+      supplier: "Local Farms"
     },
     {
-      id: '5',
-      name: 'Flour',
-      category: 'Baking',
+      id: "5",
+      name: "Flour",
+      category: "Baking",
       currentStock: 12,
       minThreshold: 5,
-      unit: 'kg',
-      lastUpdated: '2025-04-14',
-      supplier: "Baker's Choice",
+      unit: "kg",
+      lastUpdated: "2025-04-14",
+      supplier: "Baker's Choice"
     },
     {
-      id: '6',
-      name: 'Salt',
-      category: 'Condiments',
+      id: "6",
+      name: "Salt",
+      category: "Condiments",
       currentStock: 4,
       minThreshold: 2,
-      unit: 'kg',
-      lastUpdated: '2025-04-13',
-      supplier: 'Seasoning Co.',
+      unit: "kg",
+      lastUpdated: "2025-04-13",
+      supplier: "Seasoning Co."
     },
     {
-      id: '7',
-      name: 'Milk',
-      category: 'Dairy',
+      id: "7",
+      name: "Milk",
+      category: "Dairy",
       currentStock: 6,
       minThreshold: 8,
-      unit: 'liters',
-      lastUpdated: '2025-04-17',
-      supplier: 'Dairy Farms',
-    },
-  ]);
+      unit: "liters",
+      lastUpdated: "2025-04-17",
+      supplier: "Dairy Farms"
+    }
+  ])
+
   const recentActivities = [
     {
-      id: '1',
-      action: 'Stock Update',
-      item: 'Rice',
-      quantity: '+50kg',
-      timestamp: '2025-04-22 14:30',
-      user: 'John Smith',
+      id: "1",
+      action: "Stock Update",
+      item: "Rice",
+      quantity: "+50kg",
+      timestamp: "2025-04-22 14:30",
+      user: "John Smith"
     },
     {
-      id: '2',
-      action: 'Stock Deduction',
-      item: 'Chicken Breast',
-      quantity: '-15kg',
-      timestamp: '2025-04-22 13:45',
-      user: 'Maria Garcia',
+      id: "2",
+      action: "Stock Deduction",
+      item: "Chicken Breast",
+      quantity: "-15kg",
+      timestamp: "2025-04-22 13:45",
+      user: "Maria Garcia"
     },
     {
-      id: '3',
-      action: 'Low Stock Alert',
-      item: 'Olive Oil',
-      quantity: '2 bottles remaining',
-      timestamp: '2025-04-22 12:20',
-      user: 'System',
+      id: "3",
+      action: "Low Stock Alert",
+      item: "Olive Oil",
+      quantity: "2 bottles remaining",
+      timestamp: "2025-04-22 12:20",
+      user: "System"
     },
     {
-      id: '4',
-      action: 'Inventory Count',
-      item: 'Tomatoes',
-      quantity: 'Updated to 15kg',
-      timestamp: '2025-04-22 11:00',
-      user: 'David Chen',
-    },
-  ];
+      id: "4",
+      action: "Inventory Count",
+      item: "Tomatoes",
+      quantity: "Updated to 15kg",
+      timestamp: "2025-04-22 11:00",
+      user: "David Chen"
+    }
+  ]
+
   const categories = [
-    'Grains',
-    'Meat',
-    'Vegetables',
-    'Dairy',
-    'Condiments',
-    'Baking',
-    'Fruits',
-  ];
-  const filteredItems = inventoryItems.filter((item) => {
+    "Grains",
+    "Meat",
+    "Vegetables",
+    "Dairy",
+    "Condiments",
+    "Baking",
+    "Fruits"
+  ]
+
+  const filteredItems = inventoryItems.filter(item => {
     // Filter by search term
     const matchesSearch =
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.supplier.toLowerCase().includes(searchTerm.toLowerCase());
+      item.supplier.toLowerCase().includes(searchTerm.toLowerCase())
+
     // Filter by category
     const matchesCategory =
-      selectedCategory === 'all' || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+      selectedCategory === "all" || item.category === selectedCategory
+    return matchesSearch && matchesCategory
+  })
+
   // Items that are below threshold
   const lowStockItems = inventoryItems.filter(
-    (item) => item.currentStock < item.minThreshold
-  );
+    item => item.currentStock < item.minThreshold
+  )
+
   // Calculate stock level percentage
   const getStockPercentage = (current, threshold) => {
-    return Math.min(100, Math.round((current / (threshold * 2)) * 100));
-  };
+    return Math.min(100, Math.round((current / (threshold * 2)) * 100))
+  }
+
   // Determine badge color based on stock level
   const getStockBadgeVariant = (current, threshold) => {
-    if (current <= threshold * 0.5) return 'destructive';
-    if (current <= threshold) return 'warning';
-    return 'success';
-  };
+    if (current <= threshold * 0.5) return "destructive"
+    if (current <= threshold) return "warning"
+    return "success"
+  }
+
   // Get text for stock status
   const getStockStatusText = (current, threshold) => {
-    if (current <= threshold * 0.5) return 'Critical';
-    if (current <= threshold) return 'Low';
-    if (current >= threshold * 2) return 'Overstocked';
-    return 'Good';
-  };
+    if (current <= threshold * 0.5) return "Critical"
+    if (current <= threshold) return "Low"
+    if (current >= threshold * 2) return "Overstocked"
+    return "Good"
+  }
+
+  const handleAddItem = newItem => {
+    const item = {
+      ...newItem,
+      id: Date.now().toString(),
+      lastUpdated: new Date().toISOString().split("T")[0],
+      disabled: false
+    }
+    setInventoryItems(prev => [...prev, item])
+  }
+
+  const handleEditItem = item => {
+    setEditingItem(item)
+    setShowEditModal(true)
+  }
+
+  const handleUpdateItem = updatedItem => {
+    setInventoryItems(prev =>
+      prev.map(item => (item.id === updatedItem.id ? updatedItem : item))
+    )
+  }
+
+  const handleDisableItem = (itemId, itemName) => {
+    setInventoryItems(prev =>
+      prev.map(item =>
+        item.id === itemId ? { ...item, disabled: !item.disabled } : item
+      )
+    )
+
+    const item = inventoryItems.find(item => item.id === itemId)
+    if (item) {
+      toast.success(
+        `${itemName} has been ${item.disabled ? "enabled" : "disabled"}`
+      )
+    }
+  }
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <div className="md:col-span-2 space-y-4">
@@ -199,7 +250,11 @@ const Inventory = () => {
                 Track and manage inventory items
               </CardDescription>
             </div>
-            <Button size="sm" className="flex gap-1">
+            <Button
+              size="sm"
+              className="flex gap-1"
+              onClick={() => setShowAddModal(true)}
+            >
               <PlusCircle className="h-4 w-4 mr-1" /> Add Item
             </Button>
           </CardHeader>
@@ -212,7 +267,7 @@ const Inventory = () => {
                   placeholder="Search inventory..."
                   className="pl-8"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                 />
               </div>
 
@@ -225,7 +280,7 @@ const Inventory = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
+                  {categories.map(category => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
@@ -266,13 +321,25 @@ const Inventory = () => {
                       </thead>
                       <tbody>
                         {filteredItems.length > 0 ? (
-                          filteredItems.map((item) => (
+                          filteredItems.map(item => (
                             <tr
                               key={item.id}
-                              className="border-b transition-colors hover:bg-muted/50"
+                              className={`border-b transition-colors hover:bg-muted/50 ${
+                                item.disabled ? "opacity-50" : ""
+                              }`}
                             >
                               <td className="p-4 align-middle font-medium">
-                                {item.name}
+                                <div className="flex items-center gap-2">
+                                  {item.name}
+                                  {item.disabled && (
+                                    <Badge
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      Disabled
+                                    </Badge>
+                                  )}
+                                </div>
                               </td>
                               <td className="p-4 align-middle">
                                 <Badge variant="outline">{item.category}</Badge>
@@ -300,7 +367,11 @@ const Inventory = () => {
                                       item.currentStock,
                                       item.minThreshold
                                     )}
-                                    className={`h-2 ${item.currentStock < item.minThreshold ? 'bg-red-200' : 'bg-green-200'}`}
+                                    className={`h-2 ${
+                                      item.currentStock < item.minThreshold
+                                        ? "bg-red-200"
+                                        : "bg-green-200"
+                                    }`}
                                   />
                                 </div>
                               </td>
@@ -319,21 +390,25 @@ const Inventory = () => {
                                       Actions
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
-                                      <PenSquare className="mr-2 h-4 w-4" />{' '}
+                                    <DropdownMenuItem
+                                      onClick={() => handleEditItem(item)}
+                                    >
+                                      <PenSquare className="mr-2 h-4 w-4" />{" "}
                                       Edit
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                      <Truck className="mr-2 h-4 w-4" /> Order
-                                      More
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                      <BarChart2 className="mr-2 h-4 w-4" />{' '}
-                                      Usage History
-                                    </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="text-destructive">
-                                      <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleDisableItem(item.id, item.name)
+                                      }
+                                      className={
+                                        item.disabled
+                                          ? "text-green-600"
+                                          : "text-destructive"
+                                      }
+                                    >
+                                      <Ban className="mr-2 h-4 w-4" />
+                                      {item.disabled ? "Enable" : "Disable"}
                                     </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
@@ -354,11 +429,23 @@ const Inventory = () => {
               </TabsContent>
               <TabsContent value="grid">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
-                  {filteredItems.map((item) => (
-                    <div key={item.id} className="border rounded-lg p-4">
+                  {filteredItems.map(item => (
+                    <div
+                      key={item.id}
+                      className={`border rounded-lg p-4 ${
+                        item.disabled ? "opacity-50" : ""
+                      }`}
+                    >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-medium">{item.name}</h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-medium">{item.name}</h3>
+                            {item.disabled && (
+                              <Badge variant="secondary" className="text-xs">
+                                Disabled
+                              </Badge>
+                            )}
+                          </div>
                           <p className="text-sm text-muted-foreground">
                             {item.category}
                           </p>
@@ -396,9 +483,36 @@ const Inventory = () => {
                         <span className="text-xs text-muted-foreground">
                           Supplier: {item.supplier}
                         </span>
-                        <Button variant="ghost" size="sm">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleEditItem(item)}
+                            >
+                              <PenSquare className="mr-2 h-4 w-4" /> Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleDisableItem(item.id, item.name)
+                              }
+                              className={
+                                item.disabled
+                                  ? "text-green-600"
+                                  : "text-destructive"
+                              }
+                            >
+                              <Ban className="mr-2 h-4 w-4" />
+                              {item.disabled ? "Enable" : "Disable"}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                   ))}
@@ -424,7 +538,7 @@ const Inventory = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivities.map((activity) => (
+              {recentActivities.map(activity => (
                 <div
                   key={activity.id}
                   className="flex items-start gap-3 pb-3 border-b last:border-0 last:pb-0"
@@ -449,13 +563,24 @@ const Inventory = () => {
                 </div>
               ))}
             </div>
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              View All Activity
-            </Button>
           </CardContent>
         </Card>
       </div>
+
+      <AddItemModal
+        open={showAddModal}
+        onOpenChange={setShowAddModal}
+        onAddItem={handleAddItem}
+      />
+
+      <EditItemModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        item={editingItem}
+        onEditItem={handleUpdateItem}
+      />
     </div>
-  );
-};
-export default Inventory;
+  )
+}
+
+export default Inventory
