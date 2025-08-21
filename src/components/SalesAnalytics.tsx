@@ -58,6 +58,29 @@ const topSellingItemsData = getSalesByItem(salesData);
 // Colors for pie chart
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
+// Historical analytics data
+const peakHoursData = [
+  { hour: '8:00', sales: 45, orders: 8 },
+  { hour: '9:00', sales: 78, orders: 12 },
+  { hour: '10:00', sales: 120, orders: 18 },
+  { hour: '11:00', sales: 185, orders: 25 },
+  { hour: '12:00', sales: 280, orders: 35 },
+  { hour: '13:00', sales: 320, orders: 42 },
+  { hour: '14:00', sales: 195, orders: 28 },
+  { hour: '15:00', sales: 165, orders: 22 },
+  { hour: '16:00', sales: 140, orders: 19 },
+  { hour: '17:00', sales: 110, orders: 15 }
+];
+
+const monthlyComparison = [
+  { month: 'Jan', sales: 12500, orders: 450 },
+  { month: 'Feb', sales: 13200, orders: 480 },
+  { month: 'Mar', sales: 14800, orders: 520 },
+  { month: 'Apr', sales: 16200, orders: 580 },
+  { month: 'May', sales: 15900, orders: 565 },
+  { month: 'Jun', sales: 17300, orders: 620 }
+];
+
 // Mock payments data
 interface Payment {
   id: string;
@@ -154,9 +177,8 @@ const SalesAnalytics: React.FC = () => {
       <Tabs defaultValue="overview" className="w-full">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="items">Top Items</TabsTrigger>
-          {/* Add new Payment Analytics Tab */}
           <TabsTrigger value="payments">Payment Analytics</TabsTrigger>
         </TabsList>
 
@@ -264,40 +286,94 @@ const SalesAnalytics: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="trends" className="mt-6">
+        <TabsContent value="analytics" className="mt-6 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Peak Hours Analysis</CardTitle>
+                <CardDescription>
+                  Sales performance throughout the day
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={peakHoursData}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="hour" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="sales" name="Sales (₱)" fill="hsl(var(--primary))" />
+                    <Bar dataKey="orders" name="Orders" fill="hsl(var(--secondary))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Monthly Performance</CardTitle>
+                <CardDescription>
+                  6-month sales and order trends
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={monthlyComparison}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="sales" 
+                      stroke="hsl(var(--primary))" 
+                      strokeWidth={2}
+                      name="Sales (₱)" 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="orders" 
+                      stroke="hsl(var(--secondary))" 
+                      strokeWidth={2}
+                      name="Total Orders" 
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
           <Card>
             <CardHeader>
-              <CardTitle>Sales Forecast</CardTitle>
+              <CardTitle>Performance Insights</CardTitle>
               <CardDescription>
-                Predictive analytics based on historical data
+                Key insights from your sales data
               </CardDescription>
             </CardHeader>
-            <CardContent className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={[
-                    { date: "Mon", actual: 850, forecast: 800 },
-                    { date: "Tue", actual: 740, forecast: 720 },
-                    { date: "Wed", actual: 900, forecast: 870 },
-                    { date: "Thu", actual: 1100, forecast: 1050 },
-                    { date: "Fri", actual: 1250, forecast: 1200 },
-                    { date: "Sat", actual: 1400, forecast: 1380 },
-                    { date: "Sun", actual: 1000, forecast: 1100 },
-                    { date: "Mon (Next)", actual: null, forecast: 950 },
-                    { date: "Tue (Next)", actual: null, forecast: 1000 },
-                    { date: "Wed (Next)", actual: null, forecast: 1100 },
-                  ]}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="actual" stroke="hsl(var(--primary))" name="Actual Sales (₱)" strokeWidth={2} />
-                  <Line type="monotone" dataKey="forecast" stroke="hsl(var(--secondary))" strokeDasharray="5 5" name="Forecasted Sales (₱)" />
-                </LineChart>
-              </ResponsiveContainer>
+            <CardContent className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Peak Hour</h3>
+                <p className="text-2xl font-bold mb-1">1:00 PM</p>
+                <p className="text-sm text-muted-foreground">Highest daily sales period</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Best Month</h3>
+                <p className="text-2xl font-bold mb-1">June</p>
+                <p className="text-sm text-muted-foreground">₱17,300 total sales</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-2">Growth Rate</h3>
+                <p className="text-2xl font-bold mb-1">+23%</p>
+                <p className="text-sm text-muted-foreground">Compared to last quarter</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
