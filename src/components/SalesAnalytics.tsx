@@ -167,6 +167,18 @@ const mockPayments: Payment[] = [
   }
 ];
 
+// Mock inventory shortage data
+const inventoryShortageData = [
+  { itemName: 'Fried Rice', shortageFrequency: 8, lastShortage: '2025-04-15' },
+  { itemName: 'Chicken Adobo', shortageFrequency: 12, lastShortage: '2025-04-16' },
+  { itemName: 'Pancit Canton', shortageFrequency: 5, lastShortage: '2025-04-10' },
+  { itemName: 'Pork Sisig', shortageFrequency: 15, lastShortage: '2025-04-17' },
+  { itemName: 'Beef Tapa', shortageFrequency: 7, lastShortage: '2025-04-14' },
+  { itemName: 'Fresh Lumpia', shortageFrequency: 3, lastShortage: '2025-04-08' },
+  { itemName: 'Chicken Inasal', shortageFrequency: 9, lastShortage: '2025-04-16' },
+  { itemName: 'Longganisa', shortageFrequency: 6, lastShortage: '2025-04-12' }
+];
+
 const SalesAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('week');
   const [payments, setPayments] = useState<Payment[]>(mockPayments);
@@ -181,6 +193,17 @@ const SalesAnalytics: React.FC = () => {
       .toFixed(2);
   };
 
+  // Get items with highest shortage frequency
+  const getHighestShortageItems = () => {
+    return inventoryShortageData
+      .sort((a, b) => b.shortageFrequency - a.shortageFrequency)
+      .slice(0, 5);
+  };
+
+  const highestShortageItems = getHighestShortageItems();
+  const totalShortages = inventoryShortageData.reduce((acc, item) => acc + item.shortageFrequency, 0);
+  const averageShortageFrequency = (totalShortages / inventoryShortageData.length).toFixed(1);
+
   return (
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-3xl font-semibold">Sales Analytics</h2>
@@ -190,7 +213,7 @@ const SalesAnalytics: React.FC = () => {
           <TabsTrigger value="financial">Financial</TabsTrigger>
           <TabsTrigger value="menu">Menu</TabsTrigger>
           <TabsTrigger value="payment">Payment</TabsTrigger>
-          <TabsTrigger value="payments">Payment Analytics</TabsTrigger>
+          <TabsTrigger value="inventory">Inventory</TabsTrigger>
         </TabsList>
 
         <TabsContent value="financial" className="mt-6 space-y-6">
@@ -479,38 +502,89 @@ const SalesAnalytics: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="payments" className="mt-6">
+        <TabsContent value="inventory" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Out-of-Stock Frequency Analysis</CardTitle>
+                <CardDescription>
+                  Items with highest shortage occurrences
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={highestShortageItems}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 80, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="itemName" type="category" />
+                    <Tooltip formatter={(value) => [`${value} times`, 'Shortage Frequency']} />
+                    <Legend />
+                    <Bar dataKey="shortageFrequency" name="Shortage Count" fill="hsl(var(--destructive))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Shortage Timeline</CardTitle>
+                <CardDescription>
+                  Shortage frequency over time by item
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={inventoryShortageData}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="itemName" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip formatter={(value) => [`${value} times`, 'Shortage Frequency']} />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="shortageFrequency" 
+                      stroke="hsl(var(--destructive))" 
+                      strokeWidth={2}
+                      name="Shortage Count" 
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
           <Card>
             <CardHeader>
-              <CardTitle>Payment Analytics</CardTitle>
-              <CardDescription>Transaction analytics and insights</CardDescription>
+              <CardTitle>Inventory Shortage Insights</CardTitle>
+              <CardDescription>
+                Key metrics about inventory shortages
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Today's Total</p>
-                  <p className="text-2xl font-bold">₱{getTotalAmount()}</p>
-                </div>
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Transactions</p>
-                  <p className="text-2xl font-bold">{payments.length}</p>
-                </div>
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Avg. Transaction</p>
-                  <p className="text-2xl font-bold">
-                    ₱{(parseFloat(getTotalAmount()) / payments.filter(p => p.status !== 'refunded').length).toFixed(2)}
-                  </p>
-                </div>
-                <div className="border rounded-md p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Success Rate</p>
-                  <p className="text-2xl font-bold">
-                    {Math.round(payments.filter(p => p.status === 'completed').length / payments.length * 100)}%
-                  </p>
-                </div>
+            <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Total Shortages</h3>
+                <p className="text-2xl font-bold">{totalShortages}</p>
               </div>
-              <Button className="w-full mt-4" variant="outline" size="sm">
-                <BarChartIcon className="h-4 w-4 mr-1" /> Detailed Reports
-              </Button>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Items Monitored</h3>
+                <p className="text-2xl font-bold">{inventoryShortageData.length}</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Avg. Shortage/Item</h3>
+                <p className="text-2xl font-bold">{averageShortageFrequency}</p>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium text-sm text-muted-foreground mb-1">Most Critical Item</h3>
+                <p className="text-xl font-bold text-destructive mb-1">{highestShortageItems[0]?.itemName}</p>
+                <p className="text-sm text-muted-foreground">{highestShortageItems[0]?.shortageFrequency} shortages</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
