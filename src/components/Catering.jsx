@@ -1,15 +1,15 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { CustomBadge } from "@/components/ui/custom-badge"
+  CardFooter,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { CustomBadge } from '@/components/ui/custom-badge';
 import {
   Utensils,
   CalendarDays,
@@ -24,231 +24,230 @@ import {
   User,
   Search,
   Calendar,
-  ChevronRight
-} from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+  ChevronRight,
+} from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { NewEventModal } from "./catering/NewEventModal"
-import { CalendarViewModal } from "./catering/CalendarViewModal"
-import { EventDetailsModal } from "./catering/EventDetailsModal"
-import { MenuItemsModal } from "./catering/MenuItemsModal"
-import { toast } from "sonner"
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { NewEventModal } from './catering/NewEventModal';
+import { CalendarViewModal } from './catering/CalendarViewModal';
+import { EventDetailsModal } from './catering/EventDetailsModal';
+import { MenuItemsModal } from './catering/MenuItemsModal';
+import { toast } from 'sonner';
 
 const Catering = () => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [currentTab, setCurrentTab] = useState("upcoming")
-  const [showNewEventModal, setShowNewEventModal] = useState(false)
-  const [showCalendarModal, setShowCalendarModal] = useState(false)
-  const [showEventDetailsModal, setShowEventDetailsModal] = useState(false)
-  const [showStaffAssignmentModal, setShowStaffAssignmentModal] = useState(
-    false
-  )
-  const [showMenuItemsModal, setShowMenuItemsModal] = useState(false)
-  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentTab, setCurrentTab] = useState('upcoming');
+  const [showNewEventModal, setShowNewEventModal] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showEventDetailsModal, setShowEventDetailsModal] = useState(false);
+  const [showStaffAssignmentModal, setShowStaffAssignmentModal] =
+    useState(false);
+  const [showMenuItemsModal, setShowMenuItemsModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([
     {
-      id: "1",
-      name: "Corporate Lunch Meeting",
-      client: "ABC Technologies",
-      date: "2025-04-20",
-      time: "12:30 - 14:00",
-      location: "ABC Technologies HQ, Conference Room B",
+      id: '1',
+      name: 'Corporate Lunch Meeting',
+      client: 'ABC Technologies',
+      date: '2025-04-20',
+      time: '12:30 - 14:00',
+      location: 'ABC Technologies HQ, Conference Room B',
       attendees: 25,
-      status: "scheduled",
+      status: 'scheduled',
       total: 625.0,
       contactPerson: {
-        name: "John Smith",
-        phone: "555-123-4567"
-      }
+        name: 'John Smith',
+        phone: '555-123-4567',
+      },
     },
     {
-      id: "2",
-      name: "Executive Breakfast",
-      client: "Global Finance",
-      date: "2025-04-21",
-      time: "08:00 - 09:30",
-      location: "Global Finance Tower, 15th Floor",
+      id: '2',
+      name: 'Executive Breakfast',
+      client: 'Global Finance',
+      date: '2025-04-21',
+      time: '08:00 - 09:30',
+      location: 'Global Finance Tower, 15th Floor',
       attendees: 12,
-      status: "scheduled",
+      status: 'scheduled',
       total: 360.0,
       contactPerson: {
-        name: "Maria Garcia",
-        phone: "555-987-6543"
-      }
+        name: 'Maria Garcia',
+        phone: '555-987-6543',
+      },
     },
     {
-      id: "3",
-      name: "Team Building Lunch",
-      client: "InnovateTech",
-      date: "2025-05-05",
-      time: "11:30 - 13:30",
-      location: "City Park Pavilion",
+      id: '3',
+      name: 'Team Building Lunch',
+      client: 'InnovateTech',
+      date: '2025-05-05',
+      time: '11:30 - 13:30',
+      location: 'City Park Pavilion',
       attendees: 45,
-      status: "scheduled",
+      status: 'scheduled',
       total: 1125.0,
       contactPerson: {
-        name: "Alex Johnson",
-        phone: "555-456-7890"
-      }
+        name: 'Alex Johnson',
+        phone: '555-456-7890',
+      },
     },
     {
-      id: "4",
-      name: "Charity Gala Dinner",
-      client: "Hope Foundation",
-      date: "2025-05-15",
-      time: "18:00 - 22:00",
-      location: "Grand Hotel Ballroom",
+      id: '4',
+      name: 'Charity Gala Dinner',
+      client: 'Hope Foundation',
+      date: '2025-05-15',
+      time: '18:00 - 22:00',
+      location: 'Grand Hotel Ballroom',
       attendees: 120,
-      status: "scheduled",
+      status: 'scheduled',
       total: 6000.0,
       contactPerson: {
-        name: "Sarah Williams",
-        phone: "555-789-0123"
-      }
-    }
-  ])
+        name: 'Sarah Williams',
+        phone: '555-789-0123',
+      },
+    },
+  ]);
   const [cateringMenu, setCateringMenu] = useState([
     {
-      id: "1",
-      name: "Gourmet Sandwich Platter",
-      category: "Platters",
+      id: '1',
+      name: 'Gourmet Sandwich Platter',
+      category: 'Platters',
       price: 75.0,
       description:
-        "Assortment of premium sandwiches with artisan breads and fillings",
+        'Assortment of premium sandwiches with artisan breads and fillings',
       popular: true,
-      available: true
+      available: true,
     },
     {
-      id: "2",
-      name: "Mediterranean Mezze",
-      category: "Appetizers",
+      id: '2',
+      name: 'Mediterranean Mezze',
+      category: 'Appetizers',
       price: 65.0,
-      description: "Hummus, tzatziki, baba ganoush, olives, and pita bread",
+      description: 'Hummus, tzatziki, baba ganoush, olives, and pita bread',
       popular: true,
-      available: true
+      available: true,
     },
     {
-      id: "3",
-      name: "Executive Hot Lunch",
-      category: "Entrees",
+      id: '3',
+      name: 'Executive Hot Lunch',
+      category: 'Entrees',
       price: 25.0,
-      description: "Per person: Choice of protein, two sides, and dessert",
+      description: 'Per person: Choice of protein, two sides, and dessert',
       popular: true,
-      available: true
+      available: true,
     },
     {
-      id: "4",
-      name: "Fresh Fruit Platter",
-      category: "Platters",
+      id: '4',
+      name: 'Fresh Fruit Platter',
+      category: 'Platters',
       price: 45.0,
-      description: "Seasonal fruits arranged beautifully",
+      description: 'Seasonal fruits arranged beautifully',
       popular: false,
-      available: true
+      available: true,
     },
     {
-      id: "5",
-      name: "Artisan Cheese Board",
-      category: "Appetizers",
+      id: '5',
+      name: 'Artisan Cheese Board',
+      category: 'Appetizers',
       price: 85.0,
-      description: "Selection of fine cheeses with crackers and accompaniments",
+      description: 'Selection of fine cheeses with crackers and accompaniments',
       popular: true,
-      available: true
+      available: true,
     },
     {
-      id: "6",
-      name: "Breakfast Package",
-      category: "Breakfast",
+      id: '6',
+      name: 'Breakfast Package',
+      category: 'Breakfast',
       price: 15.0,
-      description: "Per person: Pastries, fruit, yogurt, and coffee",
+      description: 'Per person: Pastries, fruit, yogurt, and coffee',
       popular: false,
-      available: true
-    }
-  ])
+      available: true,
+    },
+  ]);
 
-  const handleCreateEvent = newEvent => {
-    setEvents(prev => [...prev, newEvent])
-    toast.success("Event created successfully!")
-  }
+  const handleCreateEvent = (newEvent) => {
+    setEvents((prev) => [...prev, newEvent]);
+    toast.success('Event created successfully!');
+  };
 
-  const handleViewDetails = event => {
-    setSelectedEvent(event)
-    setShowEventDetailsModal(true)
-  }
+  const handleViewDetails = (event) => {
+    setSelectedEvent(event);
+    setShowEventDetailsModal(true);
+  };
 
-  const handleStaffAssignment = event => {
-    setSelectedEvent(event)
-    setShowStaffAssignmentModal(true)
-  }
+  const handleStaffAssignment = (event) => {
+    setSelectedEvent(event);
+    setShowStaffAssignmentModal(true);
+  };
 
-  const handleMenuItems = event => {
-    setSelectedEvent(event)
-    setShowMenuItemsModal(true)
-  }
+  const handleMenuItems = (event) => {
+    setSelectedEvent(event);
+    setShowMenuItemsModal(true);
+  };
 
-  const handleCancelEvent = event => {
-    setEvents(prev =>
-      prev.map(e =>
+  const handleCancelEvent = (event) => {
+    setEvents((prev) =>
+      prev.map((e) =>
         e.id === event.id
           ? {
               ...e,
-              status: "cancelled"
+              status: 'cancelled',
             }
           : e
       )
-    )
-    toast.success(`Event "${event.name}" has been cancelled.`)
-  }
+    );
+    toast.success(`Event "${event.name}" has been cancelled.`);
+  };
 
   const handleAssignStaff = (eventId, staffIds) => {
-    toast.success(`${staffIds.length} staff member(s) assigned to the event.`)
-  }
+    toast.success(`${staffIds.length} staff member(s) assigned to the event.`);
+  };
 
   const handleUpdateMenuItems = (eventId, menuItems) => {
-    toast.success("Menu items updated successfully!")
-  }
+    toast.success('Menu items updated successfully!');
+  };
 
-  const getInitials = name => {
+  const getInitials = (name) => {
     return name
-      .split(" ")
-      .map(n => n[0])
-      .join("")
-      .toUpperCase()
-  }
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase();
+  };
 
-  const getStatusBadgeVariant = status => {
+  const getStatusBadgeVariant = (status) => {
     switch (status) {
-      case "scheduled":
-        return "outline"
-      case "in-progress":
-        return "default"
-      case "completed":
-        return "success"
-      case "cancelled":
-        return "destructive"
+      case 'scheduled':
+        return 'outline';
+      case 'in-progress':
+        return 'default';
+      case 'completed':
+        return 'success';
+      case 'cancelled':
+        return 'destructive';
       default:
-        return "outline"
+        return 'outline';
     }
-  }
+  };
 
-  const filteredEvents = events.filter(event => {
+  const filteredEvents = events.filter((event) => {
     const matchesSearch =
       event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.client.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesSearch
-  })
+      event.client.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
 
   const sortedEvents = [...filteredEvents].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  )
+  );
 
   return (
     <>
@@ -278,7 +277,7 @@ const Catering = () => {
                     placeholder="Search events..."
                     className="pl-8"
                     value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
                 <Button
@@ -321,7 +320,7 @@ const Catering = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {sortedEvents.map(event => (
+                            {sortedEvents.map((event) => (
                               <tr
                                 key={event.id}
                                 className="border-b transition-colors hover:bg-muted/50"
@@ -365,14 +364,14 @@ const Catering = () => {
                                       <DropdownMenuItem
                                         onClick={() => handleViewDetails(event)}
                                       >
-                                        <ClipboardCheck className="mr-2 h-4 w-4" />{" "}
+                                        <ClipboardCheck className="mr-2 h-4 w-4" />{' '}
                                         View Details
                                       </DropdownMenuItem>
 
                                       <DropdownMenuItem
                                         onClick={() => handleMenuItems(event)}
                                       >
-                                        <Utensils className="mr-2 h-4 w-4" />{" "}
+                                        <Utensils className="mr-2 h-4 w-4" />{' '}
                                         Menu Items
                                       </DropdownMenuItem>
                                       <DropdownMenuSeparator />
@@ -380,7 +379,7 @@ const Catering = () => {
                                         className="text-destructive"
                                         onClick={() => handleCancelEvent(event)}
                                       >
-                                        <MoreVertical className="mr-2 h-4 w-4" />{" "}
+                                        <MoreVertical className="mr-2 h-4 w-4" />{' '}
                                         Cancel Event
                                       </DropdownMenuItem>
                                     </DropdownMenuContent>
@@ -427,7 +426,7 @@ const Catering = () => {
             </CardContent>
           </Card>
 
-          {currentTab === "upcoming" && sortedEvents.length > 0 && (
+          {currentTab === 'upcoming' && sortedEvents.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>Event Details</CardTitle>
@@ -448,7 +447,7 @@ const Catering = () => {
                       variant={getStatusBadgeVariant(sortedEvents[0].status)}
                       className="capitalize w-fit"
                     >
-                      {sortedEvents[0].status.replace("-", " ")}
+                      {sortedEvents[0].status.replace('-', ' ')}
                     </CustomBadge>
                   </div>
 
@@ -566,7 +565,7 @@ const Catering = () => {
               <div className="space-y-4">
                 {cateringMenu
                   .filter((item, index) => index < 4)
-                  .map(item => (
+                  .map((item) => (
                     <div
                       key={item.id}
                       className="flex justify-between items-start border-b pb-3 last:border-0 last:pb-0"
@@ -574,11 +573,6 @@ const Catering = () => {
                       <div>
                         <p className="font-medium flex items-center">
                           {item.name}
-                          {item.popular && (
-                            <Badge variant="secondary" className="ml-2 text-xs">
-                              Popular
-                            </Badge>
-                          )}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {item.description}
@@ -607,18 +601,18 @@ const Catering = () => {
                 <div className="space-y-3">
                   {events
                     .filter((_, index) => index < 4)
-                    .map(event => (
+                    .map((event) => (
                       <div
                         key={event.id}
                         className="flex items-center gap-3 border-b pb-3 last:border-0 last:pb-0"
                       >
                         <div className="flex-shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-md bg-primary/10 text-primary">
                           <span className="text-sm font-bold">
-                            {event.date.split("-")[2]}
+                            {event.date.split('-')[2]}
                           </span>
                           <span className="text-xs">
-                            {new Date(event.date).toLocaleString("default", {
-                              month: "short"
+                            {new Date(event.date).toLocaleString('default', {
+                              month: 'short',
                             })}
                           </span>
                         </div>
@@ -674,7 +668,7 @@ const Catering = () => {
         onUpdateMenuItems={handleUpdateMenuItems}
       />
     </>
-  )
-}
+  );
+};
 
-export default Catering
+export default Catering;
