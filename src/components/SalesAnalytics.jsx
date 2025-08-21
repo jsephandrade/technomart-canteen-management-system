@@ -399,9 +399,9 @@ const SalesAnalytics = () => {
 
       <Tabs defaultValue="financial" className="w-full">
         <TabsList>
-          <TabsTrigger value="financial">Financial</TabsTrigger>
-          <TabsTrigger value="menu">Menu</TabsTrigger>
-          <TabsTrigger value="payment">Payment</TabsTrigger>
+          <TabsTrigger value="financial">Financial Reports</TabsTrigger>
+          <TabsTrigger value="menu">Menu Reports</TabsTrigger>
+          <TabsTrigger value="payment">Payment Reports</TabsTrigger>
         </TabsList>
 
         <TabsContent value="financial" className="mt-6 space-y-6">

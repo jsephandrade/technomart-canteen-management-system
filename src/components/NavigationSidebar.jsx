@@ -53,7 +53,7 @@ export const NavigationSidebar = () => {
       icon: TrendingUp,
     },
     {
-      name: 'Employee Schedule',
+      name: 'Employee Management',
       href: '/employees',
       icon: CalendarClock,
     },

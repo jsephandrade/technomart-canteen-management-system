@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState } from "react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+  CardTitle
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  SelectValue
+} from "@/components/ui/select"
 import {
   Dialog,
   DialogContent,
@@ -23,42 +23,45 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Calendar } from '@/components/ui/calendar';
-import { employees, scheduleData } from '@/utils/mockData';
-import { Edit, Plus, Trash2, Users } from 'lucide-react';
-import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
+  DialogTrigger
+} from "@/components/ui/dialog"
+import { Calendar } from "@/components/ui/calendar"
+import { employees, scheduleData } from "@/utils/mockData"
+import { Edit, Plus, Trash2, Users } from "lucide-react"
+import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
+
 const EmployeeSchedule = () => {
-  const [schedule, setSchedule] = useState(scheduleData);
-  const [employeeList, setEmployeeList] = useState(employees);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingSchedule, setEditingSchedule] = useState(null);
-  const [employeeDialogOpen, setEmployeeDialogOpen] = useState(false);
+  const [schedule, setSchedule] = useState(scheduleData)
+  const [employeeList, setEmployeeList] = useState(employees)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [editingSchedule, setEditingSchedule] = useState(null)
+  const [employeeDialogOpen, setEmployeeDialogOpen] = useState(false)
   const [newEmployee, setNewEmployee] = useState({
-    name: '',
-    position: '',
+    name: "",
+    position: "",
     hourlyRate: 0,
-    contact: '',
-  });
-  const [date, setDate] = React.useState(new Date());
+    contact: ""
+  })
+  const [date, setDate] = React.useState(new Date())
   const [newScheduleEntry, setNewScheduleEntry] = useState({
-    employeeId: '',
-    employeeName: '',
-    day: '',
-    startTime: '',
-    endTime: '',
-  });
+    employeeId: "",
+    employeeName: "",
+    day: "",
+    startTime: "",
+    endTime: ""
+  })
+
   const daysOfWeek = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ]
+
   const handleAddSchedule = () => {
     if (
       !newScheduleEntry.employeeId ||
@@ -66,70 +69,83 @@ const EmployeeSchedule = () => {
       !newScheduleEntry.startTime ||
       !newScheduleEntry.endTime
     ) {
-      toast.error('Please fill in all required fields');
-      return;
+      toast.error("Please fill in all required fields")
+      return
     }
+
     const employee = employeeList.find(
-      (emp) => emp.id === newScheduleEntry.employeeId
-    );
+      emp => emp.id === newScheduleEntry.employeeId
+    )
     if (!employee) {
-      toast.error('Employee not found');
-      return;
+      toast.error("Employee not found")
+      return
     }
+
     const scheduleToAdd = {
       ...newScheduleEntry,
       id: `${schedule.length + 1}`,
-      employeeName: employee.name,
-    };
-    setSchedule([...schedule, scheduleToAdd]);
+      employeeName: employee.name
+    }
+
+    setSchedule([...schedule, scheduleToAdd])
     setNewScheduleEntry({
-      employeeId: '',
-      employeeName: '',
-      day: '',
-      startTime: '',
-      endTime: '',
-    });
-    setDialogOpen(false);
-    toast.success('Schedule entry added successfully');
-  };
+      employeeId: "",
+      employeeName: "",
+      day: "",
+      startTime: "",
+      endTime: ""
+    })
+
+    setDialogOpen(false)
+    toast.success("Schedule entry added successfully")
+  }
+
   const handleEditSchedule = () => {
-    if (!editingSchedule) return;
-    const updatedSchedule = schedule.map((entry) =>
+    if (!editingSchedule) return
+
+    const updatedSchedule = schedule.map(entry =>
       entry.id === editingSchedule.id ? editingSchedule : entry
-    );
-    setSchedule(updatedSchedule);
-    setEditingSchedule(null);
-    toast.success('Schedule updated successfully');
-  };
-  const handleDeleteSchedule = (id) => {
-    setSchedule(schedule.filter((entry) => entry.id !== id));
-    toast.success('Schedule entry deleted successfully');
-  };
+    )
+
+    setSchedule(updatedSchedule)
+    setEditingSchedule(null)
+    toast.success("Schedule updated successfully")
+  }
+
+  const handleDeleteSchedule = id => {
+    setSchedule(schedule.filter(entry => entry.id !== id))
+    toast.success("Schedule entry deleted successfully")
+  }
+
   const handleAddEmployee = () => {
     if (!newEmployee.name || !newEmployee.position || !newEmployee.contact) {
-      toast.error('Please fill in all required fields');
-      return;
+      toast.error("Please fill in all required fields")
+      return
     }
+
     const employeeToAdd = {
       ...newEmployee,
       id: `${employeeList.length + 1}`,
       hourlyRate: Number(newEmployee.hourlyRate),
-      avatar: '/placeholder.svg',
-    };
-    setEmployeeList([...employeeList, employeeToAdd]);
+      avatar: "/placeholder.svg"
+    }
+
+    setEmployeeList([...employeeList, employeeToAdd])
     setNewEmployee({
-      name: '',
-      position: '',
+      name: "",
+      position: "",
       hourlyRate: 0,
-      contact: '',
-    });
-    setEmployeeDialogOpen(false);
-    toast.success('Employee added successfully');
-  };
+      contact: ""
+    })
+
+    setEmployeeDialogOpen(false)
+    toast.success("Employee added successfully")
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-semibold">Employee Schedule</h2>
+        <h2 className="text-3xl font-semibold">Employee</h2>
         <div className="flex gap-2">
           <Dialog
             open={employeeDialogOpen}
@@ -155,7 +171,7 @@ const EmployeeSchedule = () => {
                   <Input
                     id="name"
                     value={newEmployee.name}
-                    onChange={(e) =>
+                    onChange={e =>
                       setNewEmployee({ ...newEmployee, name: e.target.value })
                     }
                     className="col-span-3"
@@ -168,10 +184,10 @@ const EmployeeSchedule = () => {
                   <Input
                     id="position"
                     value={newEmployee.position}
-                    onChange={(e) =>
+                    onChange={e =>
                       setNewEmployee({
                         ...newEmployee,
-                        position: e.target.value,
+                        position: e.target.value
                       })
                     }
                     className="col-span-3"
@@ -185,10 +201,10 @@ const EmployeeSchedule = () => {
                     id="hourlyRate"
                     type="number"
                     value={newEmployee.hourlyRate}
-                    onChange={(e) =>
+                    onChange={e =>
                       setNewEmployee({
                         ...newEmployee,
-                        hourlyRate: parseFloat(e.target.value),
+                        hourlyRate: parseFloat(e.target.value)
                       })
                     }
                     className="col-span-3"
@@ -201,10 +217,10 @@ const EmployeeSchedule = () => {
                   <Input
                     id="contact"
                     value={newEmployee.contact}
-                    onChange={(e) =>
+                    onChange={e =>
                       setNewEmployee({
                         ...newEmployee,
-                        contact: e.target.value,
+                        contact: e.target.value
                       })
                     }
                     className="col-span-3"
@@ -242,10 +258,10 @@ const EmployeeSchedule = () => {
                     Employee
                   </Label>
                   <Select
-                    onValueChange={(value) =>
+                    onValueChange={value =>
                       setNewScheduleEntry({
                         ...newScheduleEntry,
-                        employeeId: value,
+                        employeeId: value
                       })
                     }
                     value={newScheduleEntry.employeeId}
@@ -254,7 +270,7 @@ const EmployeeSchedule = () => {
                       <SelectValue placeholder="Select an employee" />
                     </SelectTrigger>
                     <SelectContent>
-                      {employeeList.map((employee) => (
+                      {employeeList.map(employee => (
                         <SelectItem key={employee.id} value={employee.id}>
                           {employee.name} ({employee.position})
                         </SelectItem>
@@ -267,7 +283,7 @@ const EmployeeSchedule = () => {
                     Day
                   </Label>
                   <Select
-                    onValueChange={(value) =>
+                    onValueChange={value =>
                       setNewScheduleEntry({ ...newScheduleEntry, day: value })
                     }
                     value={newScheduleEntry.day}
@@ -276,7 +292,7 @@ const EmployeeSchedule = () => {
                       <SelectValue placeholder="Select a day" />
                     </SelectTrigger>
                     <SelectContent>
-                      {daysOfWeek.map((day) => (
+                      {daysOfWeek.map(day => (
                         <SelectItem key={day} value={day}>
                           {day}
                         </SelectItem>
@@ -292,10 +308,10 @@ const EmployeeSchedule = () => {
                     id="startTime"
                     type="time"
                     value={newScheduleEntry.startTime}
-                    onChange={(e) =>
+                    onChange={e =>
                       setNewScheduleEntry({
                         ...newScheduleEntry,
-                        startTime: e.target.value,
+                        startTime: e.target.value
                       })
                     }
                     className="col-span-3"
@@ -309,10 +325,10 @@ const EmployeeSchedule = () => {
                     id="endTime"
                     type="time"
                     value={newScheduleEntry.endTime}
-                    onChange={(e) =>
+                    onChange={e =>
                       setNewScheduleEntry({
                         ...newScheduleEntry,
-                        endTime: e.target.value,
+                        endTime: e.target.value
                       })
                     }
                     className="col-span-3"
@@ -340,78 +356,106 @@ const EmployeeSchedule = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-8 gap-2 mb-2 font-medium">
-                <div className="col-span-2">Employee</div>
-                {daysOfWeek.map((day) => (
-                  <div key={day} className="text-center">
-                    {day.slice(0, 3)}
-                  </div>
-                ))}
-              </div>
-              <div className="space-y-4">
-                {employeeList.map((employee) => (
-                  <div
-                    key={employee.id}
-                    className="grid grid-cols-8 gap-2 items-center"
-                  >
-                    <div className="col-span-2 flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                        {employee.name.charAt(0)}
-                      </div>
-                      <span className="font-medium">{employee.name}</span>
+              <div className="overflow-x-auto">
+                <div className="w-full">
+                  {/* Header Row */}
+                  <div className="grid grid-cols-8 gap-2 mb-4 pb-2 border-b">
+                    <div className="col-span-1 font-semibold text-left">
+                      Employee
                     </div>
-
-                    {daysOfWeek.map((day) => {
-                      const entry = schedule.find(
-                        (s) => s.employeeId === employee.id && s.day === day
-                      );
-                      return (
-                        <div key={day} className="text-center h-12 relative">
-                          {entry ? (
-                            <div className="bg-primary/10 p-1 rounded text-xs h-full flex flex-col items-center justify-center">
-                              <span>
-                                {entry.startTime} - {entry.endTime}
-                              </span>
-                              <div className="flex gap-1 mt-1">
-                                <button
-                                  onClick={() => setEditingSchedule(entry)}
-                                  className="text-primary hover:text-primary/80"
-                                >
-                                  <Edit size={12} />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteSchedule(entry.id)}
-                                  className="text-destructive hover:text-destructive/80"
-                                >
-                                  <Trash2 size={12} />
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="border border-dashed border-muted h-full rounded flex items-center justify-center">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 w-6 p-0"
-                                onClick={() => {
-                                  setNewScheduleEntry({
-                                    employeeId: employee.id,
-                                    day: day,
-                                    startTime: '',
-                                    endTime: '',
-                                  });
-                                  setDialogOpen(true);
-                                }}
-                              >
-                                <Plus size={12} />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                    {daysOfWeek.map(day => (
+                      <div
+                        key={day}
+                        className="text-center font-semibold text-sm"
+                      >
+                        {day.slice(0, 3)}
+                      </div>
+                    ))}
                   </div>
-                ))}
+
+                  {/* Schedule Rows */}
+                  <div className="space-y-3">
+                    {employeeList.map(employee => (
+                      <div
+                        key={employee.id}
+                        className="grid grid-cols-8 gap-1 items-center min-h-[40px]"
+                      >
+                        <div className="col-span-1 flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
+                            {employee.name.charAt(0)}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-medium text-xs truncate block">
+                              {employee.name}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground truncate block">
+                              {employee.position}
+                            </span>
+                          </div>
+                        </div>
+
+                        {daysOfWeek.map(day => {
+                          const entry = schedule.find(
+                            s => s.employeeId === employee.id && s.day === day
+                          )
+
+                          return (
+                            <div
+                              key={day}
+                              className="flex items-center justify-center"
+                            >
+                              {entry ? (
+                               <div className="bg-primary/10 border border-primary/20 p-1 rounded w-full text-[10px]">
+                                    <div className="text-center font-medium">
+                                    {entry.startTime} - {entry.endTime}
+                                  </div>
+                                  <div className="flex gap-1 justify-center">
+                                    <button
+                                      onClick={() => setEditingSchedule(entry)}
+                                      className="text-primary hover:text-primary/80 p-0.5"
+                                      title="Edit schedule"
+                                    >
+                                      <Edit size={10} />
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleDeleteSchedule(entry.id)
+                                      }
+                                      className="text-destructive hover:text-destructive/80 p-0.5"
+                                      title="Delete schedule"
+                                    >
+                                      <Trash2 size={10} />
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="border border-dashed border-muted rounded-md w-full h-8 flex items-center justify-center hover:border-primary/30">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 hover:bg-primary/10"
+                                    onClick={() => {
+                                      setNewScheduleEntry({
+                                        employeeId: employee.id,
+                                        day: day,
+                                        startTime: "",
+                                        endTime: ""
+                                      })
+                                      setDialogOpen(true)
+                                    }}
+                                    title={`Add schedule for ${day}`}
+                                  >
+                                    <Plus size={10} />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -433,21 +477,21 @@ const EmployeeSchedule = () => {
             {date && (
               <div>
                 <h4 className="font-medium mb-2">
-                  {date.toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
+                  {date.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
                   })}
                 </h4>
                 <div className="space-y-2">
                   {schedule
                     .filter(
-                      (entry) =>
+                      entry =>
                         entry.day ===
-                        date.toLocaleDateString('en-US', { weekday: 'long' })
+                        date.toLocaleDateString("en-US", { weekday: "long" })
                     )
-                    .map((entry) => (
+                    .map(entry => (
                       <div
                         key={entry.id}
                         className="flex justify-between items-center p-2 bg-muted rounded"
@@ -463,9 +507,9 @@ const EmployeeSchedule = () => {
                     ))}
 
                   {schedule.filter(
-                    (entry) =>
+                    entry =>
                       entry.day ===
-                      date.toLocaleDateString('en-US', { weekday: 'long' })
+                      date.toLocaleDateString("en-US", { weekday: "long" })
                   ).length === 0 && (
                     <p className="text-sm text-muted-foreground">
                       No schedules for this day
@@ -488,7 +532,7 @@ const EmployeeSchedule = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {employeeList.map((employee) => (
+            {employeeList.map(employee => (
               <div
                 key={employee.id}
                 className="bg-card border rounded-lg p-4 flex flex-col"
@@ -519,16 +563,15 @@ const EmployeeSchedule = () => {
                     <span className="text-muted-foreground">Weekly Hours:</span>
                     <span>
                       {schedule
-                        .filter((entry) => entry.employeeId === employee.id)
+                        .filter(entry => entry.employeeId === employee.id)
                         .reduce((total, entry) => {
                           const start = new Date(
                             `1970-01-01T${entry.startTime}`
-                          );
-                          const end = new Date(`1970-01-01T${entry.endTime}`);
+                          )
+                          const end = new Date(`1970-01-01T${entry.endTime}`)
                           const diffHours =
-                            (end.getTime() - start.getTime()) /
-                            (1000 * 60 * 60);
-                          return total + diffHours;
+                            (end.getTime() - start.getTime()) / (1000 * 60 * 60)
+                          return total + diffHours
                         }, 0)
                         .toFixed(1)}
                       h
@@ -545,7 +588,7 @@ const EmployeeSchedule = () => {
       {editingSchedule && (
         <Dialog
           open={!!editingSchedule}
-          onOpenChange={(open) => !open && setEditingSchedule(null)}
+          onOpenChange={open => !open && setEditingSchedule(null)}
         >
           <DialogContent>
             <DialogHeader>
@@ -560,15 +603,13 @@ const EmployeeSchedule = () => {
                   Employee
                 </Label>
                 <Select
-                  onValueChange={(value) => {
-                    const employee = employeeList.find(
-                      (emp) => emp.id === value
-                    );
+                  onValueChange={value => {
+                    const employee = employeeList.find(emp => emp.id === value)
                     setEditingSchedule({
                       ...editingSchedule,
                       employeeId: value,
-                      employeeName: employee?.name || '',
-                    });
+                      employeeName: employee?.name || ""
+                    })
                   }}
                   value={editingSchedule.employeeId}
                 >
@@ -576,7 +617,7 @@ const EmployeeSchedule = () => {
                     <SelectValue placeholder="Select an employee" />
                   </SelectTrigger>
                   <SelectContent>
-                    {employeeList.map((employee) => (
+                    {employeeList.map(employee => (
                       <SelectItem key={employee.id} value={employee.id}>
                         {employee.name} ({employee.position})
                       </SelectItem>
@@ -589,7 +630,7 @@ const EmployeeSchedule = () => {
                   Day
                 </Label>
                 <Select
-                  onValueChange={(value) =>
+                  onValueChange={value =>
                     setEditingSchedule({ ...editingSchedule, day: value })
                   }
                   value={editingSchedule.day}
@@ -598,7 +639,7 @@ const EmployeeSchedule = () => {
                     <SelectValue placeholder="Select a day" />
                   </SelectTrigger>
                   <SelectContent>
-                    {daysOfWeek.map((day) => (
+                    {daysOfWeek.map(day => (
                       <SelectItem key={day} value={day}>
                         {day}
                       </SelectItem>
@@ -614,10 +655,10 @@ const EmployeeSchedule = () => {
                   id="edit-startTime"
                   type="time"
                   value={editingSchedule.startTime}
-                  onChange={(e) =>
+                  onChange={e =>
                     setEditingSchedule({
                       ...editingSchedule,
-                      startTime: e.target.value,
+                      startTime: e.target.value
                     })
                   }
                   className="col-span-3"
@@ -631,10 +672,10 @@ const EmployeeSchedule = () => {
                   id="edit-endTime"
                   type="time"
                   value={editingSchedule.endTime}
-                  onChange={(e) =>
+                  onChange={e =>
                     setEditingSchedule({
                       ...editingSchedule,
-                      endTime: e.target.value,
+                      endTime: e.target.value
                     })
                   }
                   className="col-span-3"
@@ -654,6 +695,7 @@ const EmployeeSchedule = () => {
         </Dialog>
       )}
     </div>
-  );
-};
-export default EmployeeSchedule;
+  )
+}
+
+export default EmployeeSchedule
