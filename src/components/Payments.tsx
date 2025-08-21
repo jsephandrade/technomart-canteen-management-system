@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CustomBadge } from '@/components/ui/custom-badge';
+import { Switch } from '@/components/ui/switch';
 import { 
   CreditCard, 
   Search, 
   Download, 
-  Filter,
   Wallet,
   Receipt,
   ArrowUpDown,
@@ -18,12 +18,17 @@ import {
   ArrowDownUp,
   Banknote,
   Smartphone,
-  CircleDollarSign
+  CircleDollarSign,
+  Plus,
+  Edit,
+  Trash2
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import FilterModal from './payments/FilterModal';
+import PaymentMethodModal from './payments/PaymentMethodModal';
 
 interface Payment {
   id: string;
@@ -35,10 +40,30 @@ interface Payment {
   customer?: string;
 }
 
+interface PaymentMethod {
+  id: string;
+  name: string;
+  type: 'cash' | 'card' | 'mobile' | 'other';
+  description: string;
+  active: boolean;
+}
+
 const Payments: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [dateRange, setDateRange] = useState<string>('7d');
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [paymentMethodModalOpen, setPaymentMethodModalOpen] = useState(false);
+  const [editingMethod, setEditingMethod] = useState<PaymentMethod | undefined>();
+  
+  const [filters, setFilters] = useState({
+    status: 'all',
+    method: 'all',
+    dateFrom: undefined as Date | undefined,
+    dateTo: undefined as Date | undefined,
+    amountMin: '',
+    amountMax: '',
+  });
   
   const [payments, setPayments] = useState<Payment[]>([
     {
@@ -103,6 +128,30 @@ const Payments: React.FC = () => {
       customer: 'David Brown'
     }
   ]);
+
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
+    {
+      id: 'cash',
+      name: 'Cash',
+      type: 'cash',
+      description: 'Physical currency',
+      active: true,
+    },
+    {
+      id: 'card',
+      name: 'Credit/Debit Cards',
+      type: 'card',
+      description: 'Visa, Mastercard, Amex',
+      active: true,
+    },
+    {
+      id: 'mobile',
+      name: 'Mobile Payments',
+      type: 'mobile',
+      description: 'Apple Pay, Google Pay',
+      active: true,
+    },
+  ]);
   
   const getPaymentMethodIcon = (method: string) => {
     switch (method) {
@@ -133,6 +182,44 @@ const Payments: React.FC = () => {
       .toFixed(2);
   };
 
+  const applyFilters = () => {
+    setSelectedStatus(filters.status);
+    setFilterModalOpen(false);
+  };
+
+  const clearFilters = () => {
+    const clearedFilters = {
+      status: 'all',
+      method: 'all',
+      dateFrom: undefined,
+      dateTo: undefined,
+      amountMin: '',
+      amountMax: '',
+    };
+    setFilters(clearedFilters);
+    setSelectedStatus('all');
+  };
+
+  const handleSavePaymentMethod = (method: PaymentMethod) => {
+    setPaymentMethods(prev => {
+      const existing = prev.find(pm => pm.id === method.id);
+      if (existing) {
+        return prev.map(pm => pm.id === method.id ? method : pm);
+      }
+      return [...prev, method];
+    });
+  };
+
+  const handleToggleMethod = (methodId: string, active: boolean) => {
+    setPaymentMethods(prev =>
+      prev.map(pm => pm.id === methodId ? { ...pm, active } : pm)
+    );
+  };
+
+  const handleDeleteMethod = (methodId: string) => {
+    setPaymentMethods(prev => prev.filter(pm => pm.id !== methodId));
+  };
+
   const filteredPayments = payments.filter(payment => {
     // Filter by search term
     const matchesSearch = 
@@ -142,7 +229,15 @@ const Payments: React.FC = () => {
     // Filter by status
     const matchesStatus = selectedStatus === 'all' || payment.status === selectedStatus;
     
-    return matchesSearch && matchesStatus;
+    // Filter by method from advanced filters
+    const matchesMethod = filters.method === 'all' || payment.method === filters.method;
+    
+    // Filter by amount range
+    const matchesAmount = 
+      (!filters.amountMin || payment.amount >= parseFloat(filters.amountMin)) &&
+      (!filters.amountMax || payment.amount <= parseFloat(filters.amountMax));
+    
+    return matchesSearch && matchesStatus && matchesMethod && matchesAmount;
   });
 
   // Sort payments by date (most recent first)
@@ -163,9 +258,14 @@ const Payments: React.FC = () => {
               <Button variant="outline" size="sm" className="flex items-center gap-1">
                 <Download className="h-4 w-4 mr-1" /> Export
               </Button>
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
-                <Filter className="h-4 w-4 mr-1" /> Filter
-              </Button>
+              <FilterModal
+                isOpen={filterModalOpen}
+                onOpenChange={setFilterModalOpen}
+                filters={filters}
+                onFiltersChange={setFilters}
+                onApplyFilters={applyFilters}
+                onClearFilters={clearFilters}
+              />
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -373,52 +473,89 @@ const Payments: React.FC = () => {
               </TabsList>
               <TabsContent value="active" className="pt-4">
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center border p-3 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <Banknote className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="font-medium">Cash</p>
-                        <p className="text-xs text-muted-foreground">Physical currency</p>
+                  {paymentMethods.map((method) => (
+                    <div key={method.id} className="flex justify-between items-center border p-3 rounded-md">
+                      <div className="flex items-center gap-3">
+                        {getPaymentMethodIcon(method.type)}
+                        <div>
+                          <p className="font-medium">{method.name}</p>
+                          <p className="text-xs text-muted-foreground">{method.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={method.active}
+                          onCheckedChange={(checked) => handleToggleMethod(method.id, checked)}
+                        />
+                        <Badge variant={method.active ? 'default' : 'secondary'}>
+                          {method.active ? 'Active' : 'Inactive'}
+                        </Badge>
                       </div>
                     </div>
-                    <Badge>Active</Badge>
-                  </div>
-                  
-                  <div className="flex justify-between items-center border p-3 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <CreditCard className="h-5 w-5 text-blue-600" />
-                      <div>
-                        <p className="font-medium">Credit/Debit Cards</p>
-                        <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex</p>
-                      </div>
-                    </div>
-                    <Badge>Active</Badge>
-                  </div>
-                  
-                  <div className="flex justify-between items-center border p-3 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <Smartphone className="h-5 w-5 text-purple-600" />
-                      <div>
-                        <p className="font-medium">Mobile Payments</p>
-                        <p className="text-xs text-muted-foreground">Apple Pay, Google Pay</p>
-                      </div>
-                    </div>
-                    <Badge>Active</Badge>
-                  </div>
+                  ))}
                 </div>
               </TabsContent>
               <TabsContent value="settings" className="pt-4">
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">Payment method configuration</p>
-                  <Button className="mt-4" variant="outline" size="sm">
-                    Configure Settings
+                <div className="space-y-4">
+                  <Button 
+                    onClick={() => {
+                      setEditingMethod(undefined);
+                      setPaymentMethodModalOpen(true);
+                    }}
+                    className="w-full"
+                    variant="outline"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add New Payment Method
                   </Button>
+                  
+                  <div className="space-y-2">
+                    {paymentMethods.map((method) => (
+                      <div key={method.id} className="flex justify-between items-center border p-3 rounded-md">
+                        <div className="flex items-center gap-3">
+                          {getPaymentMethodIcon(method.type)}
+                          <div>
+                            <p className="font-medium">{method.name}</p>
+                            <p className="text-xs text-muted-foreground">{method.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingMethod(method);
+                              setPaymentMethodModalOpen(true);
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          {!['cash', 'card', 'mobile'].includes(method.id) && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteMethod(method.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
       </div>
+
+      <PaymentMethodModal
+        isOpen={paymentMethodModalOpen}
+        onOpenChange={setPaymentMethodModalOpen}
+        method={editingMethod}
+        onSave={handleSavePaymentMethod}
+      />
     </div>
   );
 };
