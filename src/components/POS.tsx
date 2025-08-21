@@ -586,9 +586,22 @@ const POS: React.FC = () => {
               {isDiscountModalOpen && (
                 <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
                   <Card className="w-full max-w-md mx-4">
-                    <CardHeader>
-                      <CardTitle>Apply Discount</CardTitle>
-                      <CardDescription>Enter discount details</CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <div>
+                        <CardTitle>Apply Discount</CardTitle>
+                        <CardDescription>Enter discount details</CardDescription>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setIsDiscountModalOpen(false);
+                          setDiscountInput('');
+                        }}
+                        className="h-8 w-8"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="flex gap-2">
@@ -673,9 +686,19 @@ const POS: React.FC = () => {
               {isOrderHistoryModalOpen && (
                 <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
                   <Card className="w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden">
-                    <CardHeader>
-                      <CardTitle>Order History</CardTitle>
-                      <CardDescription>Recent completed orders</CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <div>
+                        <CardTitle>Order History</CardTitle>
+                        <CardDescription>Recent completed orders</CardDescription>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsOrderHistoryModalOpen(false)}
+                        className="h-8 w-8"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                     </CardHeader>
                     <CardContent className="overflow-y-auto">
                       <div className="space-y-4">
@@ -721,9 +744,19 @@ const POS: React.FC = () => {
               {isPaymentModalOpen && (
                 <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
                   <Card className="w-full max-w-md mx-4">
-                    <CardHeader>
-                      <CardTitle>Complete Payment</CardTitle>
-                      <CardDescription>Select payment method</CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <div>
+                        <CardTitle>Complete Payment</CardTitle>
+                        <CardDescription>Select payment method</CardDescription>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsPaymentModalOpen(false)}
+                        className="h-8 w-8"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="text-center mb-4">
