@@ -13,7 +13,9 @@ import { CalendarViewModal } from './catering/CalendarViewModal';
 import { EventDetailsModal } from './catering/EventDetailsModal';
 import { StaffAssignmentModal } from './catering/StaffAssignmentModal';
 import { MenuItemsModal } from './catering/MenuItemsModal';
+import { MenuItem } from '@/types';
 import { toast } from 'sonner';
+
 interface CateringEvent {
   id: string;
   name: string;
@@ -29,14 +31,7 @@ interface CateringEvent {
     phone: string;
   };
 }
-interface MenuItem {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  description: string;
-  popular: boolean;
-}
+
 const Catering: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentTab, setCurrentTab] = useState<string>('upcoming');
@@ -109,59 +104,70 @@ const Catering: React.FC = () => {
     category: 'Platters',
     price: 75.00,
     description: 'Assortment of premium sandwiches with artisan breads and fillings',
-    popular: true
+    popular: true,
+    available: true
   }, {
     id: '2',
     name: 'Mediterranean Mezze',
     category: 'Appetizers',
     price: 65.00,
     description: 'Hummus, tzatziki, baba ganoush, olives, and pita bread',
-    popular: true
+    popular: true,
+    available: true
   }, {
     id: '3',
     name: 'Executive Hot Lunch',
     category: 'Entrees',
     price: 25.00,
     description: 'Per person: Choice of protein, two sides, and dessert',
-    popular: true
+    popular: true,
+    available: true
   }, {
     id: '4',
     name: 'Fresh Fruit Platter',
     category: 'Platters',
     price: 45.00,
     description: 'Seasonal fruits arranged beautifully',
-    popular: false
+    popular: false,
+    available: true
   }, {
     id: '5',
     name: 'Artisan Cheese Board',
     category: 'Appetizers',
     price: 85.00,
     description: 'Selection of fine cheeses with crackers and accompaniments',
-    popular: true
+    popular: true,
+    available: true
   }, {
     id: '6',
     name: 'Breakfast Package',
     category: 'Breakfast',
     price: 15.00,
     description: 'Per person: Pastries, fruit, yogurt, and coffee',
-    popular: false
+    popular: false,
+    available: true
   }]);
+
   const handleCreateEvent = (newEvent: CateringEvent) => {
     setEvents(prev => [...prev, newEvent]);
     toast.success('Event created successfully!');
   };
+
   const handleViewDetails = (event: CateringEvent) => {
     setSelectedEvent(event);
     setShowEventDetailsModal(true);
   };
+
   const handleStaffAssignment = (event: CateringEvent) => {
     setSelectedEvent(event);
     setShowStaffAssignmentModal(true);
   };
+
   const handleMenuItems = (event: CateringEvent) => {
     setSelectedEvent(event);
     setShowMenuItemsModal(true);
   };
+
   const handleCancelEvent = (event: CateringEvent) => {
     setEvents(prev => prev.map(e => e.id === event.id ? {
       ...e,
@@ -169,15 +175,19 @@ const Catering: React.FC = () => {
     } : e));
     toast.success(`Event "${event.name}" has been cancelled.`);
   };
+
   const handleAssignStaff = (eventId: string, staffIds: string[]) => {
     toast.success(`${staffIds.length} staff member(s) assigned to the event.`);
   };
+
   const handleUpdateMenuItems = (eventId: string, menuItems: any[]) => {
     toast.success('Menu items updated successfully!');
   };
+
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
+
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case 'scheduled':
@@ -192,11 +202,14 @@ const Catering: React.FC = () => {
         return 'outline';
     }
   };
+
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) || event.client.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesSearch;
   });
+
   const sortedEvents = [...filteredEvents].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
   return <>
       <div className="grid gap-4 md:grid-cols-3">
         <div className="md:col-span-2 space-y-4">
@@ -489,4 +502,5 @@ const Catering: React.FC = () => {
       <MenuItemsModal open={showMenuItemsModal} onOpenChange={setShowMenuItemsModal} event={selectedEvent} menuItems={cateringMenu} onUpdateMenuItems={handleUpdateMenuItems} />
     </>;
 };
+
 export default Catering;
