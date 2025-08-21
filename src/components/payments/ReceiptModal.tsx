@@ -13,7 +13,7 @@ import { CustomBadge } from '@/components/ui/custom-badge';
 import { 
   Receipt, 
   Download, 
-  Print,
+  Printer,
   CreditCard,
   Banknote,
   Smartphone,
@@ -173,7 +173,7 @@ const ReceiptModal: React.FC<ReceiptModalProps> = ({
               className="flex-1"
               onClick={handlePrint}
             >
-              <Print className="h-4 w-4 mr-2" />
+              <Printer className="h-4 w-4 mr-2" />
               Print
             </Button>
             <Button 
