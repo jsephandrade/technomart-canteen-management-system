@@ -30,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import FilterModal from './payments/FilterModal';
 import PaymentMethodModal from './payments/PaymentMethodModal';
+import ReceiptModal from './payments/ReceiptModal';
 
 interface Payment {
   id: string;
@@ -57,7 +58,9 @@ const Payments: React.FC = () => {
   const [dateRange, setDateRange] = useState<string>('7d');
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [paymentMethodModalOpen, setPaymentMethodModalOpen] = useState(false);
+  const [receiptModalOpen, setReceiptModalOpen] = useState(false);
   const [editingMethod, setEditingMethod] = useState<PaymentMethod | undefined>();
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   
   const [filters, setFilters] = useState({
     status: 'all',
@@ -224,11 +227,8 @@ const Payments: React.FC = () => {
   };
 
   const handleViewReceipt = (payment: Payment) => {
-    toast({
-      title: "Receipt Viewed",
-      description: `Displaying receipt for ${payment.orderId}`,
-    });
-    console.log("Viewing receipt for payment:", payment);
+    setSelectedPayment(payment);
+    setReceiptModalOpen(true);
   };
 
   const handleDownloadInvoice = (payment: Payment) => {
@@ -636,6 +636,12 @@ const Payments: React.FC = () => {
         onOpenChange={setPaymentMethodModalOpen}
         method={editingMethod}
         onSave={handleSavePaymentMethod}
+      />
+
+      <ReceiptModal
+        isOpen={receiptModalOpen}
+        onOpenChange={setReceiptModalOpen}
+        payment={selectedPayment}
       />
     </div>
   );
