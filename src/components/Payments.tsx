@@ -27,6 +27,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 import FilterModal from './payments/FilterModal';
 import PaymentMethodModal from './payments/PaymentMethodModal';
 
@@ -49,6 +50,8 @@ interface PaymentMethod {
 }
 
 const Payments: React.FC = () => {
+  const { toast } = useToast();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [dateRange, setDateRange] = useState<string>('7d');
@@ -220,6 +223,84 @@ const Payments: React.FC = () => {
     setPaymentMethods(prev => prev.filter(pm => pm.id !== methodId));
   };
 
+  const handleViewReceipt = (payment: Payment) => {
+    toast({
+      title: "Receipt Viewed",
+      description: `Displaying receipt for ${payment.orderId}`,
+    });
+    console.log("Viewing receipt for payment:", payment);
+  };
+
+  const handleDownloadInvoice = (payment: Payment) => {
+    toast({
+      title: "Invoice Downloaded",
+      description: `Invoice for ${payment.orderId} has been downloaded`,
+    });
+    console.log("Downloading invoice for payment:", payment);
+  };
+
+  const handleProcessRefund = (payment: Payment) => {
+    if (payment.status !== 'completed') {
+      toast({
+        title: "Refund Error",
+        description: "Only completed payments can be refunded",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Update payment status to refunded
+    setPayments(prev => prev.map(p => 
+      p.id === payment.id 
+        ? { ...p, status: 'refunded' as const }
+        : p
+    ));
+
+    toast({
+      title: "Refund Processed",
+      description: `Refund of ₱${payment.amount.toFixed(2)} processed for ${payment.orderId}`,
+    });
+    console.log("Processing refund for payment:", payment);
+  };
+
+  const handleRetryPayment = (payment: Payment) => {
+    if (payment.status !== 'failed') {
+      toast({
+        title: "Retry Error",
+        description: "Only failed payments can be retried",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Update payment status to pending (simulating retry)
+    setPayments(prev => prev.map(p => 
+      p.id === payment.id 
+        ? { ...p, status: 'pending' as const }
+        : p
+    ));
+
+    // Simulate processing after a delay
+    setTimeout(() => {
+      setPayments(prev => prev.map(p => 
+        p.id === payment.id 
+          ? { ...p, status: 'completed' as const }
+          : p
+      ));
+      
+      toast({
+        title: "Payment Retry Successful",
+        description: `Payment ${payment.orderId} has been completed successfully`,
+      });
+    }, 2000);
+
+    toast({
+      title: "Payment Retry Initiated",
+      description: `Retrying payment for ${payment.orderId}...`,
+    });
+    console.log("Retrying payment:", payment);
+  };
+
   const filteredPayments = payments.filter(payment => {
     // Filter by search term
     const matchesSearch = 
@@ -366,19 +447,19 @@ const Payments: React.FC = () => {
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleViewReceipt(payment)}>
                                   <Receipt className="mr-2 h-4 w-4" /> View Receipt
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDownloadInvoice(payment)}>
                                   <Download className="mr-2 h-4 w-4" /> Download Invoice
                                 </DropdownMenuItem>
                                 {payment.status === 'completed' && (
-                                  <DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleProcessRefund(payment)}>
                                     <ArrowDownUp className="mr-2 h-4 w-4" /> Process Refund
                                   </DropdownMenuItem>
                                 )}
                                 {payment.status === 'failed' && (
-                                  <DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleRetryPayment(payment)}>
                                     <ArrowDownUp className="mr-2 h-4 w-4" /> Retry Payment
                                   </DropdownMenuItem>
                                 )}
