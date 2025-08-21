@@ -3,13 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CustomBadge } from '@/components/ui/custom-badge';
-import { Package, Search, PlusCircle, ArrowUpDown, MoreVertical, Truck, PenSquare, Trash2, BarChart2, History } from 'lucide-react';
+import { Package, Search, PlusCircle, ArrowUpDown, MoreVertical, Truck, PenSquare, Ban, BarChart2, History } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import AddItemModal from '@/components/inventory/AddItemModal';
+import EditItemModal from '@/components/inventory/EditItemModal';
 
 interface InventoryItem {
   id: string;
@@ -20,11 +22,16 @@ interface InventoryItem {
   unit: string;
   lastUpdated: string;
   supplier: string;
+  disabled?: boolean;
 }
 
 const Inventory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
+  
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([{
     id: '1',
     name: 'Rice',
@@ -154,16 +161,36 @@ const Inventory: React.FC = () => {
     return 'Good';
   };
 
-  const handleAddItem = () => {
-    toast.info('Add Item functionality would allow you to create new inventory items with details like name, category, stock levels, and supplier information.');
+  const handleAddItem = (newItem: Omit<InventoryItem, 'id' | 'lastUpdated' | 'disabled'>) => {
+    const item: InventoryItem = {
+      ...newItem,
+      id: Date.now().toString(),
+      lastUpdated: new Date().toISOString().split('T')[0],
+      disabled: false
+    };
+    setInventoryItems(prev => [...prev, item]);
   };
 
-  const handleEditItem = (itemName: string) => {
-    toast.info(`Edit functionality would allow you to modify details for "${itemName}" including stock levels, supplier, and thresholds.`);
+  const handleEditItem = (item: InventoryItem) => {
+    setEditingItem(item);
+    setShowEditModal(true);
   };
 
-  const handleDeleteItem = (itemName: string) => {
-    toast.info(`Delete functionality would remove "${itemName}" from inventory after confirmation dialog.`);
+  const handleUpdateItem = (updatedItem: InventoryItem) => {
+    setInventoryItems(prev => prev.map(item => 
+      item.id === updatedItem.id ? updatedItem : item
+    ));
+  };
+
+  const handleDisableItem = (itemId: string, itemName: string) => {
+    setInventoryItems(prev => prev.map(item => 
+      item.id === itemId ? { ...item, disabled: !item.disabled } : item
+    ));
+    
+    const item = inventoryItems.find(item => item.id === itemId);
+    if (item) {
+      toast.success(`${itemName} has been ${item.disabled ? 'enabled' : 'disabled'}`);
+    }
   };
 
   return <div className="grid gap-4 md:grid-cols-3">
@@ -177,8 +204,7 @@ const Inventory: React.FC = () => {
             <Button 
               size="sm" 
               className="flex gap-1" 
-              disabled
-              onClick={handleAddItem}
+              onClick={() => setShowAddModal(true)}
             >
               <PlusCircle className="h-4 w-4 mr-1" /> Add Item
             </Button>
@@ -224,52 +250,61 @@ const Inventory: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {filteredItems.length > 0 ? filteredItems.map(item => <tr key={item.id} className="border-b transition-colors hover:bg-muted/50">
-                              <td className="p-4 align-middle font-medium">
+                        {filteredItems.length > 0 ? filteredItems.map(item => (
+                          <tr key={item.id} className={`border-b transition-colors hover:bg-muted/50 ${item.disabled ? 'opacity-50' : ''}`}>
+                            <td className="p-4 align-middle font-medium">
+                              <div className="flex items-center gap-2">
                                 {item.name}
-                              </td>
-                              <td className="p-4 align-middle">
-                                <Badge variant="outline">{item.category}</Badge>
-                              </td>
-                              <td className="p-4 align-middle">
-                                <div className="flex flex-col gap-1">
-                                  <div className="flex justify-between text-xs">
-                                    <span>{item.currentStock} {item.unit}</span>
-                                    <CustomBadge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
-                                      {getStockStatusText(item.currentStock, item.minThreshold)}
-                                    </CustomBadge>
-                                  </div>
-                                  <Progress value={getStockPercentage(item.currentStock, item.minThreshold)} className={`h-2 ${item.currentStock < item.minThreshold ? 'bg-red-200' : 'bg-green-200'}`} />
+                                {item.disabled && <Badge variant="secondary" className="text-xs">Disabled</Badge>}
+                              </div>
+                            </td>
+                            <td className="p-4 align-middle">
+                              <Badge variant="outline">{item.category}</Badge>
+                            </td>
+                            <td className="p-4 align-middle">
+                              <div className="flex flex-col gap-1">
+                                <div className="flex justify-between text-xs">
+                                  <span>{item.currentStock} {item.unit}</span>
+                                  <CustomBadge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
+                                    {getStockStatusText(item.currentStock, item.minThreshold)}
+                                  </CustomBadge>
                                 </div>
-                              </td>
-                              <td className="p-4 align-middle hidden md:table-cell">{item.supplier}</td>
-                              <td className="p-4 align-middle text-right">
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="sm" disabled>
-                                      <MoreVertical className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => handleEditItem(item.name)}>
-                                      <PenSquare className="mr-2 h-4 w-4" /> Edit
-                                    </DropdownMenuItem>
-                                    
-                                    
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteItem(item.name)}>
-                                      <Trash2 className="mr-2 h-4 w-4" /> Delete
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </td>
-                            </tr>) : <tr>
+                                <Progress value={getStockPercentage(item.currentStock, item.minThreshold)} className={`h-2 ${item.currentStock < item.minThreshold ? 'bg-red-200' : 'bg-green-200'}`} />
+                              </div>
+                            </td>
+                            <td className="p-4 align-middle hidden md:table-cell">{item.supplier}</td>
+                            <td className="p-4 align-middle text-right">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => handleEditItem(item)}>
+                                    <PenSquare className="mr-2 h-4 w-4" /> Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem 
+                                    onClick={() => handleDisableItem(item.id, item.name)}
+                                    className={item.disabled ? "text-green-600" : "text-destructive"}
+                                  >
+                                    <Ban className="mr-2 h-4 w-4" /> 
+                                    {item.disabled ? 'Enable' : 'Disable'}
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </td>
+                          </tr>
+                        )) : (
+                          <tr>
                             <td colSpan={5} className="h-24 text-center">
                               No inventory items found
                             </td>
-                          </tr>}
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -277,10 +312,14 @@ const Inventory: React.FC = () => {
               </TabsContent>
               <TabsContent value="grid">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
-                  {filteredItems.map(item => <div key={item.id} className="border rounded-lg p-4">
+                  {filteredItems.map(item => (
+                    <div key={item.id} className={`border rounded-lg p-4 ${item.disabled ? 'opacity-50' : ''}`}>
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-medium">{item.name}</h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-medium">{item.name}</h3>
+                            {item.disabled && <Badge variant="secondary" className="text-xs">Disabled</Badge>}
+                          </div>
                           <p className="text-sm text-muted-foreground">{item.category}</p>
                         </div>
                         <CustomBadge variant={getStockBadgeVariant(item.currentStock, item.minThreshold)}>
@@ -298,11 +337,31 @@ const Inventory: React.FC = () => {
                         <span className="text-xs text-muted-foreground">
                           Supplier: {item.supplier}
                         </span>
-                        <Button variant="ghost" size="sm" disabled onClick={() => handleEditItem(item.name)}>
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => handleEditItem(item)}>
+                              <PenSquare className="mr-2 h-4 w-4" /> Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem 
+                              onClick={() => handleDisableItem(item.id, item.name)}
+                              className={item.disabled ? "text-green-600" : "text-destructive"}
+                            >
+                              <Ban className="mr-2 h-4 w-4" /> 
+                              {item.disabled ? 'Enable' : 'Disable'}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
-                    </div>)}
+                    </div>
+                  ))}
                 </div>
               </TabsContent>
             </Tabs>
@@ -323,7 +382,8 @@ const Inventory: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivities.map(activity => <div key={activity.id} className="flex items-start gap-3 pb-3 border-b last:border-0 last:pb-0">
+              {recentActivities.map(activity => (
+                <div key={activity.id} className="flex items-start gap-3 pb-3 border-b last:border-0 last:pb-0">
                   <div className="bg-muted rounded-full p-2">
                     <History className="h-4 w-4 text-muted-foreground" />
                   </div>
@@ -337,7 +397,8 @@ const Inventory: React.FC = () => {
                     </p>
                     <p className="text-xs text-muted-foreground">By {activity.user}</p>
                   </div>
-                </div>)}
+                </div>
+              ))}
             </div>
             <Button variant="outline" size="sm" className="w-full mt-4">
               View All Activity
@@ -345,6 +406,19 @@ const Inventory: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+
+      <AddItemModal 
+        open={showAddModal} 
+        onOpenChange={setShowAddModal}
+        onAddItem={handleAddItem}
+      />
+      
+      <EditItemModal 
+        open={showEditModal} 
+        onOpenChange={setShowEditModal}
+        item={editingItem}
+        onEditItem={handleUpdateItem}
+      />
     </div>;
 };
 
