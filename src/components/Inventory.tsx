@@ -9,6 +9,8 @@ import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
+
 interface InventoryItem {
   id: string;
   name: string;
@@ -19,6 +21,7 @@ interface InventoryItem {
   lastUpdated: string;
   supplier: string;
 }
+
 const Inventory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -86,6 +89,7 @@ const Inventory: React.FC = () => {
     lastUpdated: '2025-04-17',
     supplier: 'Dairy Farms'
   }]);
+
   const recentActivities = [{
     id: '1',
     action: 'Stock Update',
@@ -115,7 +119,9 @@ const Inventory: React.FC = () => {
     timestamp: '2025-04-22 11:00',
     user: 'David Chen'
   }];
+
   const categories = ['Grains', 'Meat', 'Vegetables', 'Dairy', 'Condiments', 'Baking', 'Fruits'];
+
   const filteredItems = inventoryItems.filter(item => {
     // Filter by search term
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || item.supplier.toLowerCase().includes(searchTerm.toLowerCase());
@@ -147,6 +153,19 @@ const Inventory: React.FC = () => {
     if (current >= threshold * 2) return 'Overstocked';
     return 'Good';
   };
+
+  const handleAddItem = () => {
+    toast.info('Add Item functionality would allow you to create new inventory items with details like name, category, stock levels, and supplier information.');
+  };
+
+  const handleEditItem = (itemName: string) => {
+    toast.info(`Edit functionality would allow you to modify details for "${itemName}" including stock levels, supplier, and thresholds.`);
+  };
+
+  const handleDeleteItem = (itemName: string) => {
+    toast.info(`Delete functionality would remove "${itemName}" from inventory after confirmation dialog.`);
+  };
+
   return <div className="grid gap-4 md:grid-cols-3">
       <div className="md:col-span-2 space-y-4">
         <Card>
@@ -155,7 +174,12 @@ const Inventory: React.FC = () => {
               <CardTitle>Raw Materials Inventory</CardTitle>
               <CardDescription>Track and manage inventory items</CardDescription>
             </div>
-            <Button size="sm" className="flex gap-1">
+            <Button 
+              size="sm" 
+              className="flex gap-1" 
+              disabled
+              onClick={handleAddItem}
+            >
               <PlusCircle className="h-4 w-4 mr-1" /> Add Item
             </Button>
           </CardHeader>
@@ -222,20 +246,20 @@ const Inventory: React.FC = () => {
                               <td className="p-4 align-middle text-right">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="sm">
+                                    <Button variant="ghost" size="sm" disabled>
                                       <MoreVertical className="h-4 w-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleEditItem(item.name)}>
                                       <PenSquare className="mr-2 h-4 w-4" /> Edit
                                     </DropdownMenuItem>
                                     
                                     
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem className="text-destructive">
+                                    <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteItem(item.name)}>
                                       <Trash2 className="mr-2 h-4 w-4" /> Delete
                                     </DropdownMenuItem>
                                   </DropdownMenuContent>
@@ -274,7 +298,7 @@ const Inventory: React.FC = () => {
                         <span className="text-xs text-muted-foreground">
                           Supplier: {item.supplier}
                         </span>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" disabled onClick={() => handleEditItem(item.name)}>
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </div>
@@ -323,4 +347,5 @@ const Inventory: React.FC = () => {
       </div>
     </div>;
 };
+
 export default Inventory;
