@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,10 +15,20 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
 import { User } from '@/types';
+import { AddUserModal } from './users/AddUserModal';
+import { EditUserModal } from './users/EditUserModal';
+import { RoleConfigModal } from './users/RoleConfigModal';
 
 const Users: React.FC = () => {
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedRole, setSelectedRole] = useState<{ label: string; value: string; description: string } | null>(null);
   
   const [users, setUsers] = useState<User[]>([
     {
@@ -80,6 +89,63 @@ const Users: React.FC = () => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
+  const handleAddUser = (newUser: Omit<User, 'id'>) => {
+    const user: User = {
+      ...newUser,
+      id: (users.length + 1).toString(),
+    };
+    setUsers([...users, user]);
+    toast({
+      title: "User Added",
+      description: `${user.name} has been added successfully.`,
+    });
+  };
+
+  const handleUpdateUser = (updatedUser: User) => {
+    setUsers(users.map(user => 
+      user.id === updatedUser.id ? updatedUser : user
+    ));
+    toast({
+      title: "User Updated",
+      description: `${updatedUser.name}'s information has been updated.`,
+    });
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    setUsers(users.filter(u => u.id !== userId));
+    toast({
+      title: "User Deleted",
+      description: `${user?.name} has been removed from the system.`,
+      variant: "destructive",
+    });
+  };
+
+  const handleDeactivateUser = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    toast({
+      title: "User Deactivated",
+      description: `${user?.name} has been deactivated.`,
+    });
+  };
+
+  const handleChangeRole = (user: User) => {
+    setSelectedUser(user);
+    setShowEditModal(true);
+  };
+
+  const handleConfigureRole = (role: { label: string; value: string; description: string }) => {
+    setSelectedRole(role);
+    setShowRoleModal(true);
+  };
+
+  const handleUpdateRole = (updatedRole: { label: string; value: string; description: string; permissions: string[] }) => {
+    toast({
+      title: "Role Updated",
+      description: `${updatedRole.label} role configuration has been updated.`,
+    });
+  };
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <div className="md:col-span-2 space-y-4">
@@ -89,7 +155,7 @@ const Users: React.FC = () => {
               <CardTitle>User Management</CardTitle>
               <CardDescription>Manage system users and access</CardDescription>
             </div>
-            <Button size="sm" className="flex gap-1">
+            <Button size="sm" className="flex gap-1" onClick={() => setShowAddModal(true)}>
               <UserPlus className="h-4 w-4 mr-1" />
               Add User
             </Button>
@@ -153,17 +219,23 @@ const Users: React.FC = () => {
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {
+                                  setSelectedUser(user);
+                                  setShowEditModal(true);
+                                }}>
                                   <Edit className="mr-2 h-4 w-4" /> Edit
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleChangeRole(user)}>
                                   <Shield className="mr-2 h-4 w-4" /> Change Role
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDeactivateUser(user.id)}>
                                   <UserX className="mr-2 h-4 w-4" /> Deactivate
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-destructive">
+                                <DropdownMenuItem 
+                                  className="text-destructive"
+                                  onClick={() => handleDeleteUser(user.id)}
+                                >
                                   <Trash2 className="mr-2 h-4 w-4" /> Delete
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
@@ -205,7 +277,11 @@ const Users: React.FC = () => {
                     <h4 className="font-medium capitalize">{role.label}</h4>
                     <p className="text-xs text-muted-foreground">{role.description}</p>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleConfigureRole(role)}
+                  >
                     <Edit className="h-4 w-4 mr-1" /> Configure
                   </Button>
                 </div>
@@ -237,6 +313,26 @@ const Users: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+
+      <AddUserModal
+        open={showAddModal}
+        onOpenChange={setShowAddModal}
+        onAddUser={handleAddUser}
+      />
+
+      <EditUserModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        user={selectedUser}
+        onUpdateUser={handleUpdateUser}
+      />
+
+      <RoleConfigModal
+        open={showRoleModal}
+        onOpenChange={setShowRoleModal}
+        role={selectedRole}
+        onUpdateRole={handleUpdateRole}
+      />
     </div>
   );
 };
