@@ -21,45 +21,55 @@ import { AddUserModal } from './users/AddUserModal';
 import { EditUserModal } from './users/EditUserModal';
 import { RoleConfigModal } from './users/RoleConfigModal';
 
+// Extended User interface to include status
+interface ExtendedUser extends User {
+  status: 'active' | 'deactivated';
+}
+
 const Users: React.FC = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<ExtendedUser | null>(null);
   const [selectedRole, setSelectedRole] = useState<{ label: string; value: string; description: string } | null>(null);
   
-  const [users, setUsers] = useState<User[]>([
+  const [users, setUsers] = useState<ExtendedUser[]>([
     {
       id: '1',
       name: 'Admin User',
       email: 'admin@canteen.com',
-      role: 'admin'
+      role: 'admin',
+      status: 'active'
     },
     {
       id: '2',
       name: 'Sarah Johnson',
       email: 'sarah@canteen.com',
-      role: 'manager'
+      role: 'manager',
+      status: 'active'
     },
     {
       id: '3',
       name: 'Miguel Rodriguez',
       email: 'miguel@canteen.com',
-      role: 'staff'
+      role: 'staff',
+      status: 'active'
     },
     {
       id: '4',
       name: 'Aisha Patel',
       email: 'aisha@canteen.com',
-      role: 'cashier'
+      role: 'cashier',
+      status: 'active'
     },
     {
       id: '5',
       name: 'David Chen',
       email: 'david@canteen.com',
-      role: 'staff'
+      role: 'staff',
+      status: 'active'
     }
   ]);
 
@@ -90,9 +100,10 @@ const Users: React.FC = () => {
   };
 
   const handleAddUser = (newUser: Omit<User, 'id'>) => {
-    const user: User = {
+    const user: ExtendedUser = {
       ...newUser,
       id: (users.length + 1).toString(),
+      status: 'active'
     };
     setUsers([...users, user]);
     toast({
@@ -103,7 +114,7 @@ const Users: React.FC = () => {
 
   const handleUpdateUser = (updatedUser: User) => {
     setUsers(users.map(user => 
-      user.id === updatedUser.id ? updatedUser : user
+      user.id === updatedUser.id ? { ...user, ...updatedUser } : user
     ));
     toast({
       title: "User Updated",
@@ -123,15 +134,18 @@ const Users: React.FC = () => {
 
   const handleDeactivateUser = (userId: string) => {
     const user = users.find(u => u.id === userId);
-    toast({
-      title: "User Deactivated",
-      description: `${user?.name} has been deactivated.`,
-    });
-  };
-
-  const handleChangeRole = (user: User) => {
-    setSelectedUser(user);
-    setShowEditModal(true);
+    if (user) {
+      setUsers(users.map(u => 
+        u.id === userId 
+          ? { ...u, status: u.status === 'active' ? 'deactivated' : 'active' }
+          : u
+      ));
+      const newStatus = user.status === 'active' ? 'deactivated' : 'activated';
+      toast({
+        title: `User ${newStatus === 'deactivated' ? 'Deactivated' : 'Activated'}`,
+        description: `${user.name} has been ${newStatus}.`,
+      });
+    }
   };
 
   const handleConfigureRole = (role: { label: string; value: string; description: string }) => {
@@ -205,8 +219,10 @@ const Users: React.FC = () => {
                           </td>
                           <td className="p-4 align-middle">
                             <div className="flex items-center">
-                              <div className="mr-2 h-2.5 w-2.5 rounded-full bg-green-500"></div>
-                              <span className="text-sm">Active</span>
+                              <div className={`mr-2 h-2.5 w-2.5 rounded-full ${
+                                user.status === 'active' ? 'bg-green-500' : 'bg-red-500'
+                              }`}></div>
+                              <span className="text-sm capitalize">{user.status}</span>
                             </div>
                           </td>
                           <td className="p-4 align-middle text-right">
@@ -225,11 +241,9 @@ const Users: React.FC = () => {
                                 }}>
                                   <Edit className="mr-2 h-4 w-4" /> Edit
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleChangeRole(user)}>
-                                  <Shield className="mr-2 h-4 w-4" /> Change Role
-                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleDeactivateUser(user.id)}>
-                                  <UserX className="mr-2 h-4 w-4" /> Deactivate
+                                  <UserX className="mr-2 h-4 w-4" /> 
+                                  {user.status === 'active' ? 'Deactivate' : 'Activate'}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem 
