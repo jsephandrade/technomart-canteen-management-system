@@ -112,7 +112,7 @@ const LandingPage = () => {
         <div className="w-full md:w-1/2 flex items-center justify-center mt-8 md:mt-0 order-1 md:order-2">
           <div className="relative w-full max-w-xl h-64 md:h-auto md:aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
             <img
-              src="/lovable-uploads/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png"
+              src="/images/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png"
               alt="TechnoMart Canteen"
               className="w-full h-full object-cover"
             />

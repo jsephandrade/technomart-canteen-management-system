@@ -48,6 +48,43 @@ const MenuSelection = ({
 
   const filteredItems = getFilteredItems();
 
+  // Small reusable card (with image)
+  const ItemCard = ({ item, showCategoryBadge = false }) => (
+    <div
+      className="border rounded-md hover:bg-accent hover:cursor-pointer transition-colors overflow-hidden"
+      onClick={() => onAddToOrder(item)}
+    >
+      {/* Image (item.image is an imported path from src/assets) */}
+      {item.image ? (
+        <div className="w-full aspect-[4/3] bg-muted">
+          <img
+            src={item.image}
+            alt={item.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        <div className="w-full aspect-[4/3] bg-muted" />
+      )}
+
+      <div className="p-3">
+        <div className="flex justify-between items-start mb-1">
+          <h4 className="font-medium line-clamp-1">{item.name}</h4>
+          {showCategoryBadge && (
+            <Badge variant="outline" className="text-xs shrink-0 ml-2">
+              {item.categoryName}
+            </Badge>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+          {item.description}
+        </p>
+        <p className="text-sm font-semibold">₱{item.price.toFixed(2)}</p>
+      </div>
+    </div>
+  );
+
   return (
     <div className="md:col-span-2">
       <Card className="h-full flex flex-col">
@@ -73,6 +110,7 @@ const MenuSelection = ({
             </div>
           </div>
         </CardHeader>
+
         <CardContent className="flex-1 overflow-hidden flex flex-col">
           {searchTerm.trim() ? (
             // Search results view
@@ -84,26 +122,11 @@ const MenuSelection = ({
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {filteredItems.length > 0 ? (
                     filteredItems.map((item) => (
-                      <div
-                        key={item.id}
-                        className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
-                        onClick={() => onAddToOrder(item)}
-                      >
-                        <div className="flex justify-between items-start mb-1">
-                          <h4 className="font-medium">{item.name}</h4>
-                        </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-                          {item.description}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <p className="text-sm font-semibold">
-                            ₱{item.price.toFixed(2)}
-                          </p>
-                          <Badge variant="outline" className="text-xs">
-                            {item.categoryName}
-                          </Badge>
-                        </div>
-                      </div>
+                      <ItemCard
+                        key={`${item.categoryName}-${item.id}`}
+                        item={item}
+                        showCategoryBadge
+                      />
                     ))
                   ) : (
                     <div className="col-span-full text-center py-12">
@@ -137,6 +160,7 @@ const MenuSelection = ({
                   ))}
                 </TabsList>
               </div>
+
               {categories.map((category) => (
                 <TabsContent
                   key={category.id}
@@ -146,21 +170,7 @@ const MenuSelection = ({
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
                     {filteredItems.length > 0 ? (
                       filteredItems.map((item) => (
-                        <div
-                          key={item.id}
-                          className="border rounded-md p-3 hover:bg-accent hover:cursor-pointer transition-colors"
-                          onClick={() => onAddToOrder(item)}
-                        >
-                          <div className="flex justify-between items-start mb-1">
-                            <h4 className="font-medium">{item.name}</h4>
-                          </div>
-                          <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-                            {item.description}
-                          </p>
-                          <p className="text-sm font-semibold">
-                            ₱{item.price.toFixed(2)}
-                          </p>
-                        </div>
+                        <ItemCard key={item.id} item={item} />
                       ))
                     ) : (
                       <div className="col-span-full text-center py-12">
@@ -176,6 +186,7 @@ const MenuSelection = ({
             </Tabs>
           )}
         </CardContent>
+
         <CardFooter className="border-t pt-3">
           <div className="flex justify-between w-full text-xs text-muted-foreground">
             <span>Cashier: Admin User</span>

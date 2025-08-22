@@ -6,6 +6,7 @@ import OrderQueue from "@/components/pos/OrderQueue"
 import PaymentModal from "@/components/pos/PaymentModal"
 import DiscountModal from "@/components/pos/DiscountModal"
 import OrderHistoryModal from "@/components/pos/OrderHistoryModal"
+import ImagePlaceholder from "@/assets/placeholder.svg"
 
 const POS = () => {
   const [searchTerm, setSearchTerm] = useState("")
@@ -80,7 +81,7 @@ const POS = () => {
           price: 30,
           category: "Noodles",
           available: true,
-          popular: true
+          image: ImagePlaceholder
         },
         {
           id: "2",
@@ -89,7 +90,7 @@ const POS = () => {
           price: 20,
           category: "Noodles",
           available: true,
-          popular: true
+          image: ImagePlaceholder
         }
       ]
     },
@@ -104,7 +105,7 @@ const POS = () => {
           price: 15,
           category: "Sandwich",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         }
       ]
     },
@@ -119,7 +120,7 @@ const POS = () => {
           price: 15,
           category: "Main Dish",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         },
         {
           id: "5",
@@ -128,7 +129,7 @@ const POS = () => {
           price: 60,
           category: "Main Dish",
           available: true,
-          popular: true
+          image: ImagePlaceholder
         },
         {
           id: "6",
@@ -137,7 +138,7 @@ const POS = () => {
           price: 60,
           category: "Main Dish",
           available: true,
-          popular: true
+          image: ImagePlaceholder
         }
       ]
     },
@@ -152,7 +153,7 @@ const POS = () => {
           price: 20,
           category: "Viand",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         }
       ]
     },
@@ -167,7 +168,7 @@ const POS = () => {
           price: 20,
           category: "Drinks",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         },
         {
           id: "9",
@@ -176,7 +177,7 @@ const POS = () => {
           price: 20,
           category: "Drinks",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         },
         {
           id: "10",
@@ -185,7 +186,7 @@ const POS = () => {
           price: 20,
           category: "Drinks",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         }
       ]
     },
@@ -200,7 +201,7 @@ const POS = () => {
           price: 45,
           category: "Combo Meals",
           available: true,
-          popular: true
+          image: ImagePlaceholder
         },
         {
           id: "12",
@@ -209,7 +210,7 @@ const POS = () => {
           price: 45,
           category: "Combo Meals",
           available: true,
-          popular: true
+          image: ImagePlaceholder
         },
         {
           id: "13",
@@ -218,7 +219,7 @@ const POS = () => {
           price: 45,
           category: "Combo Meals",
           available: true,
-          popular: true
+          image: ImagePlaceholder
         },
         {
           id: "14",
@@ -227,7 +228,7 @@ const POS = () => {
           price: 45,
           category: "Combo Meals",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         },
         {
           id: "15",
@@ -236,7 +237,7 @@ const POS = () => {
           price: 45,
           category: "Combo Meals",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         },
         {
           id: "16",
@@ -246,7 +247,7 @@ const POS = () => {
           price: 45,
           category: "Combo Meals",
           available: true,
-          popular: false
+          image: ImagePlaceholder
         }
       ]
     }
