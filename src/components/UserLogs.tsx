@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,6 @@ import {
   Download, 
   AlertTriangle, 
   Clock, 
-  Filter, 
   ChevronDown,
   ShieldAlert,
   UserCog,
@@ -21,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 interface LogEntry {
   id: string;
@@ -31,10 +30,19 @@ interface LogEntry {
   type: 'login' | 'action' | 'system' | 'security';
 }
 
+interface SecurityAlert {
+  id: string;
+  type: 'critical' | 'warning';
+  title: string;
+  description: string;
+  dismissed: boolean;
+}
+
 const UserLogs: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLogType, setSelectedLogType] = useState<string>('all');
   const [timeRange, setTimeRange] = useState<string>('24h');
+  const { toast } = useToast();
   
   const [logs, setLogs] = useState<LogEntry[]>([
     {
@@ -94,6 +102,23 @@ const UserLogs: React.FC = () => {
       type: 'security'
     }
   ]);
+
+  const [securityAlerts, setSecurityAlerts] = useState<SecurityAlert[]>([
+    {
+      id: '1',
+      type: 'critical',
+      title: 'Failed Login Attempts',
+      description: 'Multiple failed login attempts detected for admin account from unknown IP address',
+      dismissed: false
+    },
+    {
+      id: '2',
+      type: 'warning',
+      title: 'Password Expiring',
+      description: '2 user passwords will expire in the next 7 days',
+      dismissed: false
+    }
+  ]);
   
   const getActionIcon = (type: string) => {
     switch (type) {
@@ -115,20 +140,38 @@ const UserLogs: React.FC = () => {
     }
   };
 
+  const handleBlockIP = (alertId: string) => {
+    toast({
+      title: "IP Address Blocked",
+      description: "The suspicious IP address has been blocked successfully.",
+    });
+    // Remove the alert after blocking IP
+    setSecurityAlerts(prev => prev.filter(alert => alert.id !== alertId));
+  };
+
+  const handleDismissAlert = (alertId: string) => {
+    setSecurityAlerts(prev => 
+      prev.map(alert => 
+        alert.id === alertId ? { ...alert, dismissed: true } : alert
+      ).filter(alert => !alert.dismissed)
+    );
+    toast({
+      title: "Alert Dismissed",
+      description: "Security alert has been dismissed.",
+    });
+  };
+
   const filteredLogs = logs.filter(log => {
-    // Filter by search term
     const matchesSearch = 
       log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
       log.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
       log.details.toLowerCase().includes(searchTerm.toLowerCase());
     
-    // Filter by log type
     const matchesType = selectedLogType === 'all' || log.type === selectedLogType;
     
     return matchesSearch && matchesType;
   });
 
-  // Sort logs by timestamp (most recent first)
   const sortedLogs = [...filteredLogs].sort((a, b) => 
     new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   );
@@ -145,9 +188,6 @@ const UserLogs: React.FC = () => {
             <div className="flex gap-2">
               <Button variant="outline" size="sm" className="flex items-center gap-1">
                 <Download className="h-4 w-4 mr-1" /> Export
-              </Button>
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
-                <Filter className="h-4 w-4 mr-1" /> Filter
               </Button>
             </div>
           </CardHeader>
@@ -252,27 +292,45 @@ const UserLogs: React.FC = () => {
             <CardDescription>Important security notifications</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-lg bg-red-50 border border-red-200 p-3 flex gap-3">
-              <AlertTriangle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-medium text-red-900">Failed Login Attempts</h4>
-                <p className="text-sm text-red-700">Multiple failed login attempts detected for admin account from unknown IP address</p>
-                <div className="mt-2 flex gap-2">
-                  <Button size="sm" variant="destructive">Block IP</Button>
-                  <Button size="sm" variant="outline">Dismiss</Button>
+            {securityAlerts.map((alert) => (
+              <div key={alert.id} className={`rounded-lg border p-3 flex gap-3 ${
+                alert.type === 'critical' ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'
+              }`}>
+                <AlertTriangle className={`h-5 w-5 shrink-0 mt-0.5 ${
+                  alert.type === 'critical' ? 'text-red-600' : 'text-amber-600'
+                }`} />
+                <div className="flex-1">
+                  <h4 className={`font-medium ${
+                    alert.type === 'critical' ? 'text-red-900' : 'text-amber-900'
+                  }`}>
+                    {alert.title}
+                  </h4>
+                  <p className={`text-sm ${
+                    alert.type === 'critical' ? 'text-red-700' : 'text-amber-700'
+                  }`}>
+                    {alert.description}
+                  </p>
+                  <div className="mt-2 flex gap-2">
+                    {alert.type === 'critical' && (
+                      <Button 
+                        size="sm" 
+                        variant="destructive"
+                        onClick={() => handleBlockIP(alert.id)}
+                      >
+                        Block IP
+                      </Button>
+                    )}
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleDismissAlert(alert.id)}
+                    >
+                      Dismiss
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
-              <div className="flex gap-3">
-                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-amber-900">Password Expiring</h4>
-                  <p className="text-sm text-amber-700">2 user passwords will expire in the next 7 days</p>
-                </div>
-              </div>
-            </div>
+            ))}
           </CardContent>
         </Card>
         
