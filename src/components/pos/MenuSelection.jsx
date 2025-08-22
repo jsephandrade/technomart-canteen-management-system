@@ -59,7 +59,6 @@ const MenuSelection = ({
                 Select menu items to add to order
               </CardDescription>
             </div>
-            <Badge variant="outline">Register #1</Badge>
           </div>
           <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 pt-2">
             <div className="relative flex-1">

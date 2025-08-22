@@ -204,7 +204,7 @@ const POS = () => {
         },
         {
           id: "12",
-          name: "Rice + Hamburger + Egg",
+          name: "Rice + Humba Egg + Ham",
           description: "Hearty combo with rice, hamburger, and egg.",
           price: 45,
           category: "Combo Meals",
@@ -231,7 +231,7 @@ const POS = () => {
         },
         {
           id: "15",
-          name: "Rice + Hotdog + Nugahong",
+          name: "Rice + Hotdog + Ngohiong",
           description: "Classic combo with rice, hotdog, and nugahong.",
           price: 45,
           category: "Combo Meals",

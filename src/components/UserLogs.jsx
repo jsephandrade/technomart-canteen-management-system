@@ -1,140 +1,188 @@
-import React, { useState } from 'react';
+import React, { useState } from "react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+  CardFooter
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import {
   FileText,
   Search,
   Download,
   AlertTriangle,
   Clock,
-  Filter,
   ShieldAlert,
   UserCog,
   LogIn,
-  Settings,
-} from 'lucide-react';
-import { Input } from '@/components/ui/input';
+  Settings
+} from "lucide-react"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+  SelectValue
+} from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useToast } from "@/hooks/use-toast"
+
 const UserLogs = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedLogType, setSelectedLogType] = useState('all');
-  const [timeRange, setTimeRange] = useState('24h');
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedLogType, setSelectedLogType] = useState("all")
+  const [timeRange, setTimeRange] = useState("24h")
+  const { toast } = useToast()
+
   const [logs, setLogs] = useState([
     {
-      id: '1',
-      action: 'User Login',
-      user: 'admin@canteen.com',
-      timestamp: '2025-04-17 09:32:15',
-      details: 'Successful login from IP 192.168.1.105',
-      type: 'login',
+      id: "1",
+      action: "User Login",
+      user: "admin@canteen.com",
+      timestamp: "2025-04-17 09:32:15",
+      details: "Successful login from IP 192.168.1.105",
+      type: "login"
     },
     {
-      id: '2',
-      action: 'Menu Item Added',
-      user: 'sarah@canteen.com',
-      timestamp: '2025-04-17 10:15:22',
+      id: "2",
+      action: "Menu Item Added",
+      user: "sarah@canteen.com",
+      timestamp: "2025-04-17 10:15:22",
       details: 'Added new menu item "Grilled Chicken Sandwich" to lunch menu',
-      type: 'action',
+      type: "action"
     },
     {
-      id: '3',
-      action: 'Inventory Updated',
-      user: 'miguel@canteen.com',
-      timestamp: '2025-04-17 11:25:40',
-      details: 'Updated stock levels for Rice (-5kg) and Tomatoes (-2kg)',
-      type: 'action',
+      id: "3",
+      action: "Inventory Updated",
+      user: "miguel@canteen.com",
+      timestamp: "2025-04-17 11:25:40",
+      details: "Updated stock levels for Rice (-5kg) and Tomatoes (-2kg)",
+      type: "action"
     },
     {
-      id: '4',
-      action: 'Payment Processed',
-      user: 'aisha@canteen.com',
-      timestamp: '2025-04-17 12:10:05',
-      details: 'Processed card payment of $45.75 for order #1289',
-      type: 'action',
+      id: "4",
+      action: "Payment Processed",
+      user: "aisha@canteen.com",
+      timestamp: "2025-04-17 12:10:05",
+      details: "Processed card payment of $45.75 for order #1289",
+      type: "action"
     },
     {
-      id: '5',
-      action: 'Failed Login Attempt',
-      user: 'unknown',
-      timestamp: '2025-04-17 13:27:51',
+      id: "5",
+      action: "Failed Login Attempt",
+      user: "unknown",
+      timestamp: "2025-04-17 13:27:51",
       details:
-        'Failed login attempt for admin@canteen.com from IP 203.45.67.89',
-      type: 'security',
+        "Failed login attempt for admin@canteen.com from IP 203.45.67.89",
+      type: "security"
     },
     {
-      id: '6',
-      action: 'System Backup',
-      user: 'system',
-      timestamp: '2025-04-17 14:00:00',
-      details: 'Automated system backup completed successfully',
-      type: 'system',
+      id: "6",
+      action: "System Backup",
+      user: "system",
+      timestamp: "2025-04-17 14:00:00",
+      details: "Automated system backup completed successfully",
+      type: "system"
     },
     {
-      id: '7',
-      action: 'User Role Changed',
-      user: 'admin@canteen.com',
-      timestamp: '2025-04-17 14:55:12',
-      details: 'Changed role for david@canteen.com from Staff to Cashier',
-      type: 'security',
+      id: "7",
+      action: "User Role Changed",
+      user: "admin@canteen.com",
+      timestamp: "2025-04-17 14:55:12",
+      details: "Changed role for david@canteen.com from Staff to Cashier",
+      type: "security"
+    }
+  ])
+
+  const [securityAlerts, setSecurityAlerts] = useState([
+    {
+      id: "1",
+      type: "critical",
+      title: "Failed Login Attempts",
+      description:
+        "Multiple failed login attempts detected for admin account from unknown IP address",
+      dismissed: false
     },
-  ]);
-  const getActionIcon = (type) => {
-    switch (type) {
-      case 'login':
-        return <LogIn className="h-4 w-4" />;
-      case 'security':
-        return <ShieldAlert className="h-4 w-4" />;
-      case 'system':
-        return <Settings className="h-4 w-4" />;
-      case 'action':
-        return <UserCog className="h-4 w-4" />;
-      default:
-        return <FileText className="h-4 w-4" />;
+    {
+      id: "2",
+      type: "warning",
+      title: "Password Expiring",
+      description: "2 user passwords will expire in the next 7 days",
+      dismissed: false
     }
-  };
-  const getActionColor = (type) => {
+  ])
+
+  const getActionIcon = type => {
     switch (type) {
-      case 'login':
-        return 'bg-blue-100 text-blue-800';
-      case 'security':
-        return 'bg-red-100 text-red-800';
-      case 'system':
-        return 'bg-gray-100 text-gray-800';
-      case 'action':
-        return 'bg-green-100 text-green-800';
+      case "login":
+        return <LogIn className="h-4 w-4" />
+      case "security":
+        return <ShieldAlert className="h-4 w-4" />
+      case "system":
+        return <Settings className="h-4 w-4" />
+      case "action":
+        return <UserCog className="h-4 w-4" />
       default:
-        return 'bg-gray-100 text-gray-800';
+        return <FileText className="h-4 w-4" />
     }
-  };
-  const filteredLogs = logs.filter((log) => {
-    // Filter by search term
+  }
+
+  const getActionColor = type => {
+    switch (type) {
+      case "login":
+        return "bg-blue-100 text-blue-800"
+      case "security":
+        return "bg-red-100 text-red-800"
+      case "system":
+        return "bg-gray-100 text-gray-800"
+      case "action":
+        return "bg-green-100 text-green-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const handleBlockIP = alertId => {
+    toast({
+      title: "IP Address Blocked",
+      description: "The suspicious IP address has been blocked successfully."
+    })
+    // Remove the alert after blocking IP
+    setSecurityAlerts(prev => prev.filter(alert => alert.id !== alertId))
+  }
+
+  const handleDismissAlert = alertId => {
+    setSecurityAlerts(prev =>
+      prev
+        .map(alert =>
+          alert.id === alertId ? { ...alert, dismissed: true } : alert
+        )
+        .filter(alert => !alert.dismissed)
+    )
+    toast({
+      title: "Alert Dismissed",
+      description: "Security alert has been dismissed."
+    })
+  }
+
+  const filteredLogs = logs.filter(log => {
     const matchesSearch =
       log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
       log.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      log.details.toLowerCase().includes(searchTerm.toLowerCase());
-    // Filter by log type
+      log.details.toLowerCase().includes(searchTerm.toLowerCase())
+
     const matchesType =
-      selectedLogType === 'all' || log.type === selectedLogType;
-    return matchesSearch && matchesType;
-  });
-  // Sort logs by timestamp (most recent first)
+      selectedLogType === "all" || log.type === selectedLogType
+
+    return matchesSearch && matchesType
+  })
+
   const sortedLogs = [...filteredLogs].sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-  );
+  )
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <div className="md:col-span-2 space-y-4">
@@ -154,13 +202,6 @@ const UserLogs = () => {
               >
                 <Download className="h-4 w-4 mr-1" /> Export
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <Filter className="h-4 w-4 mr-1" /> Filter
-              </Button>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -172,7 +213,7 @@ const UserLogs = () => {
                   placeholder="Search logs..."
                   className="pl-8"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                 />
               </div>
 
@@ -224,7 +265,7 @@ const UserLogs = () => {
                   </thead>
                   <tbody>
                     {sortedLogs.length > 0 ? (
-                      sortedLogs.map((log) => (
+                      sortedLogs.map(log => (
                         <tr
                           key={log.id}
                           className="border-b transition-colors hover:bg-muted/50"
@@ -232,7 +273,9 @@ const UserLogs = () => {
                           <td className="p-4 align-middle">
                             <div className="flex items-center gap-2">
                               <div
-                                className={`rounded-full p-1 ${getActionColor(log.type)}`}
+                                className={`rounded-full p-1 ${getActionColor(
+                                  log.type
+                                )}`}
                               >
                                 {getActionIcon(log.type)}
                               </div>
@@ -278,40 +321,62 @@ const UserLogs = () => {
             <CardDescription>Important security notifications</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-lg bg-red-50 border border-red-200 p-3 flex gap-3">
-              <AlertTriangle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-medium text-red-900">
-                  Failed Login Attempts
-                </h4>
-                <p className="text-sm text-red-700">
-                  Multiple failed login attempts detected for admin account from
-                  unknown IP address
-                </p>
-                <div className="mt-2 flex gap-2">
-                  <Button size="sm" variant="destructive">
-                    Block IP
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    Dismiss
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
-              <div className="flex gap-3">
-                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-amber-900">
-                    Password Expiring
+            {securityAlerts.map(alert => (
+              <div
+                key={alert.id}
+                className={`rounded-lg border p-3 flex gap-3 ${
+                  alert.type === "critical"
+                    ? "bg-red-50 border-red-200"
+                    : "bg-amber-50 border-amber-200"
+                }`}
+              >
+                <AlertTriangle
+                  className={`h-5 w-5 shrink-0 mt-0.5 ${
+                    alert.type === "critical"
+                      ? "text-red-600"
+                      : "text-amber-600"
+                  }`}
+                />
+                <div className="flex-1">
+                  <h4
+                    className={`font-medium ${
+                      alert.type === "critical"
+                        ? "text-red-900"
+                        : "text-amber-900"
+                    }`}
+                  >
+                    {alert.title}
                   </h4>
-                  <p className="text-sm text-amber-700">
-                    2 user passwords will expire in the next 7 days
+                  <p
+                    className={`text-sm ${
+                      alert.type === "critical"
+                        ? "text-red-700"
+                        : "text-amber-700"
+                    }`}
+                  >
+                    {alert.description}
                   </p>
+                  <div className="mt-2 flex gap-2">
+                    {alert.type === "critical" && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleBlockIP(alert.id)}
+                      >
+                        Block IP
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleDismissAlert(alert.id)}
+                    >
+                      Dismiss
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </CardContent>
         </Card>
 
@@ -386,6 +451,7 @@ const UserLogs = () => {
         </Card>
       </div>
     </div>
-  );
-};
-export default UserLogs;
+  )
+}
+
+export default UserLogs
