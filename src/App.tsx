@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,7 +21,8 @@ import Users from "./components/Users";
 import UserLogs from "./components/UserLogs";
 import Notifications from "./components/Notifications";
 import { AuthProvider, useAuth } from "./components/AuthContext";
-import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 const queryClient = new QueryClient();
 
@@ -28,80 +30,86 @@ const queryClient = new QueryClient();
 const ProtectedRoutes = () => {
   const { user } = useAuth();
 
-  if (!user) {
-    return <LandingPage />;
-  }
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/menu" element={
-          <MainLayout title="Menu Management">
-            <MenuManagement />
-          </MainLayout>
-        } />
-        <Route path="/sales" element={
-          <MainLayout title="Sales Analytics">
-            <SalesAnalytics />
-          </MainLayout>
-        } />
-        <Route path="/employees" element={
-          <MainLayout title="Employee Schedule">
-            <EmployeeSchedule />
-          </MainLayout>
-        } />
-        <Route path="/feedback" element={
-          <MainLayout title="Customer Feedback">
-            <CustomerFeedback />
-          </MainLayout>
-        } />
-        <Route path="/pos" element={
-          <MainLayout title="Point of Sale">
-            <POS />
-          </MainLayout>
-        } />
-        <Route path="/catering" element={
-          <MainLayout title="Catering Management">
-            <Catering />
-          </MainLayout>
-        } />
-        <Route path="/inventory" element={
-          <MainLayout title="Inventory Management">
-            <Inventory />
-          </MainLayout>
-        } />
-        <Route path="/payments" element={
-          <MainLayout title="Payment Management">
-            <Payments />
-          </MainLayout>
-        } />
-        <Route path="/users" element={
-          <MainLayout title="User Management">
-            <Users />
-          </MainLayout>
-        } />
-        <Route path="/logs" element={
-          <MainLayout title="User Logs">
-            <UserLogs />
-          </MainLayout>
-        } />
-        <Route path="/notifications" element={
-          <MainLayout title="Notifications">
-            <Notifications />
-          </MainLayout>
-        } />
-        <Route path="/settings" element={
-          <MainLayout title="Settings">
-            <SettingsPage />
-          </MainLayout>
-        } />
-        <Route path="/help" element={
-          <MainLayout title="Help Center">
-            <HelpPage />
-          </MainLayout>
-        } />
-        <Route path="*" element={<NotFound />} />
+        {!user ? (
+          <>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="*" element={<LoginPage />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<Index />} />
+            <Route path="/menu" element={
+              <MainLayout title="Menu Management">
+                <MenuManagement />
+              </MainLayout>
+            } />
+            <Route path="/sales" element={
+              <MainLayout title="Sales Analytics">
+                <SalesAnalytics />
+              </MainLayout>
+            } />
+            <Route path="/employees" element={
+              <MainLayout title="Employee Schedule">
+                <EmployeeSchedule />
+              </MainLayout>
+            } />
+            <Route path="/feedback" element={
+              <MainLayout title="Customer Feedback">
+                <CustomerFeedback />
+              </MainLayout>
+            } />
+            <Route path="/pos" element={
+              <MainLayout title="Point of Sale">
+                <POS />
+              </MainLayout>
+            } />
+            <Route path="/catering" element={
+              <MainLayout title="Catering Management">
+                <Catering />
+              </MainLayout>
+            } />
+            <Route path="/inventory" element={
+              <MainLayout title="Inventory Management">
+                <Inventory />
+              </MainLayout>
+            } />
+            <Route path="/payments" element={
+              <MainLayout title="Payment Management">
+                <Payments />
+              </MainLayout>
+            } />
+            <Route path="/users" element={
+              <MainLayout title="User Management">
+                <Users />
+              </MainLayout>
+            } />
+            <Route path="/logs" element={
+              <MainLayout title="User Logs">
+                <UserLogs />
+              </MainLayout>
+            } />
+            <Route path="/notifications" element={
+              <MainLayout title="Notifications">
+                <Notifications />
+              </MainLayout>
+            } />
+            <Route path="/settings" element={
+              <MainLayout title="Settings">
+                <SettingsPage />
+              </MainLayout>
+            } />
+            <Route path="/help" element={
+              <MainLayout title="Help Center">
+                <HelpPage />
+              </MainLayout>
+            } />
+            <Route path="*" element={<NotFound />} />
+          </>
+        )}
       </Routes>
     </BrowserRouter>
   );
