@@ -57,27 +57,6 @@ const HelpPage = () => {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Getting Started</CardTitle>
-            <CardDescription>
-              Learn the basics of using the system
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Welcome to TechnoMart! This system helps you manage your canteen
-              operations efficiently. Start by exploring the sidebar navigation
-              to access different features.
-            </p>
-            <Button variant="outline" className="w-full">
-              View Quick Start Guide
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
