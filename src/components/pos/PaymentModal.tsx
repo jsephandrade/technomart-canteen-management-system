@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { X } from 'lucide-react';
+import { X, Delete } from 'lucide-react';
 import { OrderItem, Discount } from '@/types/pos';
 
 interface PaymentModalProps {
@@ -48,6 +48,19 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     }
   };
 
+  const handleNumberClick = (number: string) => {
+    if (number === '.' && paymentAmount.includes('.')) return;
+    setPaymentAmount(prev => prev + number);
+  };
+
+  const handleClear = () => {
+    setPaymentAmount('');
+  };
+
+  const handleBackspace = () => {
+    setPaymentAmount(prev => prev.slice(0, -1));
+  };
+
   const isPaymentValid = () => {
     const payment = parseFloat(paymentAmount) || 0;
     return payment >= totalAmount;
@@ -62,6 +75,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   if (!isOpen) return null;
+
+  const numberButtons = [
+    ['1', '2', '3'],
+    ['4', '5', '6'],
+    ['7', '8', '9'],
+    ['C', '0', '.']
+  ];
 
   return (
     <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
@@ -98,30 +118,43 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 value={paymentAmount}
                 onChange={handlePaymentAmountChange}
                 className="text-lg text-center"
+                readOnly
               />
+            </div>
+
+            {/* Number Keyboard */}
+            <div className="grid grid-cols-3 gap-2">
+              {numberButtons.map((row, rowIndex) =>
+                row.map((button) => (
+                  <Button
+                    key={`${rowIndex}-${button}`}
+                    variant="outline"
+                    className="h-12 text-lg font-semibold"
+                    onClick={() => {
+                      if (button === 'C') {
+                        handleClear();
+                      } else {
+                        handleNumberClick(button);
+                      }
+                    }}
+                  >
+                    {button}
+                  </Button>
+                ))
+              )}
+              <Button
+                variant="outline"
+                className="h-12 col-span-3"
+                onClick={handleBackspace}
+              >
+                <Delete className="h-4 w-4" />
+              </Button>
             </div>
             
             <div className="text-center">
               <p className="text-2xl font-semibold text-green-600">₱{change.toFixed(2)}</p>
               <p className="text-sm text-muted-foreground">Change</p>
             </div>
-          </div>
-          
-          <div className="pt-4 border-t">
-            <div className="flex justify-between mb-2">
-              <span className="text-sm">Items:</span>
-              <span className="text-sm">{currentOrder.reduce((sum, item) => sum + item.quantity, 0)}</span>
-            </div>
-            <div className="flex justify-between mb-2">
-              <span className="text-sm">Subtotal:</span>
-              <span className="text-sm">₱{calculateSubtotal().toFixed(2)}</span>
-            </div>
-            {discount.value > 0 && (
-              <div className="flex justify-between mb-2">
-                <span className="text-sm text-green-600">Discount:</span>
-                <span className="text-sm text-green-600">-₱{calculateDiscountAmount().toFixed(2)}</span>
-              </div>
-            )}
           </div>
         </CardContent>
         <CardFooter className="flex gap-3">
