@@ -68,7 +68,7 @@ export const NavigationSidebar = () => {
       icon: Users,
     },
     {
-      name: 'User Logs',
+      name: 'Activity Logs',
       href: '/logs',
       icon: FileText,
     },

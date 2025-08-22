@@ -47,7 +47,7 @@ const ProtectedRoutes = () => {
           </MainLayout>
         } />
         <Route path="/employees" element={
-          <MainLayout title="Employee Schedule">
+          <MainLayout title="Employee Management">
             <EmployeeSchedule />
           </MainLayout>
         } />
@@ -82,7 +82,7 @@ const ProtectedRoutes = () => {
           </MainLayout>
         } />
         <Route path="/logs" element={
-          <MainLayout title="User Logs">
+          <MainLayout title="Activity Logs">
             <UserLogs />
           </MainLayout>
         } />
