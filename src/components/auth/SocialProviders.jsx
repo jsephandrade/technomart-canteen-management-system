@@ -26,7 +26,7 @@ const SocialButton = ({ provider, label, onClick, pending, children }) => (
 );
 
 SocialButton.propTypes = {
-  provider: PropTypes.oneOf(['google', 'facebook']).isRequired,
+  provider: PropTypes.oneOf(['google', 'facescan']).isRequired,
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   pending: PropTypes.bool,
@@ -70,18 +70,19 @@ const SocialProviders = ({ onSocial, pending }) => {
         </SocialButton>
 
         <SocialButton
-          provider="facebook"
-          label="Facebook"
+          provider="facescan"
+          label="Face Scan"
           onClick={onSocial}
           pending={pending}
         >
+          {/* Placeholder Face Scan icon */}
           <svg
             className="w-5 h-5"
             viewBox="0 0 24 24"
-            fill="#1877F2"
+            fill="currentColor"
             aria-hidden="true"
           >
-            <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073C0 18.062 4.388 23.027 10.125 23.927v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+            <path d="M4 4h4V2H2v6h2V4zm14-2v2h4v4h2V2h-6zm4 18h-4v2h6v-6h-2v4zM4 20v-4H2v6h6v-2H4zm8-14a6 6 0 100 12 6 6 0 000-12z" />
           </svg>
         </SocialButton>
       </div>
