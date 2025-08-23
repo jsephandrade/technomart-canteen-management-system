@@ -24,7 +24,7 @@ export const menuItems = [
     name: 'Beef loaf',
     description: 'Savory Filipino-style sandwich with beef loaf slices.',
     price: 15,
-    category: 'Sandwich',
+    category: 'Canned',
     available: true,
     popular: false,
   },
