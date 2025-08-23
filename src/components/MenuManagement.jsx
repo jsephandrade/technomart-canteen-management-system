@@ -1,430 +1,52 @@
-import React, { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { menuItems } from '@/utils/mockData';
-import { Edit, Plus, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
+// src/pages/MenuManagement.jsx
+import React from 'react';
+import useMenuManager from '@/hooks/useMenuManager';
+import AddItemDialog from '@/components/menu/AddItemDialog';
+import EditItemDialog from '@/components/menu/EditItemDialog';
+import CategoryTabs from '@/components/menu/CategoryTabs';
 
 const MenuManagement = () => {
-  // Combo meals without "popular"
-  const comboMeals = [
-    {
-      id: '11',
-      name: 'Rice + Vegetable + Lumpia',
-      description: 'Complete combo meal with rice, vegetables, and lumpia.',
-      price: 45,
-      category: 'Combo Meals',
-      available: true,
-    },
-    {
-      id: '12',
-      name: 'Rice + Hamburger + Egg',
-      description: 'Hearty combo with rice, hamburger, and egg.',
-      price: 45,
-      category: 'Combo Meals',
-      available: true,
-    },
-    {
-      id: '13',
-      name: 'Rice + Bihon/Bam-i + Siomai',
-      description: 'Traditional combo with rice, noodles, and siomai.',
-      price: 45,
-      category: 'Combo Meals',
-      available: true,
-    },
-    {
-      id: '14',
-      name: 'Rice + Chorizo + Boiled Egg',
-      description: 'Flavorful combo with rice, chorizo, and boiled egg.',
-      price: 45,
-      category: 'Combo Meals',
-      available: true,
-    },
-    {
-      id: '15',
-      name: 'Rice + Hotdog + Nugahong',
-      description: 'Classic combo with rice, hotdog, and nugahong.',
-      price: 45,
-      category: 'Combo Meals',
-      available: true,
-    },
-    {
-      id: '16',
-      name: 'Rice + Fried Egg + Chorizo',
-      description:
-        'Simple yet satisfying combo with rice, fried egg, and chorizo.',
-      price: 45,
-      category: 'Combo Meals',
-      available: true,
-    },
-  ];
-
-  const [items, setItems] = useState([...menuItems, ...comboMeals]);
-  const [newItem, setNewItem] = useState({
-    name: '',
-    description: '',
-    price: 0,
-    category: '',
-    available: true,
-  });
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-
-  const categories = Array.from(new Set(items.map((item) => item.category)));
-
-  const handleAddItem = () => {
-    if (!newItem.name || !newItem.description || !newItem.category) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
-
-    const itemToAdd = {
-      ...newItem,
-      id: `P${items.length + 1}`,
-      price: Number(newItem.price),
-      available: newItem.available ?? true,
-    };
-
-    setItems([...items, itemToAdd]);
-    setNewItem({
-      name: '',
-      description: '',
-      price: 0,
-      category: '',
-      available: true,
-    });
-    setDialogOpen(false);
-    toast.success('Menu item added successfully');
-  };
-
-  const handleEditItem = () => {
-    if (!editingItem) return;
-
-    const updatedItems = items.map((item) =>
-      item.id === editingItem.id ? editingItem : item
-    );
-
-    setItems(updatedItems);
-    setEditingItem(null);
-    toast.success('Menu item updated successfully');
-  };
-
-  const handleDeleteItem = (id) => {
-    setItems(items.filter((item) => item.id !== id));
-    toast.success('Menu item deleted successfully');
-  };
+  const {
+    items,
+    categories,
+    newItem,
+    setNewItem,
+    dialogOpen,
+    setDialogOpen,
+    editingItem,
+    setEditingItem,
+    handleAddItem,
+    handleEditItem,
+    handleDeleteItem,
+  } = useMenuManager();
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-semibold">Menu Management</h2>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Plus size={16} /> Add Item
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Menu Item</DialogTitle>
-              <DialogDescription>
-                Add a new item to your canteen menu.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  value={newItem.name}
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, name: e.target.value })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right">
-                  Description
-                </Label>
-                <Input
-                  id="description"
-                  value={newItem.description}
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, description: e.target.value })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="price" className="text-right">
-                  Price
-                </Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={newItem.price}
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      price: parseFloat(e.target.value),
-                    })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category" className="text-right">
-                  Category
-                </Label>
-                <Input
-                  id="category"
-                  value={newItem.category}
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, category: e.target.value })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="available" className="text-right">
-                  Available
-                </Label>
-                <Switch
-                  id="available"
-                  checked={newItem.available}
-                  onCheckedChange={(checked) =>
-                    setNewItem({ ...newItem, available: checked })
-                  }
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddItem}>Add Item</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+
+        <AddItemDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          newItem={newItem}
+          setNewItem={setNewItem}
+          onAdd={handleAddItem}
+        />
       </div>
 
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList>
-          <TabsTrigger value="all">All Items</TabsTrigger>
-          {categories.map((category) => (
-            <TabsTrigger key={category} value={category}>
-              {category}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      <CategoryTabs
+        items={items}
+        categories={categories}
+        onEdit={setEditingItem}
+        onDelete={handleDeleteItem}
+      />
 
-        <TabsContent value="all" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((item) => (
-              <Card key={item.id}>
-                <CardHeader>
-                  <CardTitle>{item.name}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-bold text-lg">
-                      ₱{item.price.toFixed(2)}
-                    </span>
-                    <Badge variant={item.available ? 'outline' : 'destructive'}>
-                      {item.available ? 'Available' : 'Unavailable'}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Category: {item.category}
-                  </p>
-                </CardContent>
-                <CardFooter className="flex justify-end space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setEditingItem(item)}
-                  >
-                    <Edit className="h-4 w-4 mr-1" /> Edit
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDeleteItem(item.id)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-1" /> Delete
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {categories.map((category) => (
-          <TabsContent key={category} value={category} className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items
-                .filter((item) => item.category === category)
-                .map((item) => (
-                  <Card key={item.id}>
-                    <CardHeader>
-                      <CardTitle>{item.name}</CardTitle>
-                      <CardDescription>{item.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="font-bold text-lg">
-                          ₱{item.price.toFixed(2)}
-                        </span>
-                        <Badge
-                          variant={item.available ? 'outline' : 'destructive'}
-                        >
-                          {item.available ? 'Available' : 'Unavailable'}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setEditingItem(item)}
-                      >
-                        <Edit className="h-4 w-4 mr-1" /> Edit
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeleteItem(item.id)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" /> Delete
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
-
-      {/* Edit Dialog */}
-      {editingItem && (
-        <Dialog
-          open={!!editingItem}
-          onOpenChange={(open) => !open && setEditingItem(null)}
-        >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Menu Item</DialogTitle>
-              <DialogDescription>
-                Make changes to the menu item.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="edit-name"
-                  value={editingItem.name}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, name: e.target.value })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-description" className="text-right">
-                  Description
-                </Label>
-                <Input
-                  id="edit-description"
-                  value={editingItem.description}
-                  onChange={(e) =>
-                    setEditingItem({
-                      ...editingItem,
-                      description: e.target.value,
-                    })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-price" className="text-right">
-                  Price
-                </Label>
-                <Input
-                  id="edit-price"
-                  type="number"
-                  value={editingItem.price}
-                  onChange={(e) =>
-                    setEditingItem({
-                      ...editingItem,
-                      price: parseFloat(e.target.value),
-                    })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-category" className="text-right">
-                  Category
-                </Label>
-                <Input
-                  id="edit-category"
-                  value={editingItem.category}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, category: e.target.value })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-available" className="text-right">
-                  Available
-                </Label>
-                <Switch
-                  id="edit-available"
-                  checked={editingItem.available}
-                  onCheckedChange={(checked) =>
-                    setEditingItem({ ...editingItem, available: checked })
-                  }
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setEditingItem(null)}>
-                Cancel
-              </Button>
-              <Button onClick={handleEditItem}>Save Changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+      <EditItemDialog
+        item={editingItem}
+        setItem={setEditingItem}
+        onSave={handleEditItem}
+        onClose={() => setEditingItem(null)}
+      />
     </div>
   );
 };
