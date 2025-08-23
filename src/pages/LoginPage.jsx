@@ -13,19 +13,55 @@ const LoginPage = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async e => {
+  // field-level errors for a11y
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validate = () => {
+    let ok = true;
+    setEmailError("");
+    setPasswordError("");
+
+    if (!email) {
+      setEmailError("Email is required.");
+      ok = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setEmailError("Enter a valid email address.");
+      ok = false;
+    }
+
+    if (!password) {
+      setPasswordError("Password is required.");
+      ok = false;
+    } else if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters.");
+      ok = false;
+    }
+
+    return ok;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setPending(true);
+    if (pending) return;
     setError("");
 
+    if (!validate()) return;
+
+    setPending(true);
     try {
-      const ok = await login(email, password);
-      if (!ok) setError("Invalid credentials.");
-      // optionally navigate on success here
-      // if (ok) navigate("/dashboard");
+      const ok = await login(email, password, { remember });
+      if (!ok) {
+        setError("Invalid credentials.");
+        return;
+      }
+      // navigate on success if desired:
+      // navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -33,18 +69,24 @@ const LoginPage = () => {
     }
   };
 
-  const handleSocial = async provider => {
+  // SocialProviders now calls onSocial(provider, event).
+  const handleSocial = async (provider /* , e */) => {
+    if (pending) return;
     setPending(true);
     setError("");
     try {
       await socialLogin(provider);
-      // optionally navigate on success
       // navigate("/dashboard");
     } catch (err) {
       setError("Social login failed. Please try again.");
     } finally {
       setPending(false);
     }
+  };
+
+  const handleForgotPassword = () => {
+    if (pending) return;
+    navigate("/forgot-password");
   };
 
   return (
@@ -59,8 +101,13 @@ const LoginPage = () => {
               password={password}
               pending={pending}
               error={error}
+              emailError={emailError}
+              passwordError={passwordError}
+              remember={remember}
               onEmailChange={setEmail}
               onPasswordChange={setPassword}
+              onRememberChange={setRemember}
+              onForgotPassword={handleForgotPassword}
               onSubmit={handleSubmit}
             />
 
@@ -69,8 +116,9 @@ const LoginPage = () => {
             <div className="mt-6 text-center">
               <button
                 onClick={() => navigate("/signup")}
-                className="text-primary hover:text-primary-dark text-sm font-medium"
+                className="text-primary hover:text-primary-dark text-sm font-medium disabled:opacity-60"
                 type="button"
+                disabled={pending}
               >
                 Create New Account
               </button>
@@ -78,6 +126,7 @@ const LoginPage = () => {
           </AuthCard>
         </div>
 
+        {/* Ensure HeroImage includes meaningful alt text in its component */}
         <HeroImage src="/images/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" />
       </main>
 
