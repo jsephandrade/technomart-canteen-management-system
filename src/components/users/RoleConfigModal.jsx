@@ -1,62 +1,62 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export const RoleConfigModal = ({ open, onOpenChange, role, onUpdateRole }) => {
   const [formData, setFormData] = useState({
-    label: role?.label || "",
-    description: role?.description || "",
-    permissions: []
-  })
+    label: role?.label || '',
+    description: role?.description || '',
+    permissions: [],
+  });
 
   const availablePermissions = [
-    "View Dashboard",
-    "Manage Users",
-    "Manage Menu",
-    "Process Payments",
-    "View Reports",
-    "Manage Inventory",
-    "Handle Catering",
-    "Access Settings"
-  ]
+    'View Dashboard',
+    'Manage Users',
+    'Manage Menu',
+    'Process Payments',
+    'View Reports',
+    'Manage Inventory',
+    'Handle Catering',
+    'Access Settings',
+  ];
 
   const handlePermissionChange = (permission, checked) => {
     if (checked) {
       setFormData({
         ...formData,
-        permissions: [...formData.permissions, permission]
-      })
+        permissions: [...formData.permissions, permission],
+      });
     } else {
       setFormData({
         ...formData,
-        permissions: formData.permissions.filter(p => p !== permission)
-      })
+        permissions: formData.permissions.filter((p) => p !== permission),
+      });
     }
-  }
+  };
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (role && formData.label && formData.description) {
       onUpdateRole({
         ...role,
         label: formData.label,
         description: formData.description,
-        permissions: formData.permissions
-      })
-      onOpenChange(false)
+        permissions: formData.permissions,
+      });
+      onOpenChange(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -74,7 +74,7 @@ export const RoleConfigModal = ({ open, onOpenChange, role, onUpdateRole }) => {
               <Input
                 id="label"
                 value={formData.label}
-                onChange={e =>
+                onChange={(e) =>
                   setFormData({ ...formData, label: e.target.value })
                 }
                 placeholder="Enter role name"
@@ -86,7 +86,7 @@ export const RoleConfigModal = ({ open, onOpenChange, role, onUpdateRole }) => {
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={e =>
+                onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
                 placeholder="Enter role description"
@@ -96,12 +96,12 @@ export const RoleConfigModal = ({ open, onOpenChange, role, onUpdateRole }) => {
             <div className="grid gap-2">
               <Label>Permissions</Label>
               <div className="grid grid-cols-2 gap-2">
-                {availablePermissions.map(permission => (
+                {availablePermissions.map((permission) => (
                   <div key={permission} className="flex items-center space-x-2">
                     <Checkbox
                       id={permission}
                       checked={formData.permissions.includes(permission)}
-                      onCheckedChange={checked =>
+                      onCheckedChange={(checked) =>
                         handlePermissionChange(permission, checked)
                       }
                     />
@@ -129,5 +129,5 @@ export const RoleConfigModal = ({ open, onOpenChange, role, onUpdateRole }) => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

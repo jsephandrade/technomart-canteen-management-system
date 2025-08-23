@@ -378,10 +378,10 @@ const Payments = () => {
                           payment.status === 'completed'
                             ? 'bg-green-100'
                             : payment.status === 'failed'
-                            ? 'bg-red-100'
-                            : payment.status === 'refunded'
-                            ? 'bg-amber-100'
-                            : 'bg-gray-100'
+                              ? 'bg-red-100'
+                              : payment.status === 'refunded'
+                                ? 'bg-amber-100'
+                                : 'bg-gray-100'
                         }`}
                       >
                         {payment.status === 'completed' && (
@@ -408,12 +408,16 @@ const Payments = () => {
                           </CustomBadge>
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {payment.customer ? payment.customer : 'Walk-in Customer'}
+                          {payment.customer
+                            ? payment.customer
+                            : 'Walk-in Customer'}
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium">₱{payment.amount.toFixed(2)}</div>
+                      <div className="font-medium">
+                        ₱{payment.amount.toFixed(2)}
+                      </div>
                       <div className="text-xs text-muted-foreground capitalize">
                         {payment.method}
                       </div>
@@ -446,7 +450,9 @@ const Payments = () => {
                   <Banknote className="h-5 w-5 text-green-600" />
                   <div>
                     <p className="font-medium">Cash</p>
-                    <p className="text-xs text-muted-foreground">Physical currency</p>
+                    <p className="text-xs text-muted-foreground">
+                      Physical currency
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -469,7 +475,9 @@ const Payments = () => {
                   <CreditCard className="h-5 w-5 text-blue-600" />
                   <div>
                     <p className="font-medium">Credit/Debit Cards</p>
-                    <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex</p>
+                    <p className="text-xs text-muted-foreground">
+                      Visa, Mastercard, Amex
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -492,7 +500,9 @@ const Payments = () => {
                   <Smartphone className="h-5 w-5 text-purple-600" />
                   <div>
                     <p className="font-medium">Mobile Payments</p>
-                    <p className="text-xs text-muted-foreground">Apple Pay, Google Pay</p>
+                    <p className="text-xs text-muted-foreground">
+                      Apple Pay, Google Pay
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

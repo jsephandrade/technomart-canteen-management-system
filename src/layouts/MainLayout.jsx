@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -6,19 +6,19 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarTrigger,
-  SidebarInset
-} from "@/components/ui/sidebar"
-import { NavigationSidebar } from "@/components/NavigationSidebar"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { Button } from "@/components/ui/button"
-import { Bell } from "lucide-react"
-import { useAuth } from "@/components/AuthContext"
-import { LogOut } from "lucide-react"
-import { Link } from "react-router-dom"
+  SidebarInset,
+} from '@/components/ui/sidebar';
+import { NavigationSidebar } from '@/components/NavigationSidebar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
+import { Bell } from 'lucide-react';
+import { useAuth } from '@/components/AuthContext';
+import { LogOut } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const MainLayout = ({ children, title }) => {
-  const isMobile = useIsMobile()
-  const { user, logout } = useAuth()
+  const isMobile = useIsMobile();
+  const { user, logout } = useAuth();
 
   return (
     <SidebarProvider defaultOpen={!isMobile}>
@@ -61,7 +61,7 @@ const MainLayout = ({ children, title }) => {
             <div className="flex items-center">
               <SidebarTrigger className="mr-2" />
               <h1 className="text-xl font-semibold">
-                {title || "Canteen Management System"}
+                {title || 'Canteen Management System'}
               </h1>
             </div>
             <div className="flex items-center gap-4">
@@ -88,6 +88,6 @@ const MainLayout = ({ children, title }) => {
         </SidebarInset>
       </div>
     </SidebarProvider>
-  )
-}
-export default MainLayout
+  );
+};
+export default MainLayout;

@@ -1,16 +1,16 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogContent,
@@ -18,122 +18,122 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
-import { menuItems } from "@/utils/mockData"
-import { Edit, Plus, Trash2 } from "lucide-react"
-import { toast } from "sonner"
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { menuItems } from '@/utils/mockData';
+import { Edit, Plus, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const MenuManagement = () => {
   // Combo meals without "popular"
   const comboMeals = [
     {
-      id: "11",
-      name: "Rice + Vegetable + Lumpia",
-      description: "Complete combo meal with rice, vegetables, and lumpia.",
+      id: '11',
+      name: 'Rice + Vegetable + Lumpia',
+      description: 'Complete combo meal with rice, vegetables, and lumpia.',
       price: 45,
-      category: "Combo Meals",
-      available: true
+      category: 'Combo Meals',
+      available: true,
     },
     {
-      id: "12",
-      name: "Rice + Hamburger + Egg",
-      description: "Hearty combo with rice, hamburger, and egg.",
+      id: '12',
+      name: 'Rice + Hamburger + Egg',
+      description: 'Hearty combo with rice, hamburger, and egg.',
       price: 45,
-      category: "Combo Meals",
-      available: true
+      category: 'Combo Meals',
+      available: true,
     },
     {
-      id: "13",
-      name: "Rice + Bihon/Bam-i + Siomai",
-      description: "Traditional combo with rice, noodles, and siomai.",
+      id: '13',
+      name: 'Rice + Bihon/Bam-i + Siomai',
+      description: 'Traditional combo with rice, noodles, and siomai.',
       price: 45,
-      category: "Combo Meals",
-      available: true
+      category: 'Combo Meals',
+      available: true,
     },
     {
-      id: "14",
-      name: "Rice + Chorizo + Boiled Egg",
-      description: "Flavorful combo with rice, chorizo, and boiled egg.",
+      id: '14',
+      name: 'Rice + Chorizo + Boiled Egg',
+      description: 'Flavorful combo with rice, chorizo, and boiled egg.',
       price: 45,
-      category: "Combo Meals",
-      available: true
+      category: 'Combo Meals',
+      available: true,
     },
     {
-      id: "15",
-      name: "Rice + Hotdog + Nugahong",
-      description: "Classic combo with rice, hotdog, and nugahong.",
+      id: '15',
+      name: 'Rice + Hotdog + Nugahong',
+      description: 'Classic combo with rice, hotdog, and nugahong.',
       price: 45,
-      category: "Combo Meals",
-      available: true
+      category: 'Combo Meals',
+      available: true,
     },
     {
-      id: "16",
-      name: "Rice + Fried Egg + Chorizo",
+      id: '16',
+      name: 'Rice + Fried Egg + Chorizo',
       description:
-        "Simple yet satisfying combo with rice, fried egg, and chorizo.",
+        'Simple yet satisfying combo with rice, fried egg, and chorizo.',
       price: 45,
-      category: "Combo Meals",
-      available: true
-    }
-  ]
+      category: 'Combo Meals',
+      available: true,
+    },
+  ];
 
-  const [items, setItems] = useState([...menuItems, ...comboMeals])
+  const [items, setItems] = useState([...menuItems, ...comboMeals]);
   const [newItem, setNewItem] = useState({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
     price: 0,
-    category: "",
-    available: true
-  })
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState(null)
+    category: '',
+    available: true,
+  });
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
 
-  const categories = Array.from(new Set(items.map(item => item.category)))
+  const categories = Array.from(new Set(items.map((item) => item.category)));
 
   const handleAddItem = () => {
     if (!newItem.name || !newItem.description || !newItem.category) {
-      toast.error("Please fill in all required fields")
-      return
+      toast.error('Please fill in all required fields');
+      return;
     }
 
     const itemToAdd = {
       ...newItem,
       id: `P${items.length + 1}`,
       price: Number(newItem.price),
-      available: newItem.available ?? true
-    }
+      available: newItem.available ?? true,
+    };
 
-    setItems([...items, itemToAdd])
+    setItems([...items, itemToAdd]);
     setNewItem({
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       price: 0,
-      category: "",
-      available: true
-    })
-    setDialogOpen(false)
-    toast.success("Menu item added successfully")
-  }
+      category: '',
+      available: true,
+    });
+    setDialogOpen(false);
+    toast.success('Menu item added successfully');
+  };
 
   const handleEditItem = () => {
-    if (!editingItem) return
+    if (!editingItem) return;
 
-    const updatedItems = items.map(item =>
+    const updatedItems = items.map((item) =>
       item.id === editingItem.id ? editingItem : item
-    )
+    );
 
-    setItems(updatedItems)
-    setEditingItem(null)
-    toast.success("Menu item updated successfully")
-  }
+    setItems(updatedItems);
+    setEditingItem(null);
+    toast.success('Menu item updated successfully');
+  };
 
-  const handleDeleteItem = id => {
-    setItems(items.filter(item => item.id !== id))
-    toast.success("Menu item deleted successfully")
-  }
+  const handleDeleteItem = (id) => {
+    setItems(items.filter((item) => item.id !== id));
+    toast.success('Menu item deleted successfully');
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -160,7 +160,7 @@ const MenuManagement = () => {
                 <Input
                   id="name"
                   value={newItem.name}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewItem({ ...newItem, name: e.target.value })
                   }
                   className="col-span-3"
@@ -173,7 +173,7 @@ const MenuManagement = () => {
                 <Input
                   id="description"
                   value={newItem.description}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewItem({ ...newItem, description: e.target.value })
                   }
                   className="col-span-3"
@@ -187,10 +187,10 @@ const MenuManagement = () => {
                   id="price"
                   type="number"
                   value={newItem.price}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewItem({
                       ...newItem,
-                      price: parseFloat(e.target.value)
+                      price: parseFloat(e.target.value),
                     })
                   }
                   className="col-span-3"
@@ -203,7 +203,7 @@ const MenuManagement = () => {
                 <Input
                   id="category"
                   value={newItem.category}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewItem({ ...newItem, category: e.target.value })
                   }
                   className="col-span-3"
@@ -216,7 +216,7 @@ const MenuManagement = () => {
                 <Switch
                   id="available"
                   checked={newItem.available}
-                  onCheckedChange={checked =>
+                  onCheckedChange={(checked) =>
                     setNewItem({ ...newItem, available: checked })
                   }
                 />
@@ -235,7 +235,7 @@ const MenuManagement = () => {
       <Tabs defaultValue="all" className="w-full">
         <TabsList>
           <TabsTrigger value="all">All Items</TabsTrigger>
-          {categories.map(category => (
+          {categories.map((category) => (
             <TabsTrigger key={category} value={category}>
               {category}
             </TabsTrigger>
@@ -244,7 +244,7 @@ const MenuManagement = () => {
 
         <TabsContent value="all" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map(item => (
+            {items.map((item) => (
               <Card key={item.id}>
                 <CardHeader>
                   <CardTitle>{item.name}</CardTitle>
@@ -255,8 +255,8 @@ const MenuManagement = () => {
                     <span className="font-bold text-lg">
                       ₱{item.price.toFixed(2)}
                     </span>
-                    <Badge variant={item.available ? "outline" : "destructive"}>
-                      {item.available ? "Available" : "Unavailable"}
+                    <Badge variant={item.available ? 'outline' : 'destructive'}>
+                      {item.available ? 'Available' : 'Unavailable'}
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
@@ -284,12 +284,12 @@ const MenuManagement = () => {
           </div>
         </TabsContent>
 
-        {categories.map(category => (
+        {categories.map((category) => (
           <TabsContent key={category} value={category} className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {items
-                .filter(item => item.category === category)
-                .map(item => (
+                .filter((item) => item.category === category)
+                .map((item) => (
                   <Card key={item.id}>
                     <CardHeader>
                       <CardTitle>{item.name}</CardTitle>
@@ -301,9 +301,9 @@ const MenuManagement = () => {
                           ₱{item.price.toFixed(2)}
                         </span>
                         <Badge
-                          variant={item.available ? "outline" : "destructive"}
+                          variant={item.available ? 'outline' : 'destructive'}
                         >
-                          {item.available ? "Available" : "Unavailable"}
+                          {item.available ? 'Available' : 'Unavailable'}
                         </Badge>
                       </div>
                     </CardContent>
@@ -334,7 +334,7 @@ const MenuManagement = () => {
       {editingItem && (
         <Dialog
           open={!!editingItem}
-          onOpenChange={open => !open && setEditingItem(null)}
+          onOpenChange={(open) => !open && setEditingItem(null)}
         >
           <DialogContent>
             <DialogHeader>
@@ -351,7 +351,7 @@ const MenuManagement = () => {
                 <Input
                   id="edit-name"
                   value={editingItem.name}
-                  onChange={e =>
+                  onChange={(e) =>
                     setEditingItem({ ...editingItem, name: e.target.value })
                   }
                   className="col-span-3"
@@ -364,10 +364,10 @@ const MenuManagement = () => {
                 <Input
                   id="edit-description"
                   value={editingItem.description}
-                  onChange={e =>
+                  onChange={(e) =>
                     setEditingItem({
                       ...editingItem,
-                      description: e.target.value
+                      description: e.target.value,
                     })
                   }
                   className="col-span-3"
@@ -381,10 +381,10 @@ const MenuManagement = () => {
                   id="edit-price"
                   type="number"
                   value={editingItem.price}
-                  onChange={e =>
+                  onChange={(e) =>
                     setEditingItem({
                       ...editingItem,
-                      price: parseFloat(e.target.value)
+                      price: parseFloat(e.target.value),
                     })
                   }
                   className="col-span-3"
@@ -397,7 +397,7 @@ const MenuManagement = () => {
                 <Input
                   id="edit-category"
                   value={editingItem.category}
-                  onChange={e =>
+                  onChange={(e) =>
                     setEditingItem({ ...editingItem, category: e.target.value })
                   }
                   className="col-span-3"
@@ -410,7 +410,7 @@ const MenuManagement = () => {
                 <Switch
                   id="edit-available"
                   checked={editingItem.available}
-                  onCheckedChange={checked =>
+                  onCheckedChange={(checked) =>
                     setEditingItem({ ...editingItem, available: checked })
                   }
                 />
@@ -426,7 +426,7 @@ const MenuManagement = () => {
         </Dialog>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default MenuManagement
+export default MenuManagement;

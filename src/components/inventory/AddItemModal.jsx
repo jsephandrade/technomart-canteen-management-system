@@ -1,24 +1,24 @@
-import React from "react"
+import React from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from "@/components/ui/select"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+  SelectValue,
+} from '@/components/ui/select';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
   const {
@@ -26,30 +26,30 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
-  } = useForm()
+    formState: { errors },
+  } = useForm();
 
   const categories = [
-    "Grains",
-    "Meat",
-    "Vegetables",
-    "Dairy",
-    "Condiments",
-    "Baking",
-    "Fruits"
-  ]
+    'Grains',
+    'Meat',
+    'Vegetables',
+    'Dairy',
+    'Condiments',
+    'Baking',
+    'Fruits',
+  ];
 
-  const onSubmit = data => {
-    onAddItem(data)
-    reset()
-    onOpenChange(false)
-    toast.success(`${data.name} has been added to inventory`)
-  }
+  const onSubmit = (data) => {
+    onAddItem(data);
+    reset();
+    onOpenChange(false);
+    toast.success(`${data.name} has been added to inventory`);
+  };
 
   const handleCancel = () => {
-    reset()
-    onOpenChange(false)
-  }
+    reset();
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -66,7 +66,7 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
               <Label htmlFor="name">Item Name</Label>
               <Input
                 id="name"
-                {...register("name", { required: "Item name is required" })}
+                {...register('name', { required: 'Item name is required' })}
                 placeholder="e.g., Rice"
               />
               {errors.name && (
@@ -77,12 +77,12 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
             </div>
             <div>
               <Label htmlFor="category">Category</Label>
-              <Select onValueChange={value => setValue("category", value)}>
+              <Select onValueChange={(value) => setValue('category', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map(category => (
+                  {categories.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
@@ -97,9 +97,9 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
               <Input
                 id="currentStock"
                 type="number"
-                {...register("currentStock", {
-                  required: "Current stock is required",
-                  min: { value: 0, message: "Stock cannot be negative" }
+                {...register('currentStock', {
+                  required: 'Current stock is required',
+                  min: { value: 0, message: 'Stock cannot be negative' },
                 })}
                 placeholder="0"
               />
@@ -114,9 +114,9 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
               <Input
                 id="minThreshold"
                 type="number"
-                {...register("minThreshold", {
-                  required: "Minimum threshold is required",
-                  min: { value: 0, message: "Threshold cannot be negative" }
+                {...register('minThreshold', {
+                  required: 'Minimum threshold is required',
+                  min: { value: 0, message: 'Threshold cannot be negative' },
                 })}
                 placeholder="0"
               />
@@ -132,7 +132,7 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
               <Label htmlFor="unit">Unit</Label>
               <Input
                 id="unit"
-                {...register("unit", { required: "Unit is required" })}
+                {...register('unit', { required: 'Unit is required' })}
                 placeholder="e.g., kg, pieces, bottles"
               />
               {errors.unit && (
@@ -145,7 +145,7 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
               <Label htmlFor="supplier">Supplier</Label>
               <Input
                 id="supplier"
-                {...register("supplier", { required: "Supplier is required" })}
+                {...register('supplier', { required: 'Supplier is required' })}
                 placeholder="e.g., Global Foods"
               />
               {errors.supplier && (
@@ -164,7 +164,7 @@ const AddItemModal = ({ open, onOpenChange, onAddItem }) => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddItemModal
+export default AddItemModal;

@@ -1,73 +1,73 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
-import CateringMenuSelection from "./CateringMenuSelection"
-import CurrentCateringOrder from "./CurrentCateringOrder"
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
+import CateringMenuSelection from './CateringMenuSelection';
+import CurrentCateringOrder from './CurrentCateringOrder';
 
 export const MenuItemsModal = ({
   open,
   onOpenChange,
   event,
   menuItems,
-  onUpdateMenuItems
+  onUpdateMenuItems,
 }) => {
-  const [selectedItems, setSelectedItems] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [activeCategory, setActiveCategory] = useState("1")
-  const [paymentType, setPaymentType] = useState("downpayment")
-  const [amountPaid, setAmountPaid] = useState("")
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('1');
+  const [paymentType, setPaymentType] = useState('downpayment');
+  const [amountPaid, setAmountPaid] = useState('');
 
   // Sample categories - same as POS
   const categories = [
     {
-      id: "1",
-      name: "Noodles",
-      items: menuItems.filter(item => item.category === "Noodles")
+      id: '1',
+      name: 'Noodles',
+      items: menuItems.filter((item) => item.category === 'Noodles'),
     },
     {
-      id: "2",
-      name: "Sandwich",
-      items: menuItems.filter(item => item.category === "Sandwich")
+      id: '2',
+      name: 'Sandwich',
+      items: menuItems.filter((item) => item.category === 'Sandwich'),
     },
     {
-      id: "3",
-      name: "Main Dish",
-      items: menuItems.filter(item => item.category === "Main Dish")
+      id: '3',
+      name: 'Main Dish',
+      items: menuItems.filter((item) => item.category === 'Main Dish'),
     },
     {
-      id: "4",
-      name: "Viand",
-      items: menuItems.filter(item => item.category === "Viand")
+      id: '4',
+      name: 'Viand',
+      items: menuItems.filter((item) => item.category === 'Viand'),
     },
     {
-      id: "5",
-      name: "Drinks",
-      items: menuItems.filter(item => item.category === "Drinks")
+      id: '5',
+      name: 'Drinks',
+      items: menuItems.filter((item) => item.category === 'Drinks'),
     },
     {
-      id: "6",
-      name: "Combo Meals",
-      items: menuItems.filter(item => item.category === "Combo Meals")
-    }
-  ]
+      id: '6',
+      name: 'Combo Meals',
+      items: menuItems.filter((item) => item.category === 'Combo Meals'),
+    },
+  ];
 
-  const addToOrder = menuItem => {
-    setSelectedItems(prevItems => {
+  const addToOrder = (menuItem) => {
+    setSelectedItems((prevItems) => {
       const existingItemIndex = prevItems.findIndex(
-        item => item.menuItemId === menuItem.id
-      )
+        (item) => item.menuItemId === menuItem.id
+      );
 
       if (existingItemIndex !== -1) {
-        const updatedItems = [...prevItems]
-        updatedItems[existingItemIndex].quantity += 1
-        return updatedItems
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex].quantity += 1;
+        return updatedItems;
       } else {
         return [
           ...prevItems,
@@ -76,73 +76,75 @@ export const MenuItemsModal = ({
             menuItemId: menuItem.id,
             name: menuItem.name,
             price: menuItem.price,
-            quantity: 1
-          }
-        ]
+            quantity: 1,
+          },
+        ];
       }
-    })
-  }
+    });
+  };
 
   const updateQuantity = (itemId, change) => {
-    setSelectedItems(prevItems => {
+    setSelectedItems((prevItems) => {
       return prevItems
-        .map(item => {
+        .map((item) => {
           if (item.id === itemId) {
-            const newQuantity = item.quantity + change
-            return newQuantity > 0 ? { ...item, quantity: newQuantity } : item
+            const newQuantity = item.quantity + change;
+            return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
           }
-          return item
+          return item;
         })
-        .filter(item => item.quantity > 0)
-    })
-  }
+        .filter((item) => item.quantity > 0);
+    });
+  };
 
-  const removeItem = itemId => {
-    setSelectedItems(prevItems => prevItems.filter(item => item.id !== itemId))
-  }
+  const removeItem = (itemId) => {
+    setSelectedItems((prevItems) =>
+      prevItems.filter((item) => item.id !== itemId)
+    );
+  };
 
   const clearOrder = () => {
-    setSelectedItems([])
-    setAmountPaid("")
-  }
+    setSelectedItems([]);
+    setAmountPaid('');
+  };
 
   const calculateSubtotal = () => {
     return selectedItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
-    )
-  }
+    );
+  };
 
   const calculateDownpayment = () => {
-    return calculateSubtotal() * 0.5
-  }
+    return calculateSubtotal() * 0.5;
+  };
 
   const calculateBalance = () => {
-    const subtotal = calculateSubtotal()
-    const paidAmount = parseFloat(amountPaid) || 0
+    const subtotal = calculateSubtotal();
+    const paidAmount = parseFloat(amountPaid) || 0;
 
-    if (paymentType === "full") {
-      return subtotal - paidAmount
+    if (paymentType === 'full') {
+      return subtotal - paidAmount;
     } else {
-      return subtotal - paidAmount
+      return subtotal - paidAmount;
     }
-  }
+  };
 
   const handleSave = () => {
     if (event) {
-      const eventMenuItems = selectedItems.map(item => ({
+      const eventMenuItems = selectedItems.map((item) => ({
         menuItemId: item.menuItemId,
         quantity: item.quantity,
-        price: item.price * item.quantity
-      }))
+        price: item.price * item.quantity,
+      }));
 
-      onUpdateMenuItems(event.id, eventMenuItems)
-      onOpenChange(false)
-      clearOrder()
+      onUpdateMenuItems(event.id, eventMenuItems);
+      onOpenChange(false);
+      clearOrder();
     }
-  }
+  };
 
-  if (!event) return null
+  if (!event) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -201,5 +203,5 @@ export const MenuItemsModal = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

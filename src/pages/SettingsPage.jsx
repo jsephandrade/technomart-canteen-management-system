@@ -1,17 +1,17 @@
-import React from "react"
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Separator } from "@/components/ui/separator"
-import { Settings, User, Bell, Shield } from "lucide-react"
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Settings, User, Bell, Shield } from 'lucide-react';
 const SettingsPage = () => {
   return (
     <div className="space-y-6">
@@ -148,6 +148,6 @@ const SettingsPage = () => {
         {/* Appearance Settings */}
       </div>
     </div>
-  )
-}
-export default SettingsPage
+  );
+};
+export default SettingsPage;

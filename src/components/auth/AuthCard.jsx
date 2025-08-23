@@ -1,7 +1,7 @@
-import React, { useId } from "react";
-import PropTypes from "prop-types";
+import React, { useId } from 'react';
+import PropTypes from 'prop-types';
 
-const AuthCard = ({ title, children, className = "", ...rest }) => {
+const AuthCard = ({ title, children, className = '', ...rest }) => {
   const headingId = useId();
 
   return (
@@ -25,7 +25,7 @@ const AuthCard = ({ title, children, className = "", ...rest }) => {
 AuthCard.propTypes = {
   title: PropTypes.node,
   children: PropTypes.node,
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default AuthCard;

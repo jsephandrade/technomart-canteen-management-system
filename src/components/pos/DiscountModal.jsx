@@ -1,15 +1,15 @@
-import React from "react"
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Percent, DollarSign, X } from "lucide-react"
+  CardFooter,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Percent, DollarSign, X } from 'lucide-react';
 
 const DiscountModal = ({
   isOpen,
@@ -19,30 +19,30 @@ const DiscountModal = ({
   discountType,
   setDiscountType,
   onApplyDiscount,
-  calculateSubtotal
+  calculateSubtotal,
 }) => {
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleClose = () => {
-    onClose()
-    setDiscountInput("")
-  }
+    onClose();
+    setDiscountInput('');
+  };
 
   // ---- Derived values for the preview (avoid JSX IIFEs) ----
-  const subtotal = calculateSubtotal()
-  const discountValue = parseFloat(discountInput) || 0
+  const subtotal = calculateSubtotal();
+  const discountValue = parseFloat(discountInput) || 0;
 
   // Clamp percentage to [0, 100] for safety
-  const pct = Math.max(0, Math.min(100, discountValue))
+  const pct = Math.max(0, Math.min(100, discountValue));
 
   const discountAmount =
-    discountInput === ""
+    discountInput === ''
       ? 0
-      : discountType === "percentage"
-      ? (subtotal * pct) / 100
-      : Math.min(discountValue, subtotal)
+      : discountType === 'percentage'
+        ? (subtotal * pct) / 100
+        : Math.min(discountValue, subtotal);
 
-  const total = Math.max(0, subtotal - discountAmount)
+  const total = Math.max(0, subtotal - discountAmount);
 
   return (
     <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
@@ -66,11 +66,11 @@ const DiscountModal = ({
           <div className="flex gap-2">
             <button
               className={`flex-1 p-3 rounded-md border text-sm ${
-                discountType === "percentage"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-transparent"
+                discountType === 'percentage'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-transparent'
               }`}
-              onClick={() => setDiscountType("percentage")}
+              onClick={() => setDiscountType('percentage')}
               type="button"
             >
               <Percent className="h-4 w-4 mx-auto mb-1" />
@@ -78,11 +78,11 @@ const DiscountModal = ({
             </button>
             <button
               className={`flex-1 p-3 rounded-md border text-sm ${
-                discountType === "fixed"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-transparent"
+                discountType === 'fixed'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-transparent'
               }`}
-              onClick={() => setDiscountType("fixed")}
+              onClick={() => setDiscountType('fixed')}
               type="button"
             >
               <DollarSign className="h-4 w-4 mx-auto mb-1" />
@@ -94,14 +94,14 @@ const DiscountModal = ({
             <Input
               type="number"
               placeholder={
-                discountType === "percentage"
-                  ? "Enter percentage (0-100)"
-                  : "Enter amount (₱)"
+                discountType === 'percentage'
+                  ? 'Enter percentage (0-100)'
+                  : 'Enter amount (₱)'
               }
               value={discountInput}
-              onChange={e => setDiscountInput(e.target.value)}
+              onChange={(e) => setDiscountInput(e.target.value)}
               min="0"
-              max={discountType === "percentage" ? "100" : undefined}
+              max={discountType === 'percentage' ? '100' : undefined}
             />
           </div>
 
@@ -131,7 +131,7 @@ const DiscountModal = ({
         </CardFooter>
       </Card>
     </div>
-  )
-}
+  );
+};
 
 export default DiscountModal;

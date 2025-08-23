@@ -1,17 +1,17 @@
-import React from "react"
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ShoppingCart, Plus, Minus, Trash2, DollarSign } from "lucide-react"
+  CardFooter,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ShoppingCart, Plus, Minus, Trash2, DollarSign } from 'lucide-react';
 
 const CurrentCateringOrder = ({
   selectedItems,
@@ -24,13 +24,13 @@ const CurrentCateringOrder = ({
   onAmountPaidChange,
   calculateSubtotal,
   calculateDownpayment,
-  calculateBalance
+  calculateBalance,
 }) => {
-  const subtotal = calculateSubtotal()
-  const downpayment = calculateDownpayment()
-  const expectedAmount = paymentType === "full" ? subtotal : downpayment
-  const paidAmount = parseFloat(amountPaid) || 0
-  const balance = calculateBalance()
+  const subtotal = calculateSubtotal();
+  const downpayment = calculateDownpayment();
+  const expectedAmount = paymentType === 'full' ? subtotal : downpayment;
+  const paidAmount = parseFloat(amountPaid) || 0;
+  const balance = calculateBalance();
 
   return (
     <Card className="h-full flex flex-col">
@@ -45,7 +45,7 @@ const CurrentCateringOrder = ({
         {selectedItems.length > 0 ? (
           <>
             <div className="space-y-3">
-              {selectedItems.map(item => (
+              {selectedItems.map((item) => (
                 <div
                   key={item.id}
                   className="flex justify-between items-start p-2 border rounded-md"
@@ -97,7 +97,7 @@ const CurrentCateringOrder = ({
                 <Label className="text-base font-medium">Payment Options</Label>
                 <RadioGroup
                   value={paymentType}
-                  onValueChange={value => onPaymentTypeChange(value)}
+                  onValueChange={(value) => onPaymentTypeChange(value)}
                   className="mt-2"
                 >
                   <div className="flex items-center space-x-2">
@@ -124,7 +124,7 @@ const CurrentCateringOrder = ({
                     type="number"
                     placeholder="0.00"
                     value={amountPaid}
-                    onChange={e => onAmountPaidChange(e.target.value)}
+                    onChange={(e) => onAmountPaidChange(e.target.value)}
                     className="pl-8"
                     min="0"
                     step="0.01"
@@ -141,9 +141,9 @@ const CurrentCateringOrder = ({
                 <div className="flex justify-between text-sm">
                   <span>
                     Required (
-                    {paymentType === "full"
-                      ? "Full Payment"
-                      : "50% Down Payment"}
+                    {paymentType === 'full'
+                      ? 'Full Payment'
+                      : '50% Down Payment'}
                     ):
                   </span>
                   <span>₱{expectedAmount.toFixed(2)}</span>
@@ -153,8 +153,8 @@ const CurrentCateringOrder = ({
                   <span
                     className={
                       paidAmount >= expectedAmount
-                        ? "text-green-600"
-                        : "text-red-600"
+                        ? 'text-green-600'
+                        : 'text-red-600'
                     }
                   >
                     ₱{paidAmount.toFixed(2)}
@@ -163,7 +163,7 @@ const CurrentCateringOrder = ({
                 <div className="flex justify-between font-semibold pt-2 border-t">
                   <span>Balance:</span>
                   <span
-                    className={balance <= 0 ? "text-green-600" : "text-red-600"}
+                    className={balance <= 0 ? 'text-green-600' : 'text-red-600'}
                   >
                     ₱{balance.toFixed(2)}
                   </span>
@@ -191,7 +191,7 @@ const CurrentCateringOrder = ({
         </CardFooter>
       )}
     </Card>
-  )
-}
+  );
+};
 
-export default CurrentCateringOrder
+export default CurrentCateringOrder;

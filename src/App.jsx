@@ -1,33 +1,33 @@
-import { Toaster } from "@/components/ui/toaster"
-import { Toaster as Sonner } from "@/components/ui/sonner"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Index from "./pages/Index"
-import NotFound from "./pages/NotFound"
-import HelpPage from "./pages/HelpPage"
-import SettingsPage from "./pages/SettingsPage"
-import MainLayout from "./layouts/MainLayout"
-import MenuManagement from "./components/MenuManagement"
-import SalesAnalytics from "./components/SalesAnalytics"
-import EmployeeSchedule from "./components/EmployeeSchedule"
-import CustomerFeedback from "./components/CustomerFeedback"
-import POS from "./components/POS"
-import Catering from "./components/Catering"
-import Inventory from "./components/Inventory"
-import Payments from "./components/Payments"
-import Users from "./components/Users"
-import UserLogs from "./components/UserLogs"
-import Notifications from "./components/Notifications"
-import { AuthProvider, useAuth } from "./components/AuthContext"
-import LoginPage from "./pages/LoginPage"
-import SignupPage from "./pages/SignupPage"
+import { Toaster } from '@/components/ui/toaster';
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Index from './pages/Index';
+import NotFound from './pages/NotFound';
+import HelpPage from './pages/HelpPage';
+import SettingsPage from './pages/SettingsPage';
+import MainLayout from './layouts/MainLayout';
+import MenuManagement from './components/MenuManagement';
+import SalesAnalytics from './components/SalesAnalytics';
+import EmployeeSchedule from './components/EmployeeSchedule';
+import CustomerFeedback from './components/CustomerFeedback';
+import POS from './components/POS';
+import Catering from './components/Catering';
+import Inventory from './components/Inventory';
+import Payments from './components/Payments';
+import Users from './components/Users';
+import UserLogs from './components/UserLogs';
+import Notifications from './components/Notifications';
+import { AuthProvider, useAuth } from './components/AuthContext';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 // Wrapper for protected routes
 const ProtectedRoutes = () => {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   return (
     <BrowserRouter>
@@ -150,8 +150,8 @@ const ProtectedRoutes = () => {
         )}
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -163,6 +163,6 @@ const App = () => (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
-)
+);
 
-export default App
+export default App;

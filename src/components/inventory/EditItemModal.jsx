@@ -1,24 +1,24 @@
-import React, { useEffect } from "react"
+import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from "@/components/ui/select"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+  SelectValue,
+} from '@/components/ui/select';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
   const {
@@ -26,46 +26,46 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
-  } = useForm()
+    formState: { errors },
+  } = useForm();
 
   const categories = [
-    "Grains",
-    "Meat",
-    "Vegetables",
-    "Dairy",
-    "Condiments",
-    "Baking",
-    "Fruits"
-  ]
+    'Grains',
+    'Meat',
+    'Vegetables',
+    'Dairy',
+    'Condiments',
+    'Baking',
+    'Fruits',
+  ];
 
   useEffect(() => {
     if (item) {
-      reset(item)
-      setValue("category", item.category)
+      reset(item);
+      setValue('category', item.category);
     }
-  }, [item, reset, setValue])
+  }, [item, reset, setValue]);
 
-  const onSubmit = data => {
-    if (!item) return
+  const onSubmit = (data) => {
+    if (!item) return;
 
     const updatedItem = {
       ...data,
       id: item.id,
-      lastUpdated: new Date().toISOString().split("T")[0]
-    }
+      lastUpdated: new Date().toISOString().split('T')[0],
+    };
 
-    onEditItem(updatedItem)
-    onOpenChange(false)
-    toast.success(`${data.name} has been updated`)
-  }
+    onEditItem(updatedItem);
+    onOpenChange(false);
+    toast.success(`${data.name} has been updated`);
+  };
 
   const handleCancel = () => {
-    reset()
-    onOpenChange(false)
-  }
+    reset();
+    onOpenChange(false);
+  };
 
-  if (!item) return null
+  if (!item) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -82,7 +82,7 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
               <Label htmlFor="name">Item Name</Label>
               <Input
                 id="name"
-                {...register("name", { required: "Item name is required" })}
+                {...register('name', { required: 'Item name is required' })}
               />
               {errors.name && (
                 <span className="text-sm text-destructive">
@@ -94,13 +94,13 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
               <Label htmlFor="category">Category</Label>
               <Select
                 defaultValue={item.category}
-                onValueChange={value => setValue("category", value)}
+                onValueChange={(value) => setValue('category', value)}
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map(category => (
+                  {categories.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
@@ -115,9 +115,9 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
               <Input
                 id="currentStock"
                 type="number"
-                {...register("currentStock", {
-                  required: "Current stock is required",
-                  min: { value: 0, message: "Stock cannot be negative" }
+                {...register('currentStock', {
+                  required: 'Current stock is required',
+                  min: { value: 0, message: 'Stock cannot be negative' },
                 })}
               />
               {errors.currentStock && (
@@ -131,9 +131,9 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
               <Input
                 id="minThreshold"
                 type="number"
-                {...register("minThreshold", {
-                  required: "Minimum threshold is required",
-                  min: { value: 0, message: "Threshold cannot be negative" }
+                {...register('minThreshold', {
+                  required: 'Minimum threshold is required',
+                  min: { value: 0, message: 'Threshold cannot be negative' },
                 })}
               />
               {errors.minThreshold && (
@@ -148,7 +148,7 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
               <Label htmlFor="unit">Unit</Label>
               <Input
                 id="unit"
-                {...register("unit", { required: "Unit is required" })}
+                {...register('unit', { required: 'Unit is required' })}
               />
               {errors.unit && (
                 <span className="text-sm text-destructive">
@@ -160,7 +160,7 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
               <Label htmlFor="supplier">Supplier</Label>
               <Input
                 id="supplier"
-                {...register("supplier", { required: "Supplier is required" })}
+                {...register('supplier', { required: 'Supplier is required' })}
               />
               {errors.supplier && (
                 <span className="text-sm text-destructive">
@@ -178,7 +178,7 @@ const EditItemModal = ({ open, onOpenChange, item, onEditItem }) => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default EditItemModal
+export default EditItemModal;

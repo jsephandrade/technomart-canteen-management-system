@@ -1,39 +1,39 @@
-import React, { useState } from "react"
-import { useAuth } from "@/components/AuthContext"
-import { useNavigate } from "react-router-dom"
-import Header from "@/components/auth/Header"
-import HeroImage from "@/components/auth/HeroImage"
+import React, { useState } from 'react';
+import { useAuth } from '@/components/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import Header from '@/components/auth/Header';
+import HeroImage from '@/components/auth/HeroImage';
 
 const SignupPage = () => {
-  const { socialLogin } = useAuth()
-  const navigate = useNavigate()
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [contactNumber, setContactNumber] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [pending, setPending] = useState(false)
+  const { socialLogin } = useAuth();
+  const navigate = useNavigate();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [pending, setPending] = useState(false);
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setPending(true)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPending(true);
 
     // Simulated signup - just pretend it worked
     setTimeout(() => {
       // After "signup", navigate to login page
-      navigate("/login")
+      navigate('/login');
       // Optionally show a success message
-      alert("Account created successfully! Please log in.")
-    }, 1000)
+      alert('Account created successfully! Please log in.');
+    }, 1000);
 
-    setPending(false)
-  }
+    setPending(false);
+  };
 
-  const handleSocial = async provider => {
-    setPending(true)
-    await socialLogin(provider)
-    setPending(false)
-  }
+  const handleSocial = async (provider) => {
+    setPending(true);
+    await socialLogin(provider);
+    setPending(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -41,7 +41,6 @@ const SignupPage = () => {
 
       <main className="flex-1 flex flex-col md:flex-row items-center px-4 md:px-6 gap-8 max-w-7xl mx-auto w-full py-8">
         <div className="w-full md:w-1/2 flex flex-col gap-6 max-w-lg order-2 md:order-1">
-
           <div className="w-full max-w-md mx-auto md:mx-0">
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Create Account</h3>
@@ -50,7 +49,7 @@ const SignupPage = () => {
                   <input
                     type="text"
                     value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
+                    onChange={(e) => setFirstName(e.target.value)}
                     placeholder="First Name"
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                     required
@@ -58,7 +57,7 @@ const SignupPage = () => {
                   <input
                     type="text"
                     value={lastName}
-                    onChange={e => setLastName(e.target.value)}
+                    onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                     required
@@ -67,7 +66,7 @@ const SignupPage = () => {
                 <input
                   type="tel"
                   value={contactNumber}
-                  onChange={e => setContactNumber(e.target.value)}
+                  onChange={(e) => setContactNumber(e.target.value)}
                   placeholder="Contact Number"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   required
@@ -75,7 +74,7 @@ const SignupPage = () => {
                 <input
                   type="email"
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   required
@@ -83,7 +82,7 @@ const SignupPage = () => {
                 <input
                   type="password"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   required
@@ -93,7 +92,7 @@ const SignupPage = () => {
                   disabled={pending}
                   className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300"
                 >
-                  {pending ? "Processing..." : "Sign Up"}
+                  {pending ? 'Processing...' : 'Sign Up'}
                 </button>
               </form>
 
@@ -111,7 +110,7 @@ const SignupPage = () => {
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => handleSocial("google")}
+                  onClick={() => handleSocial('google')}
                   className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   disabled={pending}
                 >
@@ -141,7 +140,7 @@ const SignupPage = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleSocial("facebook")}
+                  onClick={() => handleSocial('facebook')}
                   className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   disabled={pending}
                 >
@@ -158,7 +157,7 @@ const SignupPage = () => {
 
               <div className="mt-6 text-center">
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate('/login')}
                   className="text-primary hover:text-primary-dark text-sm font-medium"
                   type="button"
                 >
@@ -168,10 +167,10 @@ const SignupPage = () => {
             </div>
           </div>
         </div>
-          <HeroImage src="/images/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" />   
+        <HeroImage src="/images/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" />
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default SignupPage
+export default SignupPage;

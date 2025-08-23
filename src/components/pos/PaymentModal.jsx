@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { X, Delete } from "lucide-react"
+  CardFooter,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { X, Delete } from 'lucide-react';
 
 const PaymentModal = ({
   isOpen,
@@ -19,61 +19,61 @@ const PaymentModal = ({
   onProcessPayment,
   calculateSubtotal,
   calculateDiscountAmount,
-  calculateTotal
+  calculateTotal,
 }) => {
-  const [paymentAmount, setPaymentAmount] = useState("")
-  const [change, setChange] = useState(0)
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [change, setChange] = useState(0);
 
-  const totalAmount = calculateTotal()
+  const totalAmount = calculateTotal();
 
   useEffect(() => {
-    const payment = parseFloat(paymentAmount) || 0
-    const calculatedChange = payment - totalAmount
-    setChange(calculatedChange >= 0 ? calculatedChange : 0)
-  }, [paymentAmount, totalAmount])
+    const payment = parseFloat(paymentAmount) || 0;
+    const calculatedChange = payment - totalAmount;
+    setChange(calculatedChange >= 0 ? calculatedChange : 0);
+  }, [paymentAmount, totalAmount]);
 
-  const handlePaymentAmountChange = e => {
-    const value = e.target.value
+  const handlePaymentAmountChange = (e) => {
+    const value = e.target.value;
     // Only allow numbers and decimal point
     if (/^\d*\.?\d*$/.test(value)) {
-      setPaymentAmount(value)
+      setPaymentAmount(value);
     }
-  }
+  };
 
-  const handleNumberClick = number => {
-    if (number === "." && paymentAmount.includes(".")) return
-    setPaymentAmount(prev => prev + number)
-  }
+  const handleNumberClick = (number) => {
+    if (number === '.' && paymentAmount.includes('.')) return;
+    setPaymentAmount((prev) => prev + number);
+  };
 
   const handleClear = () => {
-    setPaymentAmount("")
-  }
+    setPaymentAmount('');
+  };
 
   const handleBackspace = () => {
-    setPaymentAmount(prev => prev.slice(0, -1))
-  }
+    setPaymentAmount((prev) => prev.slice(0, -1));
+  };
 
   const isPaymentValid = () => {
-    const payment = parseFloat(paymentAmount) || 0
-    return payment >= totalAmount
-  }
+    const payment = parseFloat(paymentAmount) || 0;
+    return payment >= totalAmount;
+  };
 
   const handleProcessPayment = () => {
     if (isPaymentValid()) {
-      onProcessPayment()
-      setPaymentAmount("")
-      setChange(0)
+      onProcessPayment();
+      setPaymentAmount('');
+      setChange(0);
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const numberButtons = [
-    ["1", "2", "3"],
-    ["4", "5", "6"],
-    ["7", "8", "9"],
-    ["C", "0", "."]
-  ]
+    ['1', '2', '3'],
+    ['4', '5', '6'],
+    ['7', '8', '9'],
+    ['C', '0', '.'],
+  ];
 
   return (
     <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
@@ -120,16 +120,16 @@ const PaymentModal = ({
             {/* Number Keyboard */}
             <div className="grid grid-cols-3 gap-2">
               {numberButtons.map((row, rowIndex) =>
-                row.map(button => (
+                row.map((button) => (
                   <Button
                     key={`${rowIndex}-${button}`}
                     variant="outline"
                     className="h-12 text-lg font-semibold"
                     onClick={() => {
-                      if (button === "C") {
-                        handleClear()
+                      if (button === 'C') {
+                        handleClear();
                       } else {
-                        handleNumberClick(button)
+                        handleNumberClick(button);
                       }
                     }}
                   >
@@ -168,7 +168,7 @@ const PaymentModal = ({
         </CardFooter>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default PaymentModal
+export default PaymentModal;

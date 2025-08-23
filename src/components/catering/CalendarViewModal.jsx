@@ -1,44 +1,44 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog"
-import { Calendar } from "@/components/ui/calendar"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarDays, Clock, Users, MapPin, X } from "lucide-react"
-import { format, isSameDay, parseISO } from "date-fns"
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Calendar } from '@/components/ui/calendar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CalendarDays, Clock, Users, MapPin, X } from 'lucide-react';
+import { format, isSameDay, parseISO } from 'date-fns';
 
 export const CalendarViewModal = ({ open, onOpenChange, events }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const getEventsForDate = date => {
-    return events.filter(event => isSameDay(parseISO(event.date), date))
-  }
+  const getEventsForDate = (date) => {
+    return events.filter((event) => isSameDay(parseISO(event.date), date));
+  };
 
-  const hasEventsOnDate = date => {
-    return events.some(event => isSameDay(parseISO(event.date), date))
-  }
+  const hasEventsOnDate = (date) => {
+    return events.some((event) => isSameDay(parseISO(event.date), date));
+  };
 
-  const selectedDateEvents = selectedDate ? getEventsForDate(selectedDate) : []
+  const selectedDateEvents = selectedDate ? getEventsForDate(selectedDate) : [];
 
-  const getStatusBadgeVariant = status => {
+  const getStatusBadgeVariant = (status) => {
     switch (status) {
-      case "scheduled":
-        return "outline"
-      case "in-progress":
-        return "default"
-      case "completed":
-        return "secondary"
-      case "cancelled":
-        return "destructive"
+      case 'scheduled':
+        return 'outline';
+      case 'in-progress':
+        return 'default';
+      case 'completed':
+        return 'secondary';
+      case 'cancelled':
+        return 'destructive';
       default:
-        return "outline"
+        return 'outline';
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,7 +46,6 @@ export const CalendarViewModal = ({ open, onOpenChange, events }) => {
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Catering Events Calendar</span>
-            
           </DialogTitle>
         </DialogHeader>
 
@@ -60,10 +59,10 @@ export const CalendarViewModal = ({ open, onOpenChange, events }) => {
               onSelect={setSelectedDate}
               className="rounded-md border p-3 pointer-events-auto"
               modifiers={{
-                hasEvents: date => hasEventsOnDate(date)
+                hasEvents: (date) => hasEventsOnDate(date),
               }}
               modifiersClassNames={{
-                hasEvents: "bg-primary/10 text-primary font-semibold"
+                hasEvents: 'bg-primary/10 text-primary font-semibold',
               }}
             />
             <div className="text-sm text-muted-foreground">
@@ -80,14 +79,14 @@ export const CalendarViewModal = ({ open, onOpenChange, events }) => {
               <CalendarDays className="h-5 w-5" />
               <h3 className="font-semibold">
                 {selectedDate
-                  ? `Events on ${format(selectedDate, "MMMM d, yyyy")}`
-                  : "Select a date to view events"}
+                  ? `Events on ${format(selectedDate, 'MMMM d, yyyy')}`
+                  : 'Select a date to view events'}
               </h3>
             </div>
 
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {selectedDateEvents.length > 0 ? (
-                selectedDateEvents.map(event => (
+                selectedDateEvents.map((event) => (
                   <Card
                     key={event.id}
                     className="hover:shadow-md transition-shadow"
@@ -101,7 +100,7 @@ export const CalendarViewModal = ({ open, onOpenChange, events }) => {
                           variant={getStatusBadgeVariant(event.status)}
                           className="text-xs"
                         >
-                          {event.status.replace("-", " ")}
+                          {event.status.replace('-', ' ')}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">
@@ -166,5 +165,5 @@ export const CalendarViewModal = ({ open, onOpenChange, events }) => {
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

@@ -1,9 +1,9 @@
 // components/Header.jsx
-import React from "react"
+import React from 'react';
 
 const Header = ({
-  title = "Welcome to TechnoMart",
-  subtitle = "Canteen Management System for CTU-MC Multipurpose Cooperative"
+  title = 'Welcome to TechnoMart',
+  subtitle = 'Canteen Management System for CTU-MC Multipurpose Cooperative',
 }) => {
   return (
     <header className="w-full py-6 px-6 bg-gradient-to-r from-blue-50 to-white">
@@ -14,7 +14,7 @@ const Header = ({
         {subtitle}
       </p>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

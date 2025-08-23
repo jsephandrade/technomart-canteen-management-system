@@ -1,52 +1,52 @@
-import React from "react"
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger
-} from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
-import { Mail } from "lucide-react"
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Mail } from 'lucide-react';
 const HelpPage = () => {
   const faqs = [
     {
-      question: "How do I manage menu items?",
+      question: 'How do I manage menu items?',
       answer:
-        "Navigate to the Menu Management section from the sidebar. You can add, edit, or remove menu items, set prices, and update availability status."
+        'Navigate to the Menu Management section from the sidebar. You can add, edit, or remove menu items, set prices, and update availability status.',
     },
     {
-      question: "How do I process orders in the POS system?",
+      question: 'How do I process orders in the POS system?',
       answer:
-        "Go to the Point of Sale section, select items from the menu, add them to the cart, and process payment. You can handle cash or card transactions."
+        'Go to the Point of Sale section, select items from the menu, add them to the cart, and process payment. You can handle cash or card transactions.',
     },
     {
-      question: "How do I view sales analytics?",
+      question: 'How do I view sales analytics?',
       answer:
-        "The Sales Analytics page provides comprehensive reports on revenue, popular items, and sales trends. Use the date filters to view specific periods."
+        'The Sales Analytics page provides comprehensive reports on revenue, popular items, and sales trends. Use the date filters to view specific periods.',
     },
     {
-      question: "How do I schedule employees?",
+      question: 'How do I schedule employees?',
       answer:
-        "In the Employee Schedule section, you can create shifts, assign employees, and manage work schedules. Employees can view their schedules and request changes."
+        'In the Employee Schedule section, you can create shifts, assign employees, and manage work schedules. Employees can view their schedules and request changes.',
     },
     {
-      question: "How do I manage inventory?",
+      question: 'How do I manage inventory?',
       answer:
-        "The Inventory section allows you to track stock levels, set reorder points, and manage suppliers. You'll receive alerts when items are running low."
+        "The Inventory section allows you to track stock levels, set reorder points, and manage suppliers. You'll receive alerts when items are running low.",
     },
     {
-      question: "How do I handle customer feedback?",
+      question: 'How do I handle customer feedback?',
       answer:
-        "Customer feedback is displayed in the Feedback section. You can view, respond to, and mark feedback as resolved to improve customer satisfaction."
-    }
-  ]
+        'Customer feedback is displayed in the Feedback section. You can view, respond to, and mark feedback as resolved to improve customer satisfaction.',
+    },
+  ];
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <div className="mb-8">
@@ -107,6 +107,6 @@ const HelpPage = () => {
         </CardContent>
       </Card>
     </div>
-  )
-}
-export default HelpPage
+  );
+};
+export default HelpPage;

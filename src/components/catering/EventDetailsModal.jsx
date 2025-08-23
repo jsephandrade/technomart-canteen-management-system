@@ -1,13 +1,13 @@
-import React from "react"
+import React from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CustomBadge } from "@/components/ui/custom-badge"
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CustomBadge } from '@/components/ui/custom-badge';
 import {
   CalendarDays,
   Users,
@@ -15,34 +15,34 @@ import {
   User,
   Phone,
   Banknote,
-  X
-} from "lucide-react"
+  X,
+} from 'lucide-react';
 
 export const EventDetailsModal = ({ open, onOpenChange, event }) => {
-  if (!event) return null
+  if (!event) return null;
 
-  const getStatusBadgeVariant = status => {
+  const getStatusBadgeVariant = (status) => {
     switch (status) {
-      case "scheduled":
-        return "outline"
-      case "in-progress":
-        return "default"
-      case "completed":
-        return "secondary"
-      case "cancelled":
-        return "destructive"
+      case 'scheduled':
+        return 'outline';
+      case 'in-progress':
+        return 'default';
+      case 'completed':
+        return 'secondary';
+      case 'cancelled':
+        return 'destructive';
       default:
-        return "outline"
+        return 'outline';
     }
-  }
+  };
 
-  const getInitials = name => {
+  const getInitials = (name) => {
     return name
-      .split(" ")
-      .map(n => n[0])
-      .join("")
-      .toUpperCase()
-  }
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase();
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -66,7 +66,7 @@ export const EventDetailsModal = ({ open, onOpenChange, event }) => {
                   variant={getStatusBadgeVariant(event.status)}
                   className="capitalize"
                 >
-                  {event.status.replace("-", " ")}
+                  {event.status.replace('-', ' ')}
                 </CustomBadge>
               </div>
             </CardHeader>
@@ -162,5 +162,5 @@ export const EventDetailsModal = ({ open, onOpenChange, event }) => {
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

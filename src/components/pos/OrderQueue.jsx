@@ -1,48 +1,48 @@
-import React from "react"
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Package, Smartphone, Clock, Check } from "lucide-react"
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Package, Smartphone, Clock, Check } from 'lucide-react';
 
 const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
-  const walkInOrders = orderQueue.filter(order => order.type === "walk-in")
-  const onlineOrders = orderQueue.filter(order => order.type === "online")
+  const walkInOrders = orderQueue.filter((order) => order.type === 'walk-in');
+  const onlineOrders = orderQueue.filter((order) => order.type === 'online');
 
-  const formatTimeAgo = date => {
-    const now = new Date()
+  const formatTimeAgo = (date) => {
+    const now = new Date();
     const diffInMinutes = Math.floor(
       (now.getTime() - date.getTime()) / (1000 * 60)
-    )
+    );
 
-    if (diffInMinutes < 1) return "Just now"
-    if (diffInMinutes === 1) return "1 minute ago"
-    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes === 1) return '1 minute ago';
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
 
-    const hours = Math.floor(diffInMinutes / 60)
-    if (hours === 1) return "1 hour ago"
-    return `${hours} hours ago`
-  }
+    const hours = Math.floor(diffInMinutes / 60);
+    if (hours === 1) return '1 hour ago';
+    return `${hours} hours ago`;
+  };
 
-  const getStatusColor = status => {
+  const getStatusColor = (status) => {
     switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
-      case "preparing":
-        return "bg-blue-100 text-blue-800 border-blue-200"
-      case "ready":
-        return "bg-green-100 text-green-800 border-green-200"
-      case "completed":
-        return "bg-gray-100 text-gray-800 border-gray-200"
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'preparing':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'ready':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'completed':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
-  }
+  };
 
   return (
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
@@ -68,7 +68,7 @@ const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
         <CardContent className="p-0">
           {walkInOrders.length > 0 ? (
             <div className="divide-y">
-              {walkInOrders.map(order => (
+              {walkInOrders.map((order) => (
                 <div key={order.id} className="p-4 flex flex-col gap-3">
                   <div className="flex justify-between items-start">
                     <div>
@@ -76,7 +76,7 @@ const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
                         #{order.orderNumber}
                       </h3>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" />{" "}
+                        <Clock className="h-3.5 w-3.5" />{' '}
                         {formatTimeAgo(order.timeReceived)}
                       </p>
                     </div>
@@ -102,32 +102,32 @@ const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
                   </div>
 
                   <div className="flex gap-2">
-                    {order.status === "pending" && (
+                    {order.status === 'pending' && (
                       <Button
                         size="sm"
                         className="flex-1"
-                        onClick={() => updateOrderStatus(order.id, "preparing")}
+                        onClick={() => updateOrderStatus(order.id, 'preparing')}
                       >
                         Start Preparing
                       </Button>
                     )}
 
-                    {order.status === "preparing" && (
+                    {order.status === 'preparing' && (
                       <Button
                         size="sm"
                         className="flex-1"
-                        onClick={() => updateOrderStatus(order.id, "ready")}
+                        onClick={() => updateOrderStatus(order.id, 'ready')}
                       >
                         Mark Ready
                       </Button>
                     )}
 
-                    {order.status === "ready" && (
+                    {order.status === 'ready' && (
                       <Button
                         size="sm"
                         variant="default"
                         className="flex-1 bg-green-600 hover:bg-green-700"
-                        onClick={() => updateOrderStatus(order.id, "completed")}
+                        onClick={() => updateOrderStatus(order.id, 'completed')}
                       >
                         <Check className="h-4 w-4 mr-1" /> Complete Order
                       </Button>
@@ -171,7 +171,7 @@ const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
         <CardContent className="p-0">
           {onlineOrders.length > 0 ? (
             <div className="divide-y">
-              {onlineOrders.map(order => (
+              {onlineOrders.map((order) => (
                 <div key={order.id} className="p-4 flex flex-col gap-3">
                   <div className="flex justify-between items-start">
                     <div>
@@ -182,7 +182,7 @@ const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
                         {order.customerName}
                       </p>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" />{" "}
+                        <Clock className="h-3.5 w-3.5" />{' '}
                         {formatTimeAgo(order.timeReceived)}
                       </p>
                     </div>
@@ -208,32 +208,32 @@ const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
                   </div>
 
                   <div className="flex gap-2">
-                    {order.status === "pending" && (
+                    {order.status === 'pending' && (
                       <Button
                         size="sm"
                         className="flex-1"
-                        onClick={() => updateOrderStatus(order.id, "preparing")}
+                        onClick={() => updateOrderStatus(order.id, 'preparing')}
                       >
                         Start Preparing
                       </Button>
                     )}
 
-                    {order.status === "preparing" && (
+                    {order.status === 'preparing' && (
                       <Button
                         size="sm"
                         className="flex-1"
-                        onClick={() => updateOrderStatus(order.id, "ready")}
+                        onClick={() => updateOrderStatus(order.id, 'ready')}
                       >
                         Mark Ready
                       </Button>
                     )}
 
-                    {order.status === "ready" && (
+                    {order.status === 'ready' && (
                       <Button
                         size="sm"
                         variant="default"
                         className="flex-1 bg-green-600 hover:bg-green-700"
-                        onClick={() => updateOrderStatus(order.id, "completed")}
+                        onClick={() => updateOrderStatus(order.id, 'completed')}
                       >
                         <Check className="h-4 w-4 mr-1" /> Complete Order
                       </Button>
@@ -270,26 +270,26 @@ const OrderQueue = ({ orderQueue, updateOrderStatus }) => {
             <div className="bg-yellow-50 p-4 rounded-md">
               <p className="text-sm font-medium text-yellow-800">Pending</p>
               <p className="text-3xl font-bold text-yellow-800">
-                {orderQueue.filter(o => o.status === "pending").length}
+                {orderQueue.filter((o) => o.status === 'pending').length}
               </p>
             </div>
             <div className="bg-blue-50 p-4 rounded-md">
               <p className="text-sm font-medium text-blue-800">Preparing</p>
               <p className="text-3xl font-bold text-blue-800">
-                {orderQueue.filter(o => o.status === "preparing").length}
+                {orderQueue.filter((o) => o.status === 'preparing').length}
               </p>
             </div>
             <div className="bg-green-50 p-4 rounded-md">
               <p className="text-sm font-medium text-green-800">Ready</p>
               <p className="text-3xl font-bold text-green-800">
-                {orderQueue.filter(o => o.status === "ready").length}
+                {orderQueue.filter((o) => o.status === 'ready').length}
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default OrderQueue
+export default OrderQueue;

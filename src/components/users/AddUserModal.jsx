@@ -1,38 +1,38 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from "@/components/ui/select"
+  SelectValue,
+} from '@/components/ui/select';
 
 export const AddUserModal = ({ open, onOpenChange, onAddUser }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "staff"
-  })
+    name: '',
+    email: '',
+    role: 'staff',
+  });
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (formData.name && formData.email) {
-      onAddUser(formData)
-      setFormData({ name: "", email: "", role: "staff" })
-      onOpenChange(false)
+      onAddUser(formData);
+      setFormData({ name: '', email: '', role: 'staff' });
+      onOpenChange(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -52,7 +52,7 @@ export const AddUserModal = ({ open, onOpenChange, onAddUser }) => {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={e =>
+                onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
                 className="col-span-3"
@@ -68,7 +68,7 @@ export const AddUserModal = ({ open, onOpenChange, onAddUser }) => {
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={e =>
+                onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
                 className="col-span-3"
@@ -82,7 +82,7 @@ export const AddUserModal = ({ open, onOpenChange, onAddUser }) => {
               </Label>
               <Select
                 value={formData.role}
-                onValueChange={value =>
+                onValueChange={(value) =>
                   setFormData({ ...formData, role: value })
                 }
               >
@@ -111,5 +111,5 @@ export const AddUserModal = ({ open, onOpenChange, onAddUser }) => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

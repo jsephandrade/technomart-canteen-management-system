@@ -1,13 +1,13 @@
-import React from "react"
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+  CardFooter,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   ShoppingCart,
   Plus,
@@ -16,8 +16,8 @@ import {
   CreditCard,
   Tag,
   Receipt,
-  X
-} from "lucide-react"
+  X,
+} from 'lucide-react';
 
 const CurrentOrder = ({
   currentOrder,
@@ -31,7 +31,7 @@ const CurrentOrder = ({
   calculateTotal,
   onOpenPaymentModal,
   onOpenDiscountModal,
-  onOpenHistoryModal
+  onOpenHistoryModal,
 }) => {
   return (
     <div className="md:col-span-1">
@@ -46,7 +46,7 @@ const CurrentOrder = ({
         <CardContent className="flex-1 overflow-auto">
           {currentOrder.length > 0 ? (
             <div className="space-y-3">
-              {currentOrder.map(item => (
+              {currentOrder.map((item) => (
                 <div
                   key={item.id}
                   className="flex justify-between items-start p-2 border rounded-md"
@@ -110,7 +110,7 @@ const CurrentOrder = ({
                 <div className="flex justify-between text-sm text-green-600">
                   <span className="flex items-center gap-1">
                     Discount (
-                    {discount.type === "percentage"
+                    {discount.type === 'percentage'
                       ? `${discount.value}%`
                       : `₱${discount.value}`}
                     )
@@ -165,7 +165,7 @@ const CurrentOrder = ({
         </CardFooter>
       </Card>
     </div>
-  )
-}
+  );
+};
 
 export default CurrentOrder;
