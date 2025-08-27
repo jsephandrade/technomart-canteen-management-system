@@ -22,6 +22,7 @@ import Notifications from './components/Notifications';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,8 @@ const ProtectedRoutes = () => {
           <>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="*" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/" element={<LoginPage />} />
           </>
         ) : (
           <>

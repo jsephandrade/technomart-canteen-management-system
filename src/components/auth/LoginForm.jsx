@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Spinner = () => (
   <svg
@@ -113,7 +114,7 @@ const LoginForm = ({
               value={password}
               onChange={(e) => onPasswordChange?.(e.target.value)}
               placeholder="Password"
-              className="w-full p-3 pr-2 border border-gray-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
+              className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
               required
               autoComplete="current-password"
               aria-invalid={!!passwordError}
@@ -121,6 +122,15 @@ const LoginForm = ({
               disabled={pending}
               minLength={8}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none disabled:opacity-50"
+              disabled={pending}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {!showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           {passwordError && (
