@@ -17,11 +17,16 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  });
 
   const login = async (email, password) => {
     if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
-      setUser({ name: 'Admin', email }); // <-- add name here
+      const newUser = { name: 'Admin', email };
+      setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
       return true;
     }
     return false;
@@ -29,11 +34,16 @@ export function AuthProvider({ children }) {
 
   const socialLogin = async (provider) => {
     // Simulate a successful login
-    setUser({ name: 'Admin', email: ADMIN_EMAIL }); // <-- add name here
+    const newUser = { name: 'Admin', email: ADMIN_EMAIL };
+    setUser(newUser);
+    localStorage.setItem('user', JSON.stringify(newUser));
     return true;
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, socialLogin, logout }}>
