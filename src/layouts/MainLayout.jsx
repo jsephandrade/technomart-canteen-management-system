@@ -32,6 +32,7 @@ import {
 
 const MainLayout = ({ children, title }) => {
   const isMobile = useIsMobile();
+  console.log('MainLayout rendering, isMobile:', isMobile);
   const { user, logout } = useAuth();
 
   const displayName = user?.name || 'Admin';
