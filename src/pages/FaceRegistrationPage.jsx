@@ -1,13 +1,17 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { UserPlus, Camera, CheckCircle, XCircle, ArrowLeft, RefreshCw, Eye, EyeOff } from 'lucide-react';
+import { UserPlus, XCircle, ArrowLeft } from 'lucide-react';
 import Header from '@/components/auth/Header';
 import PageTransition from '@/components/PageTransition';
 import { useToast } from '@/hooks/use-toast';
+import CameraCapture from '@/components/face-registration/CameraCapture';
+import RegistrationStatus from '@/components/face-registration/RegistrationStatus';
+import ImagePreview from '@/components/face-registration/ImagePreview';
+import RegistrationActions from '@/components/face-registration/RegistrationActions';
+import RegistrationInstructions from '@/components/face-registration/RegistrationInstructions';
 
 const FaceRegistrationPage = () => {
   const [step, setStep] = useState('initial'); // initial, scanning, processing, complete, error
@@ -15,8 +19,7 @@ const FaceRegistrationPage = () => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
   const [showPreview, setShowPreview] = useState(false);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+  const cameraRef = useRef(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -44,15 +47,19 @@ const FaceRegistrationPage = () => {
         } 
       });
       
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+      const videoElement = cameraRef.current?.getVideoRef();
+      if (videoElement) {
+        videoElement.srcObject = stream;
       }
 
       // Capture multiple face angles
       for (let i = 0; i < capturePositions.length; i++) {
         await new Promise(resolve => {
           setTimeout(() => {
-            captureImage(i);
+            const imageData = cameraRef.current?.captureImage(i);
+            if (imageData) {
+              setCapturedImages(prev => [...prev, imageData]);
+            }
             setProgress(((i + 1) / capturePositions.length) * 100);
             resolve();
           }, 2000); // 2 seconds between captures
@@ -78,25 +85,6 @@ const FaceRegistrationPage = () => {
     }
   };
 
-  const captureImage = (index) => {
-    if (videoRef.current && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const video = videoRef.current;
-      const ctx = canvas.getContext('2d');
-      
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0);
-      
-      const imageData = canvas.toDataURL('image/jpeg', 0.8);
-      setCapturedImages(prev => [...prev, {
-        id: index,
-        position: capturePositions[index].name,
-        data: imageData,
-        timestamp: Date.now()
-      }]);
-    }
-  };
 
   const processFaceData = async () => {
     try {
@@ -178,96 +166,22 @@ const FaceRegistrationPage = () => {
 
                 {/* Camera viewport */}
                 <div className="relative">
-                  <div className="w-full h-64 bg-muted rounded-lg overflow-hidden flex items-center justify-center border-2 border-dashed border-border">
-                    {step === 'initial' && (
-                      <div className="text-center text-muted-foreground">
-                        <Camera className="w-12 h-12 mx-auto mb-2" />
-                        <p className="text-sm">Ready to capture your face</p>
-                        <p className="text-xs text-muted-foreground mt-1">We'll take 5 photos from different angles</p>
-                      </div>
-                    )}
-                    
-                    {step === 'scanning' && (
-                      <div className="relative w-full h-full">
-                        <video
-                          ref={videoRef}
-                          autoPlay
-                          playsInline
-                          className="w-full h-full object-cover"
-                        />
-                        <canvas ref={canvasRef} className="hidden" />
-                        <div className="absolute inset-0 border-4 border-primary rounded-lg animate-pulse" />
-                        
-                        {/* Current instruction */}
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                          <div className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full text-center">
-                            <div className="text-sm font-medium text-foreground">
-                              {currentPosition?.instruction || 'Hold still...'}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {capturedImages.length + 1} of {capturePositions.length}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {step === 'processing' && (
-                      <div className="text-center">
-                        <RefreshCw className="w-12 h-12 mx-auto mb-4 animate-spin text-primary" />
-                        <p className="font-medium">Processing face data...</p>
-                        <p className="text-sm text-muted-foreground">This may take a moment</p>
-                      </div>
-                    )}
-                    
-                    {step === 'complete' && (
-                      <div className="text-center text-green-600">
-                        <CheckCircle className="w-16 h-16 mx-auto mb-2" />
-                        <p className="font-medium">Registration complete!</p>
-                        <p className="text-sm text-muted-foreground">Face scan login is now enabled</p>
-                      </div>
-                    )}
-                    
-                    {step === 'error' && (
-                      <div className="text-center text-destructive">
-                        <XCircle className="w-16 h-16 mx-auto mb-2" />
-                        <p className="font-medium">Registration failed</p>
-                        <p className="text-sm text-muted-foreground">Please try again</p>
-                      </div>
-                    )}
-                  </div>
+                  <CameraCapture
+                    ref={cameraRef}
+                    step={step}
+                    currentPosition={currentPosition}
+                    capturedImages={capturedImages}
+                    capturePositions={capturePositions}
+                  />
+                  <RegistrationStatus step={step} />
                 </div>
 
                 {/* Captured images preview */}
-                {capturedImages.length > 0 && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Captured Images</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowPreview(!showPreview)}
-                      >
-                        {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </Button>
-                    </div>
-                    
-                    {showPreview && (
-                      <div className="grid grid-cols-5 gap-2">
-                        {capturedImages.map((img, index) => (
-                          <div key={img.id} className="relative">
-                            <img 
-                              src={img.data} 
-                              alt={`Face capture ${img.position}`}
-                              className="w-full h-12 object-cover rounded border"
-                            />
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border border-background rounded-full" />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+                <ImagePreview
+                  capturedImages={capturedImages}
+                  showPreview={showPreview}
+                  setShowPreview={setShowPreview}
+                />
 
                 {/* Error message */}
                 {error && (
@@ -278,70 +192,17 @@ const FaceRegistrationPage = () => {
                 )}
 
                 {/* Instructions */}
-                {step === 'initial' && (
-                  <div className="text-center text-sm text-muted-foreground space-y-2">
-                    <p>• Ensure good lighting on your face</p>
-                    <p>• Remove glasses if possible</p>
-                    <p>• Look directly at the camera</p>
-                    <p>• Follow the instructions during capture</p>
-                  </div>
-                )}
+                <RegistrationInstructions step={step} />
 
                 {/* Action buttons */}
                 <div className="space-y-3">
-                  {step === 'initial' && (
-                    <Button 
-                      onClick={startRegistration} 
-                      className="w-full"
-                      size="lg"
-                    >
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      Start Registration
-                    </Button>
-                  )}
-                  
-                  {step === 'complete' && (
-                    <div className="space-y-2">
-                      <Button 
-                        onClick={() => navigate('/login')} 
-                        className="w-full"
-                        size="lg"
-                      >
-                        Try Face Scan Login
-                      </Button>
-                      <Button 
-                        onClick={() => navigate('/settings')} 
-                        variant="outline"
-                        className="w-full"
-                      >
-                        Back to Settings
-                      </Button>
-                    </div>
-                  )}
-                  
-                  {(step === 'error') && (
-                    <Button 
-                      onClick={resetRegistration} 
-                      className="w-full"
-                      variant="outline"
-                    >
-                      <RefreshCw className="w-4 h-4 mr-2" />
-                      Try Again
-                    </Button>
-                  )}
+                  <RegistrationActions
+                    step={step}
+                    onStartRegistration={startRegistration}
+                    onReset={resetRegistration}
+                    navigate={navigate}
+                  />
                 </div>
-
-                {/* Alternative actions */}
-                {step === 'initial' && (
-                  <div className="text-center">
-                    <Link 
-                      to="/settings" 
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      Skip for now
-                    </Link>
-                  </div>
-                )}
               </CardContent>
             </Card>
 
