@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -11,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { Settings, User, Bell, Shield } from 'lucide-react';
+import { Settings, User, Bell, Shield, Scan } from 'lucide-react';
 const SettingsPage = () => {
   return (
     <div className="space-y-6">
@@ -141,6 +142,21 @@ const SettingsPage = () => {
                 </p>
               </div>
               <Switch id="twoFactor" />
+            </div>
+            <Separator />
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Face Recognition Login</Label>
+                <p className="text-sm text-muted-foreground">
+                  Set up face scan for quick and secure login
+                </p>
+              </div>
+              <Link to="/face-registration">
+                <Button variant="outline" size="sm">
+                  <Scan className="w-4 h-4 mr-2" />
+                  Setup Face Scan
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>

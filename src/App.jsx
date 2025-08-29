@@ -12,6 +12,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const FaceScanPage = lazy(() => import('./pages/FaceScanPage'));
+const FaceRegistrationPage = lazy(() => import('./pages/FaceRegistrationPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const HelpPage = lazy(() => import('./pages/HelpPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
@@ -98,6 +99,14 @@ const AppRoutes = () => {
               <PublicRoute>
                 <FaceScanPage />
               </PublicRoute>
+            }
+          />
+          <Route
+            path="/face-registration"
+            element={
+              <ProtectedRoute>
+                <FaceRegistrationPage />
+              </ProtectedRoute>
             }
           />
 
