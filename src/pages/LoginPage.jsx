@@ -6,6 +6,7 @@ import HeroImage from '@/components/auth/HeroImage';
 import AuthCard from '@/components/auth/AuthCard';
 import LoginForm from '@/components/auth/LoginForm';
 import SocialProviders from '@/components/auth/SocialProviders';
+import PageTransition from '@/components/PageTransition';
 
 const LoginPage = () => {
   const { login, socialLogin } = useAuth();
@@ -92,10 +93,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
+    <PageTransition>
+      <div className="min-h-screen flex flex-col bg-white">
+        <Header />
 
-      <main className="flex-1 flex flex-col md:flex-row items-center px-4 md:px-6 gap-8 max-w-7xl mx-auto w-full py-8">
+        <main className="flex-1 flex flex-col md:flex-row items-center px-4 md:px-6 gap-8 max-w-7xl mx-auto w-full py-8">
         <div className="w-full md:w-1/2 flex flex-col gap-6 max-w-lg order-2 md:order-1">
           <AuthCard title="Login">
             <LoginForm
@@ -132,10 +134,11 @@ const LoginPage = () => {
         <HeroImage src="/images/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" />
       </main>
 
-      <footer className="py-6 text-gray-500 text-xs text-center border-t border-gray-100">
-        &copy; {new Date().getFullYear()} TechnoMart Canteen System
-      </footer>
-    </div>
+        <footer className="py-6 text-gray-500 text-xs text-center border-t border-gray-100">
+          &copy; {new Date().getFullYear()} TechnoMart Canteen System
+        </footer>
+      </div>
+    </PageTransition>
   );
 };
 

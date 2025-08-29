@@ -5,6 +5,7 @@ import Header from '@/components/auth/Header';
 import HeroImage from '@/components/auth/HeroImage';
 import SocialProviders from '@/components/auth/SocialProviders';
 import { Eye, EyeOff } from 'lucide-react';
+import PageTransition from '@/components/PageTransition';
 
 const SignupPage = () => {
   const { socialLogin } = useAuth();
@@ -70,10 +71,11 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
+    <PageTransition>
+      <div className="min-h-screen flex flex-col bg-white">
+        <Header />
 
-      <main className="flex-1 flex flex-col md:flex-row items-center px-4 md:px-6 gap-8 max-w-7xl mx-auto w-full py-8">
+        <main className="flex-1 flex flex-col md:flex-row items-center px-4 md:px-6 gap-8 max-w-7xl mx-auto w-full py-8">
         <div className="w-full md:w-1/2 flex flex-col gap-6 max-w-lg order-2 md:order-1">
           <div className="w-full max-w-md mx-auto md:mx-0">
             <div className="bg-white p-6 rounded-xl shadow-lg">
@@ -185,9 +187,10 @@ const SignupPage = () => {
             </div>
           </div>
         </div>
-        <HeroImage src="/images/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" />
-      </main>
-    </div>
+          <HeroImage src="/images/b1bc6b54-fe3f-45eb-8a39-005cc575deef.png" />
+        </main>
+      </div>
+    </PageTransition>
   );
 };
 

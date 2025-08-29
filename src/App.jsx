@@ -3,156 +3,239 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Index from './pages/Index';
-import NotFound from './pages/NotFound';
-import HelpPage from './pages/HelpPage';
-import SettingsPage from './pages/SettingsPage';
-import MainLayout from './layouts/MainLayout';
-import MenuManagement from './components/MenuManagement';
-import SalesAnalytics from './components/SalesAnalytics';
-import EmployeeSchedule from './components/EmployeeSchedule';
-import CustomerFeedback from './components/CustomerFeedback';
-import POS from './components/POS';
-import Catering from './components/Catering';
-import Inventory from './components/Inventory';
-import Payments from './components/Payments';
-import Users from './components/Users';
-import UserLogs from './components/UserLogs';
-import Notifications from './components/Notifications';
+import { Suspense, lazy } from 'react';
 import { AuthProvider, useAuth } from './components/AuthContext';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
+
+// Lazy load pages for better performance
+const Index = lazy(() => import('./pages/Index'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const SignupPage = lazy(() => import('./pages/SignupPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const HelpPage = lazy(() => import('./pages/HelpPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+
+// Lazy load components
+const MenuManagement = lazy(() => import('./components/MenuManagement'));
+const SalesAnalytics = lazy(() => import('./components/SalesAnalytics'));
+const EmployeeSchedule = lazy(() => import('./components/EmployeeSchedule'));
+const CustomerFeedback = lazy(() => import('./components/CustomerFeedback'));
+const POS = lazy(() => import('./components/POS'));
+const Catering = lazy(() => import('./components/Catering'));
+const Inventory = lazy(() => import('./components/Inventory'));
+const Payments = lazy(() => import('./components/Payments'));
+const Users = lazy(() => import('./components/Users'));
+const UserLogs = lazy(() => import('./components/UserLogs'));
+const Notifications = lazy(() => import('./components/Notifications'));
+const MainLayout = lazy(() => import('./layouts/MainLayout'));
 
 const queryClient = new QueryClient();
 
-// Wrapper for protected routes
-const ProtectedRoutes = () => {
-  const { user } = useAuth();
+// Loading component
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  </div>
+);
 
+// Protected route wrapper
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+};
+
+// Public route wrapper (redirects to dashboard if already logged in)
+const PublicRoute = ({ children }) => {
+  const { user } = useAuth();
+  
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return children;
+};
+
+// App routes component
+const AppRoutes = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        {!user ? (
-          <>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/" element={<LoginPage />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </>
-        ) : (
-          <>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Navigate to="/" replace />} />
-            <Route
-              path="/menu"
-              element={
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          {/* Public routes */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <SignupPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPasswordPage />
+              </PublicRoute>
+            }
+          />
+
+          {/* Protected routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/menu"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Menu Management">
                   <MenuManagement />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/sales"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sales"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Sales Analytics">
                   <SalesAnalytics />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/employees"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/employees"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Employee Schedule">
                   <EmployeeSchedule />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/feedback"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Customer Feedback">
                   <CustomerFeedback />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/pos"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pos"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Point of Sale">
                   <POS />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/catering"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/catering"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Catering Management">
                   <Catering />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/inventory"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inventory"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Inventory Management">
                   <Inventory />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/payments"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Payment Management">
                   <Payments />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/users"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="User Management">
                   <Users />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/logs"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/logs"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="User Logs">
                   <UserLogs />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/notifications"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Notifications">
                   <Notifications />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Settings">
                   <SettingsPage />
                 </MainLayout>
-              }
-            />
-            <Route
-              path="/help"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help"
+            element={
+              <ProtectedRoute>
                 <MainLayout title="Help Center">
                   <HelpPage />
                 </MainLayout>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </>
-        )}
-      </Routes>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Catch all route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 };
@@ -163,7 +246,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
-        <ProtectedRoutes />
+        <AppRoutes />
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

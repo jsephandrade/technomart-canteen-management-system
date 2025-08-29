@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Bell, LogOut } from 'lucide-react';
 import { useAuth } from '@/components/AuthContext';
 import { Link } from 'react-router-dom';
+import PageTransition from '@/components/PageTransition';
 
 // ⬇️ Add these imports
 import {
@@ -131,7 +132,11 @@ const MainLayout = ({ children, title }) => {
           </header>
 
           {/* Content */}
-          <main className="flex-1 overflow-y-auto p-6">{children}</main>
+          <main className="flex-1 overflow-y-auto p-6">
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </main>
         </SidebarInset>
       </div>
     </SidebarProvider>
