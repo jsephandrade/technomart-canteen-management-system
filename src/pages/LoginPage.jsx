@@ -62,6 +62,7 @@ const LoginPage = () => {
       }
       // navigate on success if desired:
       // navigate("/dashboard");
+      navigate('/');
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -77,6 +78,7 @@ const LoginPage = () => {
     try {
       await socialLogin(provider);
       // navigate("/dashboard");
+      navigate('/');
     } catch (err) {
       setError('Social login failed. Please try again.');
     } finally {

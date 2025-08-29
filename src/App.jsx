@@ -44,6 +44,7 @@ const ProtectedRoutes = () => {
         ) : (
           <>
             <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Navigate to="/" replace />} />
             <Route
               path="/menu"
               element={
