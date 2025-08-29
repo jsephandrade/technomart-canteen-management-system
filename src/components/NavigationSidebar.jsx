@@ -1,5 +1,10 @@
 import React from 'react';
-import NavigationGroup from '@/components/navigation/NavigationGroup';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from '@/components/ui/sidebar';
 import {
   LayoutDashboard,
   Menu,
@@ -15,6 +20,7 @@ import {
   FileText,
 } from 'lucide-react';
 export const NavigationSidebar = () => {
+  const location = useLocation();
   const navigationItems = [
     {
       name: 'Dashboard',
@@ -77,10 +83,24 @@ export const NavigationSidebar = () => {
       icon: MessageSquare,
     },
   ];
-
   return (
     <div className="px-2 py-2">
-      <NavigationGroup items={navigationItems} />
+      <SidebarMenu>
+        {navigationItems.map((item) => (
+          <SidebarMenuItem key={item.name}>
+            <SidebarMenuButton
+              asChild
+              isActive={location.pathname === item.href}
+              tooltip={item.name}
+            >
+              <Link to={item.href} className="flex items-center space-x-3">
+                <item.icon className="h-5 w-5" />
+                <span>{item.name}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
+      </SidebarMenu>
     </div>
-};
+  );
 };
