@@ -11,6 +11,7 @@ const Index = lazy(() => import('./pages/Index'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const FaceScanPage = lazy(() => import('./pages/FaceScanPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const HelpPage = lazy(() => import('./pages/HelpPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
@@ -88,6 +89,14 @@ const AppRoutes = () => {
             element={
               <PublicRoute>
                 <ForgotPasswordPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/face-scan"
+            element={
+              <PublicRoute>
+                <FaceScanPage />
               </PublicRoute>
             }
           />

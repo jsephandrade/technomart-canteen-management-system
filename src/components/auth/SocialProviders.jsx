@@ -12,18 +12,38 @@ const Divider = () => (
   </div>
 );
 
-const SocialButton = ({ provider, label, onClick, pending, children }) => (
-  <button
-    type="button"
-    onClick={(e) => onClick?.(provider, e)}
-    className="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed w-full"
-    disabled={pending}
-    aria-label={`Continue with ${label}`}
-  >
-    {children}
-    <span className="ms-2">{label}</span>
-  </button>
-);
+const SocialButton = ({ provider, label, onClick, pending, children, href }) => {
+  const buttonContent = (
+    <>
+      {children}
+      <span className="ms-2">{label}</span>
+    </>
+  );
+
+  const buttonProps = {
+    className: "flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed w-full",
+    disabled: pending,
+    "aria-label": `Continue with ${label}`
+  };
+
+  if (href) {
+    return (
+      <a href={href} {...buttonProps}>
+        {buttonContent}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={(e) => onClick?.(provider, e)}
+      {...buttonProps}
+    >
+      {buttonContent}
+    </button>
+  );
+};
 
 SocialButton.propTypes = {
   provider: PropTypes.oneOf(['google', 'facescan']).isRequired,
@@ -51,7 +71,7 @@ GoogleButton.propTypes = {
 };
 
 export const FaceScanButton = ({ onClick, pending }) => (
-  <SocialButton provider="facescan" label="Face Scan" onClick={onClick} pending={pending}>
+  <SocialButton provider="facescan" label="Face Scan" href="/face-scan" pending={pending}>
     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M4 4h4V2H2v6h2V4zm14-2v2h4v4h2V2h-6zm4 18h-4v2h6v-6h-2v4zM4 20v-4H2v6h6v-2H4zm8-14a6 6 0 100 12 6 6 0 000-12z" />
     </svg>
