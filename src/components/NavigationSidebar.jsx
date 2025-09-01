@@ -19,6 +19,7 @@ import {
   CreditCard,
   FileText,
 } from 'lucide-react';
+
 export const NavigationSidebar = () => {
   const location = useLocation();
   const navigationItems = [
